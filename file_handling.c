@@ -1,22 +1,17 @@
 #include "file_handling.h"
 
 
-
-int prev_dir(char** p_cwd, int* current_index, int* prev_index, int* next_index)
+int prev_dir(char** p_cwd)
 /*int prev_dir(&cwd)*/
 {
-	*next_index = *current_index;
-	*current_index = *prev_index;
 	strcat(*p_cwd, "/..");
 	strcpy(*p_cwd,realpath(*p_cwd,NULL));
 	return 1;
 }
 
 
-int next_dir(char** p_cwd, char* dir_name, int* current_index, int* prev_index, int* next_index)
+int next_dir(char** p_cwd, char* dir_name)
 {
-	*prev_index = *current_index;
-	*current_index = *next_index;
 	if (strcmp(*p_cwd,"/"))
 		strcat(*p_cwd, "/");
 	strcat(*p_cwd, dir_name);
@@ -44,16 +39,11 @@ int open_file(char* cwd, char* file_name)
 	return 1;
 }
 
-
-int select_file(char* cwd, char* file_name)
+int accept_input()
 {
-	// set the mark ENTRY attribute
+	
 	return 1;
 }
-
-
-
-
 
 
 char* get_abs_path(char* cwd, char* file_name)

@@ -1,6 +1,6 @@
+/* entry.c*/
+
 #include "entry.h"
-
-
 
 int is_directory(char* cwd, char* name)
 {
@@ -19,45 +19,67 @@ int is_directory(char* cwd, char* name)
 }
 
 
-
-int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries)
-/* int get_entriesw(cwd, &entry_arr, &num_entries)*/
-/* take in string literal, addr of entry array to add, addr of entry count so it can be modified */
+int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 {
 	struct dirent **namelist;
 	struct stat *sb;
-	sb = malloc(sizeof(struct stat));
+	char* perm;
+	int dot_count, entry_index, ret;
+	//, user, group;
 	*num_entries = scandir(cwd, &namelist,NULL,alphasort);
 	*entry_arr = malloc(sizeof(ENTRY) * (*num_entries - 2) );
+	perm = malloc(sizeof(char) * (9+1));
+	dot_count = 0;
+	entry_index = 0;
 
-	for (int i = 2; i < *num_entries; i++) {
-		stat(  ((*entry_arr) +(i-2))->name, stat_buf);
-		memset(( (*entry_arr) +(i-2))->name,'\0', sizeof( ( (*entry_arr) +(i-2))->name));
+	char abs_path[PATH_MAX];
 
-		strcpy( ( (*entry_arr) +(i-2))->name, namelist[i]->d_name);
-		free(namelist[i]);
+	for (int n = 2; n < *num_entries; n++) {
+		if (!show_dots && namelist[n]->d_name[0] == '.') {
+			dot_count++;
+			continue;
+		}
+		else {
+			memset(( (*entry_arr) +(entry_index))->name,'\0', sizeof( ( (*entry_arr) +(entry_index))->name));
+			strcpy( ( (*entry_arr) +(entry_index))->name, namelist[n]->d_name);
+			((*entry_arr) +(entry_index))->index = entry_index;
 
-		if (is_directory(cwd,((*entry_arr) +(i-2))->name) )
-			((*entry_arr) +(i-2))->is_dir = 1;
-		else
-			((*entry_arr) +(i-2))->is_dir = 0;
-		((*entry_arr) +(i-2))->index = i-2;
+			if (is_directory(cwd,((*entry_arr) +(entry_index))->name) )
+				((*entry_arr) +(entry_index))->type = 'd';
+			else
+				((*entry_arr) +(entry_index))->type = '-';
 
+			perm = get_permissions(cwd, ((*entry_arr) +(entry_index))->name );
+			strcpy( ((*entry_arr) +(entry_index))->permission, perm);
+			
+			strcpy(abs_path, cwd);
+			strcat(abs_path,"/");
+			strcat(abs_path, ((*entry_arr) +(entry_index))->name);
+			
+			sb = malloc(sizeof(struct stat));
+			ret = stat(abs_path, sb);
 
+			((*entry_arr) +(entry_index))->marked = 0;
+			
+			entry_index++;
+		}
+		free(namelist[n]);
+		free(sb);
+		free(perm);
 	}
-	free(stat_buf);
+
 	free(namelist);
 	*num_entries -= 2;
-
+	if (!show_dots)
+		*num_entries -= dot_count;
 	return 1;
 }
-
 
 
 int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINES)
 {
 	int PRINT_STOP = LINES - 3;
-	int SCROLL_STOP_BOTTOM = PRINT_STOP - 8;
+	int SCROLL_STOP_BOTTOM = PRINT_STOP - 5;
 	//int SCROLL_STOP_TOP = 10;
 
 	if (!num_entries) {
@@ -65,79 +87,55 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 		return 1;
 	}
 
-		if (num_entries <= PRINT_STOP) {
-			for (int i = 0; i < num_entries; i++) {
-				if (entry_arr[i].index == current_index) {
-					wattron(stdscr, A_REVERSE);
-					//start_color();
-					printw("%s\n",entry_arr[i].name);
-					wattroff(stdscr, A_REVERSE);
-				}
-				else
-					if (entry_arr[i].is_dir){
-						wattron(stdscr, A_BOLD);
-						printw("%s\n",entry_arr[i].name);
-						wattroff(stdscr, A_BOLD);
-					}
-					else
-						printw("%s\n",entry_arr[i].name);
-			}
-			return 1;
+	if (num_entries <= PRINT_STOP) {
+		for (int i = 0; i < num_entries; i++) {
+			if (entry_arr[i].index == current_index) 
+				wattron(stdscr, A_REVERSE);
+			if (entry_arr[i].type == 'd')
+				wattron(stdscr, A_BOLD);
+			if (entry_arr[i].marked) 
+				wattron(stdscr, A_UNDERLINE);
+			printw("%s\n",entry_arr[i].name);
+			wattrset(stdscr, A_NORMAL);
 		}
-		else {
-			int dist = current_index - SCROLL_STOP_BOTTOM;
-			if (dist < 0)
-				dist = 0;
+		return 1;
+	}
+				
+	else {
+		int dist = current_index - SCROLL_STOP_BOTTOM;
+		if (dist < 0)
+			dist = 0;
 
-			for (int i = 0; i < PRINT_STOP; i++) {
+		for (int i = 0; i <= PRINT_STOP; i++) {
 
-					if (dist > 0)
-						current_index = SCROLL_STOP_BOTTOM;
-					if (entry_arr[i].index == current_index) {
-						wattron(stdscr, A_REVERSE);
-						printw("%s\n",entry_arr[current_index+dist].name);
-						wattroff(stdscr, A_REVERSE);
-					}
-					else {
-						printw("%s\n",entry_arr[i+dist].name);
-					}
-			}
-			return 1;
+			if (dist > 0)
+				current_index = SCROLL_STOP_BOTTOM;
+
+			if (entry_arr[i].index == current_index) 
+				wattron(stdscr, A_REVERSE);
+			if (entry_arr[i].type == 'd')
+				wattron(stdscr, A_BOLD);
+			if (entry_arr[i].marked) 
+				wattron(stdscr, A_UNDERLINE);
+			printw("%s\n",entry_arr[i+dist].name);
+			wattrset(stdscr, A_NORMAL);
 		}
-
+		return 1;
+	}
 
 	return -1;
 }
 
 
 
-int clear_entries(ENTRY* p_entry_arr, int* num_entries)
+int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index)
 {
 	//clear();
 	erase();
 	*num_entries = 0;
+	*current_index = 0;
 	return 1;
 }
-
-
-
-
-/*
-SOME USEFUL NCURSES ATTRIBUTES
-ALL PREFIXED WITH 'A_', |'ed together
-
-
-A_STANDOUT
-A_UNDERLINE
-..REVERSE
-BLINK
-DIM
-BOLD
-NORMAL
-
-
-*/
-
 
 
 int update_curr_index(short int direction, int* current_index, int *num_entries)
@@ -150,9 +148,16 @@ int update_curr_index(short int direction, int* current_index, int *num_entries)
 }
 
 
-int mark_file()
+int mark_file(ENTRY *p_entry)
 {
+	p_entry->marked = 1;
+	return 1;
+}
 
+
+int unmark_file(ENTRY *p_entry) 
+{
+	p_entry->marked = 0;
 	return 1;
 }
 
@@ -161,7 +166,7 @@ int init_ncurses(WINDOW *win)
 {
 	initscr();
 	noecho();
-	//keypad(FALSE);
+	keypad(stdscr,TRUE);
 	curs_set(0); /* 0, 1, 2 */
 	cbreak();
 	scrollok(stdscr,TRUE);
@@ -195,36 +200,63 @@ char* get_permissions(char* cwd, char* file_name)
 	    modeval[6] = (perm & S_IROTH) ? 'r' : '-';
 	    modeval[7] = (perm & S_IWOTH) ? 'w' : '-';
 	    modeval[8] = (perm & S_IXOTH) ? 'x' : '-';
-	    modeval[9] = '\0';
 	}
 	else{
 	    //return strerror(errno);
 	    for (int i = 0; i < 9; i++) {
 	    	modeval[i] = '-';
 	    }
-	    modeval[9] = '\0';
 	}
+	modeval[9] = '\0';
+
 	return modeval;
 }
 
-int display_file_info(char* cwd,char* file_name,int current_index, int num_entries)
+int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
-	char* perm = get_permissions(cwd, file_name);
-	mvprintw(LINES-2, 0, "%d/%d  %s", current_index+1, num_entries, perm);
+	char* perm = get_permissions(cwd, entry.name);
+	//mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
+	mvprintw(LINES-2, 0, "%d/%d  %c%s     mrk:%d             gid: %d / uid: %d   ", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	free(perm);
 	wattron(stdscr,A_BOLD);
 	if (strcmp(cwd, "/")) {
 		mvprintw(LINES-1, 0, "%s/", cwd);
 		wattroff(stdscr,A_BOLD);
-		mvprintw(LINES-1, strlen(cwd)+1, "%s",file_name);
+		mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
 	}
 	else {
 		mvprintw(LINES-1, 0, "%s", cwd);
 		wattroff(stdscr,A_BOLD);
-		mvprintw(LINES-1, strlen(cwd), "%s",file_name);
+		mvprintw(LINES-1, strlen(cwd), "%s",entry.name);
 	}
-	free(perm);
 	return 1;
 }
+
+
+int check_permissions(char* action, char* cwd, ENTRY entry)
+{
+	int access = false;
+	if (!strcmp(action,"enter") && entry.type == 'd') {
+		char bit = entry.permission[2];
+		(bit == 'x') ? (access = true) : (access = false);
+	}
+/*
+	char path[PATH_MAX];
+	strcpy(path,cwd);
+	strcat(path,"/");
+	strcat(path,entry.name);
+	if (!access(path,X_OK)) {
+		access = true;
+	}
+*/
+	return access;
+}
+
+
+
+
+
+
 
 
 

@@ -9,10 +9,9 @@
 
 
 
-int prev_dir(char** p_cwd, int* current_index, int* prev_index, int* next_index);
+int prev_dir(char** p_cwd);
 
-int next_dir(char** p_cwd, char* dir_name, int* current_index, int* prev_index, int* next_index);
-
+int next_dir(char** p_cwd, char* dir_name);
 
 int open_file(char* cwd, char* file_name);
 
