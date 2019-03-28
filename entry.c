@@ -95,7 +95,17 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i].marked) 
 				wattron(stdscr, A_UNDERLINE);
-			printw("%s\n",entry_arr[i].name);
+			if ( strlen(entry_arr[i].name) >= COLS-1) {
+				for (int j = 0; j < COLS-4; j++) {
+					printw("%c",entry_arr[i].name[j]);
+				}
+				printw("...\n");
+			}
+			else
+				printw("%s\n",entry_arr[i].name);
+				
+
+			
 			wattrset(stdscr, A_NORMAL);
 		}
 		return 1;
@@ -117,7 +127,14 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i].marked) 
 				wattron(stdscr, A_UNDERLINE);
-			printw("%s\n",entry_arr[i+dist].name);
+			if ( strlen(entry_arr[i+dist].name) >= COLS-2) {
+				for (int j = 0; j < COLS-4; j++) {
+					printw("%c",entry_arr[i+dist].name[j]);
+				}
+				printw("...\n");
+			}
+			else
+				printw("%s\n",entry_arr[i+dist].name);
 			wattrset(stdscr, A_NORMAL);
 		}
 		return 1;
@@ -216,13 +233,21 @@ int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries
 {
 	char* perm = get_permissions(cwd, entry.name);
 	//mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
-	mvprintw(LINES-2, 0, "%d/%d  %c%s     mrk:%d             gid: %d / uid: %d   ", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	mvprintw(LINES-2, 0, "%d/%d  %c\t%s\tmrk:%d\tgid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	free(perm);
 	wattron(stdscr,A_BOLD);
 	if (strcmp(cwd, "/")) {
 		mvprintw(LINES-1, 0, "%s/", cwd);
 		wattroff(stdscr,A_BOLD);
 		mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
+/*
+		if (strlen(cwd)+1+strlen(entry.name) < COLS -2)
+			mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
+		else
+			for (int j = 0; j < strlen(cwd)+1+strlen(entry.name)) {
+				if 
+			}
+*/
 	}
 	else {
 		mvprintw(LINES-1, 0, "%s", cwd);
@@ -252,12 +277,20 @@ int check_permissions(char* action, char* cwd, ENTRY entry)
 	return access;
 }
 
+char* get_abs_path(char* cwd, char* file_name)
+{
+	int len_cwd = strlen(cwd);
+    int len_file_name = strlen(file_name);
+    int len_abs_path = len_cwd + len_file_name + 1;
+	char* abs_path;
 
+	abs_path = malloc(sizeof(char)*len_abs_path);
+	strcpy(abs_path,cwd);
+	strcat(abs_path,"/");
+	strcat(abs_path,file_name);
 
-
-
-
-
+	return abs_path;
+}
 
 
 

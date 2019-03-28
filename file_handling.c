@@ -45,18 +45,3 @@ int accept_input()
 	return 1;
 }
 
-
-char* get_abs_path(char* cwd, char* file_name)
-{
-	int len_cwd = strlen(cwd);
-	int len_file_name = strlen(file_name);
-	int len_abs_path = len_cwd + len_file_name + 1;
-
-	char* abs_path = malloc(sizeof(char)*len_abs_path);
-	strcpy(abs_path,cwd);
-	strcat(abs_path,"/");
-	strcat(abs_path,file_name);
-
-	return abs_path;
-}
-

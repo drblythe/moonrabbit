@@ -21,4 +21,3 @@ int make_dir(char* cwd, char* dir_name);
 
 int select_file(char* cwd, char* file_name);
 
-char* get_abs_path(char* cwd, char* file_name);

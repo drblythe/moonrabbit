@@ -39,6 +39,8 @@ int mark_file();
 
 int get_file_info(char* cwd, char* name);
 
+char* get_abs_path(char* cwd, char* file_name);
+
 int is_directory(char* cwd, char* name);
 
 int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots);

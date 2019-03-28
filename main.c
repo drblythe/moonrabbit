@@ -15,6 +15,8 @@
 
 /*
 TODO:
+	- 	If text printed is longer than columns-1,
+		put ... at the end (or columns-4 i guess)
 	- 	Accept the fact that display functions need to be moved
 		out of entry.c and be sad for a while
 	- 	When ':' is pressed, start accepting input
@@ -26,24 +28,6 @@ TODO:
 	-	Scrolling:
 			upward scrolling
 	- 	Fix open_file urxvt thing
-	- 	If text printed is longer than columns-1,
-		put ... at the end (or columns-4 i guess)
-
-
-DONE(?):
-	-	Weird cursor position thing where scrolling down too far
-		stops letting you move up. Caused by stdscr y value being
-		wrong. Somehow it switches direction during j/k presses
-	- 	Scroll if num_entries > LINES-1 (HOLY SHIT)
-	- 	Dedicate areas to display information/create function
-		to display to certain area on screen
-	-	~/.steam / ~/.steampath / ~/.steampid permissions were
-		weird, stat doesn't return correctly
-	- 	Malloc/free entry_arr on every directory change instead of
-		using the same max size like a goddamn neanderthal
-	- 	Optionally hide dot files
-	-	Some kind of coloring to make dir/reg files distinct
-	-	Mark files with tab/underline/whatever with spacebar
 */
 
 
@@ -181,8 +165,6 @@ int main()
 		}
 	}
 
-
-	free(cwd);
 	free(entry_arr);
 	endwin();
 	exit(EXIT_SUCCESS);
