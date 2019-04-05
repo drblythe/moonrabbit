@@ -35,7 +35,27 @@ int make_dir(char* cwd, char* dir_name)
 
 int open_file(char* cwd, char* file_name)
 {
+    // fork() returns child's pid
+    pid_t pid;
+    pid = fork();
+    if (pid == -1)
+        perror("fork");
 
+    if (!pid) {
+        char *args[] = {"/usr/bin/urxvt", "-e", "vim $HOME/.Xresources", NULL};
+
+        int ret;
+
+        ret = execv(args[0], args);
+
+        if (ret == -1) {
+            perror("execv");
+            exit (EXIT_FAILURE);
+        }
+    }
+
+    //exit(EXIT_SUCCESS);
+	
 	return 1;
 }
 

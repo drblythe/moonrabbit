@@ -120,8 +120,8 @@ int main()
 		case KEY_RIGHT:
 			c = 'l';
 		case 'l':
-			//if (entry_arr[current_index].type == 'd') {
-			if (check_permissions("enter", cwd, entry_arr[current_index])) {
+			if (entry_arr[current_index].type == 'd') {
+			//if (check_permissions("enter", cwd, entry_arr[current_index])) {
 				next_dir(&cwd, entry_arr[current_index].name);
 				clear_entries(entry_arr, &num_entries, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
@@ -129,7 +129,7 @@ int main()
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				//open_file(cwd, entry_arr[current_index].name);
+				open_file(cwd, entry_arr[current_index].name);
 			}
 			else {
 				/* damn */
