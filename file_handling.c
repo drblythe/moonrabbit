@@ -38,23 +38,33 @@ int open_file(char* cwd, char* file_name)
     // fork() returns child's pid
     pid_t pid;
     pid = fork();
+	
     if (pid == -1)
         perror("fork");
 
-    if (!pid) {
-        char *args[] = {"/usr/bin/urxvt", "-e", "vim $HOME/.Xresources", NULL};
+	    if (!pid) {
+     		char path[strlen(cwd) + 1 + strlen(file_name) + 1];
+			strcpy(path,cwd);
+			strcat(path, "/");
+			strcat(path, file_name);
 
-        int ret;
+			char command[3 + 1 +strlen(path) + 1];
+			strcpy(command, "vim");
+			strcat(command, " ");
+			strcat(command, path);
 
-        ret = execv(args[0], args);
+   			char *args[] = {"/usr/bin/urxvt", "-e", "bash", "-i", "-c", command, NULL};
+
+	        int ret;
+
+   			ret = execv(args[0], args);
 
         if (ret == -1) {
             perror("execv");
-            exit (EXIT_FAILURE);
+            //exit (EXIT_FAILURE);
         }
     }
 
-    //exit(EXIT_SUCCESS);
 	
 	return 1;
 }
