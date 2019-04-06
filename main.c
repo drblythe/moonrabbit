@@ -27,7 +27,6 @@ TODO:
 	-	Store index from previous/forward directories
 	-	Scrolling:
 			upward scrolling
-	- 	Fix open_file urxvt thing
 */
 
 
@@ -123,10 +122,6 @@ int main()
 			if (entry_arr[current_index].type == 'd') {
 			//if (check_permissions("enter", cwd, entry_arr[current_index])) {
 				next_dir(&cwd, entry_arr[current_index].name);
-				clear_entries(entry_arr, &num_entries, &current_index);
-				get_entries(cwd, &entry_arr, &num_entries, show_dots);
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			}
 			else if (entry_arr[current_index].type != 'd') {
 				open_file(cwd, entry_arr[current_index].name);
@@ -134,6 +129,10 @@ int main()
 			else {
 				/* damn */
 			}
+			clear_entries(entry_arr, &num_entries, &current_index);
+			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
 			break;
 
@@ -166,6 +165,8 @@ int main()
 	}
 
 	free(entry_arr);
+	clear();
+	//erase();
 	endwin();
 	exit(EXIT_SUCCESS);
 }
