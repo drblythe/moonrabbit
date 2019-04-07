@@ -8,7 +8,6 @@
 #include <errno.h>
 
 
-
 int prev_dir(char** p_cwd);
 
 int next_dir(char** p_cwd, char* dir_name);

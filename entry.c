@@ -25,7 +25,6 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 	struct stat *sb;
 	char* perm;
 	int dot_count, entry_index, ret;
-	//, user, group;
 	*num_entries = scandir(cwd, &namelist,NULL,alphasort);
 	*entry_arr = malloc(sizeof(ENTRY) * (*num_entries - 2) );
 	perm = malloc(sizeof(char) * (9+1));
@@ -93,8 +92,10 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_REVERSE);
 			if (entry_arr[i].type == 'd')
 				wattron(stdscr, A_BOLD);
-			if (entry_arr[i].marked) 
-				wattron(stdscr, A_UNDERLINE);
+			if (entry_arr[i].marked) {
+				//wattron(stdscr, A_UNDERLINE);
+				printw("  ");
+			}
 			if ( strlen(entry_arr[i].name) >= COLS-1) {
 				for (int j = 0; j < COLS-4; j++) {
 					printw("%c",entry_arr[i].name[j]);
@@ -125,8 +126,10 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_REVERSE);
 			if (entry_arr[i].type == 'd')
 				wattron(stdscr, A_BOLD);
-			if (entry_arr[i].marked) 
-				wattron(stdscr, A_UNDERLINE);
+			if (entry_arr[i].marked) {
+			//	wattron(stdscr, A_UNDERLINE);
+				printw("  ");
+			}
 			if ( strlen(entry_arr[i+dist].name) >= COLS-2) {
 				for (int j = 0; j < COLS-4; j++) {
 					printw("%c",entry_arr[i+dist].name[j]);

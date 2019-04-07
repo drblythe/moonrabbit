@@ -38,8 +38,6 @@ int main()
 
 	char* cwd = malloc(sizeof(char) * PATH_MAX);
 	int current_index;
-	//int prev_index;
-	//int forward_index;
 	int num_entries;
 	int show_dots;
 
@@ -107,11 +105,7 @@ int main()
 				clear_entries(entry_arr, &num_entries, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 				display_entries(entry_arr, num_entries, current_index,LINES);
-
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-
-				move(y,x);
-				move(0,0);
 				refresh();
 			}
 			break;
@@ -120,7 +114,6 @@ int main()
 			c = 'l';
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
-			//if (check_permissions("enter", cwd, entry_arr[current_index])) {
 				next_dir(&cwd, entry_arr[current_index].name);
 			}
 			else if (entry_arr[current_index].type != 'd') {
@@ -129,11 +122,12 @@ int main()
 			else {
 				/* damn */
 			}
+			erase();
+			refresh();
 			clear_entries(entry_arr, &num_entries, &current_index);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
 			break;
 
 		case 'q':
@@ -151,7 +145,7 @@ int main()
 				mark_file(&entry_arr[current_index]);
 			else
 				unmark_file(&entry_arr[current_index]);
-			if (current_index< num_entries -1) 
+			if (current_index < num_entries -1) 
 				update_curr_index(DOWN, &current_index, &num_entries);
 			else 
 				erase();
@@ -165,8 +159,9 @@ int main()
 	}
 
 	free(entry_arr);
-	clear();
-	//erase();
+	move(0,0);
+	erase();
+	refresh();
 	endwin();
 	exit(EXIT_SUCCESS);
 }
