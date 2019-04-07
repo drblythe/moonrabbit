@@ -129,6 +129,7 @@ int main()
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			break;
+
 		case 'g':
 			if ( (c = getch()) == 'g'){
 				current_index = 0;
@@ -138,6 +139,7 @@ int main()
 				refresh();
 			}
 			break;
+
 		case 'G':
 			current_index = num_entries -1;
 			erase();
@@ -145,9 +147,11 @@ int main()
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
 			break;
+
 		case 'q':
 			run = 0;
 			break;
+
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_entries(entry_arr, &num_entries, &current_index);
