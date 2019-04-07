@@ -20,3 +20,4 @@ int make_dir(char* cwd, char* dir_name);
 
 int select_file(char* cwd, char* file_name);
 
+int delete_file(char *cwd, char *file_name);

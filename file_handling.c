@@ -51,9 +51,8 @@ int open_file(char* cwd, char* file_name)
 	return 1;
 }
 
-int accept_input()
+int delete_file(char *cwd, char *file_name)
 {
 	
 	return 1;
 }
-

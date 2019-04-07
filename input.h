@@ -7,3 +7,4 @@
 #define BACKSPACE 263
 
 char* get_cmd(void);
+int handle_cmd(char *command);

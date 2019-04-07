@@ -18,6 +18,8 @@
 
 /*
 TODO:
+	- 	Find file in dir with '/', move to index if exists
+		Also (later) allow find from command input prompt
 	- 	Storing index/position from prev/forw dirs:
 	- 	If text printed is longer than columns-1,
 		put ... at the end (or columns-4 i guess)
@@ -27,7 +29,7 @@ TODO:
 		https://linux.die.net/man/2/access
 		https://linux.die.net/man/2/stat
 	-	Scrolling:
-			upward scrolling
+		upward scrolling
 */
 
 
@@ -136,10 +138,16 @@ int main()
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			break;
+
 		case ':':
 			command = malloc(sizeof(char)*128);
 			command = get_cmd();
+			//handle_cmd(command);
 			free(command);
+			erase();
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh();
 			break;
 
 		case 'g':

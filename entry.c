@@ -96,17 +96,14 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				//wattron(stdscr, A_UNDERLINE);
 				printw("  ");
 			}
-			if ( strlen(entry_arr[i].name) >= COLS-1) {
-				for (int j = 0; j < COLS-4; j++) {
+			if ( strlen(entry_arr[i].name) >= COLS-6) {
+				for (int j = 0; j < COLS-6; j++) {
 					printw("%c",entry_arr[i].name[j]);
 				}
 				printw("...\n");
 			}
 			else
 				printw("%s\n",entry_arr[i].name);
-				
-
-			
 			wattrset(stdscr, A_NORMAL);
 		}
 		return 1;
@@ -130,8 +127,8 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 			//	wattron(stdscr, A_UNDERLINE);
 				printw("  ");
 			}
-			if ( strlen(entry_arr[i+dist].name) >= COLS-2) {
-				for (int j = 0; j < COLS-4; j++) {
+			if ( strlen(entry_arr[i+dist].name) >= COLS-6) {
+				for (int j = 0; j < COLS-6; j++) {
 					printw("%c",entry_arr[i+dist].name[j]);
 				}
 				printw("...\n");
@@ -235,22 +232,22 @@ char* get_permissions(char* cwd, char* file_name)
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
 	char* perm = get_permissions(cwd, entry.name);
-	//mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
-	mvprintw(LINES-2, 0, "%d/%d  %c\t%s\tmrk:%d\tgid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	mvprintw(LINES-2, 0, "%d/%d  %c%s\tmrk:%d\tgid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	free(perm);
 	wattron(stdscr,A_BOLD);
 	if (strcmp(cwd, "/")) {
 		mvprintw(LINES-1, 0, "%s/", cwd);
 		wattroff(stdscr,A_BOLD);
-		mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
-/*
-		if (strlen(cwd)+1+strlen(entry.name) < COLS -2)
-			mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
-		else
-			for (int j = 0; j < strlen(cwd)+1+strlen(entry.name)) {
-				if 
+		if ( (strlen(cwd)+1+strlen(entry.name) ) >= COLS-6) {
+			//for (int j = 0; j < strlen(cwd)+1+strlen(entry.name)) {
+			move(LINES-1, strlen(cwd)+1);
+			for (int i = 0; i < COLS-6-strlen(cwd)-1; i++) {
+				printw("%c",entry.name[i]);
 			}
-*/
+			printw("...");
+		}
+		else
+			mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
 	}
 	else {
 		mvprintw(LINES-1, 0, "%s", cwd);

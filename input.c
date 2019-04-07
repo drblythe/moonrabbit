@@ -31,6 +31,9 @@ char* get_cmd(void)
 			command[cmd_index] = '\0';
 			cmd_index--;
 			break;
+		case 'q':
+			read = 0;
+			break;
 		default:
 			command[cmd_index] = c;
 			cmd_index++;
@@ -38,10 +41,20 @@ char* get_cmd(void)
 			break;
 		}
 	}
-	mvprintw(10, 20, command);
 	
 	/* turn terminal feedback off again */
 	noecho();
 	cbreak();
 	return command;
 }
+
+int handle_cmd(char* command)
+{
+	//if (!strcmp(command, "q"))
+		//exit(EXIT_SUCCESS);
+		// add a new directory named
+	return 1;
+
+}
+
+
