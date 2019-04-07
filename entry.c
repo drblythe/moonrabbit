@@ -232,14 +232,13 @@ char* get_permissions(char* cwd, char* file_name)
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
 	char* perm = get_permissions(cwd, entry.name);
-	mvprintw(LINES-2, 0, "%d/%d  %c%s\tmrk:%d\tgid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	free(perm);
 	wattron(stdscr,A_BOLD);
 	if (strcmp(cwd, "/")) {
 		mvprintw(LINES-1, 0, "%s/", cwd);
 		wattroff(stdscr,A_BOLD);
 		if ( (strlen(cwd)+1+strlen(entry.name) ) >= COLS-6) {
-			//for (int j = 0; j < strlen(cwd)+1+strlen(entry.name)) {
 			move(LINES-1, strlen(cwd)+1);
 			for (int i = 0; i < COLS-6-strlen(cwd)-1; i++) {
 				printw("%c",entry.name[i]);

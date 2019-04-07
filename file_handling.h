@@ -13,11 +13,3 @@ int prev_dir(char** p_cwd);
 int next_dir(char** p_cwd, char* dir_name);
 
 int open_file(char* cwd, char* file_name);
-
-int change_dir(char** p_cwd, char* dir_name);
-
-int make_dir(char* cwd, char* dir_name);
-
-int select_file(char* cwd, char* file_name);
-
-int delete_file(char *cwd, char *file_name);

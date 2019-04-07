@@ -141,7 +141,7 @@ int main()
 
 		case ':':
 			command = malloc(sizeof(char)*128);
-			command = get_cmd();
+			command = get_input();
 			//handle_cmd(command);
 			free(command);
 			erase();

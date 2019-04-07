@@ -1,7 +1,7 @@
-/* commands.c */
+/* input.c */
 #include "input.h"
 
-char* get_cmd(void)
+char* get_input(void)
 {
 	char * command;
 	command = malloc(sizeof(char) * 255);
@@ -47,14 +47,4 @@ char* get_cmd(void)
 	cbreak();
 	return command;
 }
-
-int handle_cmd(char* command)
-{
-	//if (!strcmp(command, "q"))
-		//exit(EXIT_SUCCESS);
-		// add a new directory named
-	return 1;
-
-}
-
 
