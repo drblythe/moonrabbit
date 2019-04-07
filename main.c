@@ -7,24 +7,25 @@
 #include <sys/stat.h>
 #include <limits.h>
 #include <ncurses.h>
+
 #include "entry.h"
 #include "file_handling.h"
+#include "dir_info.h"
+#include "input.h"
 
 #define ctrl(x)		((x) & 0x1f)
 #define KEY_SPACE	' '
 
 /*
 TODO:
+	- 	Storing index/position from prev/forw dirs:
 	- 	If text printed is longer than columns-1,
 		put ... at the end (or columns-4 i guess)
-	- 	Accept the fact that display functions need to be moved
-		out of entry.c and be sad for a while
 	- 	When ':' is pressed, start accepting input
 	-	Add directory with mkdir
 	-	Check permissions before chdir or opening file
 		https://linux.die.net/man/2/access
 		https://linux.die.net/man/2/stat
-	-	Store index from previous/forward directories
 	-	Scrolling:
 			upward scrolling
 */
@@ -35,8 +36,11 @@ int main()
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr;
+	U_DIR* dir_arr;
+	int dirs_stored;
 
-	char* cwd = malloc(sizeof(char) * PATH_MAX);
+	char* cwd;
+	char *command;
 	int current_index;
 	int num_entries;
 	int show_dots;
@@ -47,6 +51,7 @@ int main()
 		exit(EXIT_FAILURE);
 	}
 
+	cwd = malloc(sizeof(char) * PATH_MAX);
 	cwd = getcwd(NULL,0);
 	if (!cwd) {
 		endwin();
@@ -55,6 +60,8 @@ int main()
 	}
 	int run = 1;
 
+	dirs_stored = 0;
+	dir_arr = malloc(sizeof(U_DIR) * 32);
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
@@ -115,6 +122,8 @@ int main()
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
 				next_dir(&cwd, entry_arr[current_index].name);
+				clear_entries(entry_arr, &num_entries, &current_index);
+				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
 				open_file(cwd, entry_arr[current_index].name);
@@ -124,10 +133,13 @@ int main()
 			}
 			erase();
 			refresh();
-			clear_entries(entry_arr, &num_entries, &current_index);
-			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			break;
+		case ':':
+			command = malloc(sizeof(char)*128);
+			command = get_cmd();
+			free(command);
 			break;
 
 		case 'g':

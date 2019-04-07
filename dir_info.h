@@ -6,9 +6,7 @@ typedef struct U_DIR {
 	char path[NAME_MAX];
 } U_DIR;
 
-int add_direc(U_DIR *direc_array);
+int store_index(U_DIR *direc, int *dirs_stored, int current_index, char *cwd);
 
-int store_index(int *current_index, char *cwd);
-
-int load_index(int *current_index, char *cwd);
+int load_index(U_DIR *direc, int *current_index, char *cwd);
 
