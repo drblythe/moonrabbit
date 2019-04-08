@@ -12,6 +12,7 @@
 #include "file_handling.h"
 #include "dir_info.h"
 #include "input.h"
+#include "command_handling.h"
 
 #define ctrl(x)		((x) & 0x1f)
 #define KEY_SPACE	' '
@@ -42,7 +43,7 @@ int main()
 	int dirs_stored;
 
 	char* cwd;
-	char *command;
+	char *input;
 	int current_index;
 	int num_entries;
 	int show_dots;
@@ -140,11 +141,13 @@ int main()
 			break;
 
 		case ':':
-			command = malloc(sizeof(char)*128);
-			command = get_input();
-			//handle_cmd(command);
-			free(command);
+			input = malloc(sizeof(char)*128);
+			input = get_input();
+			handle_cmd(input,&cwd);
+			free(input);
 			erase();
+			clear_entries(entry_arr, &num_entries, &current_index);
+			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
@@ -170,6 +173,10 @@ int main()
 
 		case 'q':
 			run = 0;
+			break;
+		
+		case 'S':
+			open_shell(cwd);
 			break;
 
 		case ctrl('h'):
