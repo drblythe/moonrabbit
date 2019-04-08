@@ -11,10 +11,6 @@ int change_dir(char** p_cwd, char* dir_name)
     return 1;
 }
 
-int make_dir(char* cwd, char* dir_name)
-{
-    return 1;
-}
 
 int delete_file(char *cwd, char *file_name)
 {
@@ -59,29 +55,20 @@ int handle_cmd(char *input, char** p_cwd)
 		args[i] = input[split_index+1+i];
 
 	/* appropriate function call */
-	if ( !strcmp(cmd, "cd") ) {
+	if (!strcmp(cmd, "cd")) {
 		change_dir(p_cwd,args);
+	}
+	else if (!strcmp(cmd,"mkdir")) {
+		//char new_dir[strlen(*p_cwd)+arg_len+1];
+		//new_dir = args;
+		//mkdir(new_dir, S_IRWXU | S_IRWXG | S_IRWXO);
+		mkdir(args, S_IRWXU | S_IRWXG | S_IRWXO);
 	}
 		
 		
 
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
