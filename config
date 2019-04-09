@@ -1,0 +1,9 @@
+# Configuration - Set default programs/args for filetypes
+# EDITOR
+# 
+
+EDITOR=vim
+AUDIO=mpv
+VIDEO=mpv
+IMAGES=
+

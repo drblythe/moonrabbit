@@ -70,5 +70,18 @@ int handle_cmd(char *input, char** p_cwd)
 	return 1;
 }
 
+int confirm()
+{
+		
+	return 1;
+}
+
+
+
+
+
+
+
+
 
 

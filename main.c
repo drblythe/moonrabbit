@@ -19,6 +19,10 @@
 
 /*
 TODO:
+	- 	Only toggle dotfiles if dotfile_count > 0!!!
+	-	Add case to switch for numbers...
+		As long as the input is a number, record it
+		Then as soon as getch() is not a digit, execute the command 'x' times
 	- 	Find file in dir with '/', move to index if exists
 		Also (later) allow find from command input prompt
 	- 	Storing index/position from prev/forw dirs:
