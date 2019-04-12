@@ -1,7 +1,7 @@
 ## Configuration file for moonrabbit
 
 # Set default Programs
-EDITOR=vim
+TEXT=vim
 AUDIO=mpv
 VIDEO=mpv
 IMAGES=feh

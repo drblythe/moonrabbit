@@ -45,7 +45,7 @@ int main()
 	WINDOW* win = NULL;
 	ENTRY* entry_arr;
 	U_DIR* dir_arr;
-	int dirs_stored;
+	//int dirs_stored;
 
 	char* cwd;
 	char *input;
@@ -68,7 +68,7 @@ int main()
 	}
 	int run = 1;
 
-	dirs_stored = 0;
+	//dirs_stored = 0;
 	dir_arr = malloc(sizeof(U_DIR) * 32);
 	show_dots = 0;
 	current_index = 0;
@@ -85,8 +85,8 @@ int main()
 	//move(y,x);
 	refresh(); /* wrefresh(stdscr); */
 
-	FILE *fp;
-   	char line[255];
+	//FILE *fp;
+   	//char line[255];
 	char *config_path = "/home/haru/Documents/moonrabbit/config";
 	while(run)
 	{
@@ -128,7 +128,8 @@ int main()
 			}
 			break;
 		case 'i':
-			//set_default_programs("./config");
+			set_default_programs(config_path);
+			/*	
     		fp = fopen(config_path,"r");
     		while (fgets(line,255,(FILE*)fp)) {
         		if (line[0] == '#') 
@@ -137,6 +138,7 @@ int main()
            			printw("%s",line);
 			}
     		fclose(fp);
+			*/
 			break;
 
 		case KEY_RIGHT:

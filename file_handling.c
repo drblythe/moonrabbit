@@ -20,7 +20,7 @@ int next_dir(char** p_cwd, char* dir_name)
 
 
 
-int open_file(char* type, char* cwd, char* file_name)
+int open_file(char* cwd, char* file_name)
 {
 	int ret;
    	char path[strlen(cwd) + 1 + strlen(file_name) + 1];
@@ -38,7 +38,7 @@ int open_file(char* type, char* cwd, char* file_name)
 	return 1;
 }
 
-int set_default_programs(char* config_path, char** DEFAULTS)
+int set_default_programs(char* config_path)
 {
     FILE *fp;
 	int n;
@@ -55,13 +55,30 @@ int set_default_programs(char* config_path, char** DEFAULTS)
 				n++;
 			}
 			prog[n] = '\0';
-			strcpy(DEFAULTS[def_index], prog);
 		}
-		if (!strcmp(prog,"EDITOR"))
+		if (!strcmp(prog,"TEXT"))
+			//strcpy(DEFAULTS[TEXT], prog);
+			strcpy(DEFAULTS[TEXT], "dongle");
+		else if (!strcmp(prog,"AUDIO"))
+			strcpy(DEFAULTS[AUDIO], prog);
+		else if (!strcmp(prog,"VIDEO"))
+			strcpy(DEFAULTS[VIDEO], prog);
+		else if (!strcmp(prog,"IMAGES"))
+			strcpy(DEFAULTS[IMAGES], prog);
+		else if (!strcmp(prog,"PDF"))
+			strcpy(DEFAULTS[PDF], prog);
+		else
+			//bootsy mcspankins
+			
 		for (int i = 0; i < n; i++)
 			prog[i] = '\0';
 		n = 0;
     fclose(fp);
+	printf("TEXT=%s\n",DEFAULTS[TEXT]);
+	printf("AUDIO=%s\n",DEFAULTS[AUDIO]);
+	printf("VIDEO=%s\n",DEFAULTS[VIDEO]);
+	printf("IMAGES=%s\n",DEFAULTS[IMAGES]);
+	printf("PDF=%s\n",DEFAULTS[PDF]);
 
     return 1;
 }
