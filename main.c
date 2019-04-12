@@ -19,6 +19,7 @@
 
 /*
 TODO:
+	- 	Add 'parser' for config file to set default programs, etc
 	- 	Only toggle dotfiles if dotfile_count > 0!!!
 	-	Add case to switch for numbers...
 		As long as the input is a number, record it
@@ -75,8 +76,8 @@ int main()
 	getyx(stdscr, y, x);
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
-	//move(0,0);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+	//move(0,0);
 	//mvprintw(LINES-1,0,"%s/%s",cwd, entry_arr[current_index].name);
 	//mvprintw(LINES-2,0,"index:%d // total entries:%d(-1) // LINES: %d // ncurses cursor pos: y=%d",
 	//	current_index,num_entries,LINES,y);
@@ -84,6 +85,9 @@ int main()
 	//move(y,x);
 	refresh(); /* wrefresh(stdscr); */
 
+	FILE *fp;
+   	char line[255];
+	char *config_path = "/home/haru/Documents/moonrabbit/config";
 	while(run)
 	{
 		flushinp();
@@ -123,6 +127,17 @@ int main()
 				refresh();
 			}
 			break;
+		case 'i':
+			//set_default_programs("./config");
+    		fp = fopen(config_path,"r");
+    		while (fgets(line,255,(FILE*)fp)) {
+        		if (line[0] == '#') 
+           			continue;
+        		else
+           			printw("%s",line);
+			}
+    		fclose(fp);
+			break;
 
 		case KEY_RIGHT:
 			c = 'l';
@@ -155,6 +170,14 @@ int main()
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
+			break;
+
+		case '/':
+			input = malloc(sizeof(char)*128);
+			input = get_input();
+			// find_in_dir(char *name);
+			// move_to_entry();
+			free(input);
 			break;
 
 		case 'g':
