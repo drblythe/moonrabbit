@@ -13,6 +13,7 @@
 #include "dir_info.h"
 #include "input.h"
 #include "command_handling.h"
+#include "setup.h"
 
 #define ctrl(x)		((x) & 0x1f)
 #define KEY_SPACE	' '

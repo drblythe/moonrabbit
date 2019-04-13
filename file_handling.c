@@ -1,5 +1,5 @@
+/* file_handling.c */
 #	include "file_handling.h"
-
 
 int prev_dir(char** p_cwd)
 /*int prev_dir(&cwd)*/
@@ -17,7 +17,6 @@ int next_dir(char** p_cwd, char* dir_name)
 	strcat(*p_cwd, dir_name);
 	return 1;
 }
-
 
 
 int open_file(char* cwd, char* file_name)
