@@ -4,8 +4,8 @@
 TEXT=vim
 AUDIO=mpv
 VIDEO=mpv
-IMAGES=feh
-PDF=zathura
+IMAGE=feh
+DOC=zathura
 
 # Settings like margins, etc..
 LEFT_MARGIN=0

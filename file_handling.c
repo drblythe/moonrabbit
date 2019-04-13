@@ -38,49 +38,70 @@ int open_file(char* cwd, char* file_name)
 }
 
 int set_default_programs(char* config_path)
+// DEFAULTS is the array of default programs that are passed in
 {
-    FILE *fp;
+	//init, open correct file
+	FILE *fp;
 	int n;
-    char line[255];
-	char prog[64];
-    fp = fopen(config_path,"r");
+	int m;
+	char cfg_line[255];
+	char filetype[64];
+	char program[64];
+	fp = fopen(config_path,"r");
 	n = 0;
-	while (fgets(line,255,(FILE*)fp))
-        if (line[0] == '#')
-            continue;
-        else {
-			while (line[n] != ' ') {
-				prog[n] = line[n];
+	m = 0;
+
+	// while there are still lines to read, parse the config file
+	// parsing
+	// 		lines commented by # -- immediately move to next loop if 0 char is #
+	// 		get index of first ' '
+	// 			0 up to index is filetype
+	// 			index up to next space is program
+	// 		copy those chars into filetype and program, terminate with '\0'
+	
+	while (fgets(cfg_line,255,(FILE*)fp)) {
+		n = 0;
+		m = 0;
+		if (cfg_line[0] == '#' || cfg_line[0] == '\n')
+			continue;
+		else {
+			while(cfg_line[n] != '='){
+				filetype[n] = cfg_line[n];
 				n++;
 			}
-			prog[n] = '\0';
+			filetype[n] = '\0';
+			while(cfg_line[n] != '\0') {
+				program[m] =  cfg_line[n+1];
+				n++;
+				m++;
+			}
+			program[m] = '\0';
+		// check file type, set appropriate char array
+		if (!strcmp(filetype,"TEXT")) 
+			strcpy(TEXT,program);
+		else if (!strcmp(filetype,"AUDIO"))
+			strcpy(AUDIO,program);
+		else if (!strcmp(filetype,"VIDEO"))
+			strcpy(VIDEO,program);
+		else if (!strcmp(filetype,"IMAGE"))
+			strcpy(IMAGE,program);
+		else if (!strcmp(filetype,"DOC"))
+			strcpy(DOC,program);
 		}
-		if (!strcmp(prog,"TEXT"))
-			//strcpy(DEFAULTS[TEXT], prog);
-			strcpy(DEFAULTS[TEXT], "dongle");
-		else if (!strcmp(prog,"AUDIO"))
-			strcpy(DEFAULTS[AUDIO], prog);
-		else if (!strcmp(prog,"VIDEO"))
-			strcpy(DEFAULTS[VIDEO], prog);
-		else if (!strcmp(prog,"IMAGES"))
-			strcpy(DEFAULTS[IMAGES], prog);
-		else if (!strcmp(prog,"PDF"))
-			strcpy(DEFAULTS[PDF], prog);
-		else
-			//bootsy mcspankins
-			
-		for (int i = 0; i < n; i++)
-			prog[i] = '\0';
-		n = 0;
-    fclose(fp);
-	printf("TEXT=%s\n",DEFAULTS[TEXT]);
-	printf("AUDIO=%s\n",DEFAULTS[AUDIO]);
-	printf("VIDEO=%s\n",DEFAULTS[VIDEO]);
-	printf("IMAGES=%s\n",DEFAULTS[IMAGES]);
-	printf("PDF=%s\n",DEFAULTS[PDF]);
+	}
 
+	fclose(fp);
     return 1;
 }
+
+
+
+
+
+
+
+
+
 
 
 

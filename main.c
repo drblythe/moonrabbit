@@ -13,7 +13,6 @@
 #include "dir_info.h"
 #include "input.h"
 #include "command_handling.h"
-#include "setup.h"
 
 #define ctrl(x)		((x) & 0x1f)
 #define KEY_SPACE	' '
@@ -130,16 +129,7 @@ int main()
 			break;
 		case 'i':
 			set_default_programs(config_path);
-			/*	
-    		fp = fopen(config_path,"r");
-    		while (fgets(line,255,(FILE*)fp)) {
-        		if (line[0] == '#') 
-           			continue;
-        		else
-           			printw("%s",line);
-			}
-    		fclose(fp);
-			*/
+			refresh();
 			break;
 
 		case KEY_RIGHT:
