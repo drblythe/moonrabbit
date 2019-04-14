@@ -26,6 +26,6 @@ int 	set_default_programs(char* config_path);
 int 	prev_dir(char **p_cwd);
 int 	next_dir(char **p_cwd, char *dir_name);
 int 	open_file(char *cwd, char *file_name);
-char*	get_extension(char *file_name);
+char* 	get_extension(char *file_name);
 char 	get_file_type(char *file_name);
 #endif

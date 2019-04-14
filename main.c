@@ -13,31 +13,10 @@
 #include "dir_info.h"
 #include "input.h"
 #include "command_handling.h"
+#include "bindings.h"
 
-#define ctrl(x)		((x) & 0x1f)
-#define KEY_SPACE	' '
-
-/*
-TODO:
-	- 	Add 'parser' for config file to set default programs, etc
-	- 	Only toggle dotfiles if dotfile_count > 0!!!
-	-	Add case to switch for numbers...
-		As long as the input is a number, record it
-		Then as soon as getch() is not a digit, execute the command 'x' times
-	- 	Find file in dir with '/', move to index if exists
-		Also (later) allow find from command input prompt
-	- 	Storing index/position from prev/forw dirs:
-	- 	If text printed is longer than columns-1,
-		put ... at the end (or columns-4 i guess)
-	- 	When ':' is pressed, start accepting input
-	-	Add directory with mkdir
-	-	Check permissions before chdir or opening file
-		https://linux.die.net/man/2/access
-		https://linux.die.net/man/2/stat
-	-	Scrolling:
-		upward scrolling
-*/
-
+//#define ctrl(x)		((x) & 0x1f)
+//#define KEY_SPACE	' '
 
 int main()
 {
@@ -48,6 +27,7 @@ int main()
 	//int dirs_stored;
 
 	char* cwd;
+	char* ext;
 	char *config_path;
 	char *input;
 	int current_index;
@@ -118,7 +98,6 @@ int main()
 			}
 			break;
 		case KEY_LEFT:
-			c = 'h';
 		case 'h':
 			if (strcmp(cwd, "/")) {
 				prev_dir(&cwd);
@@ -134,7 +113,6 @@ int main()
 			break;
 
 		case KEY_RIGHT:
-			c = 'l';
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
 				next_dir(&cwd, entry_arr[current_index].name);
@@ -142,15 +120,17 @@ int main()
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name);
+				//ext = get_extension(entry_arr[current_index].name);
+				//free(ext);
+				//open_file(cwd, entry_arr[current_index].name);
 			}
 			else {
 				/* damn */
 			}
 			erase();
-			refresh();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh();
 			break;
 
 		case ':':

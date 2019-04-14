@@ -1,5 +1,7 @@
 /* file_handling.c */
-#	include "file_handling.h"
+#include "file_handling.h"
+#include <stdio.h>
+#include <ctype.h>
 
 int prev_dir(char** p_cwd)
 /*int prev_dir(&cwd)*/
@@ -18,40 +20,6 @@ int next_dir(char** p_cwd, char* dir_name)
 	return 1;
 }
 
-
-int open_file(char* cwd, char* file_name)
-{
-	int ret;
-	char file_type;	
-	char program[64];
-   	char path[strlen(cwd) + 1 + strlen(file_name) + 1];
-	strcpy(path,cwd);
-	strcat(path, "/");
-	strcat(path, file_name);
-
-	/*
-	file_type = get_file_type(file_name);
-	if (file_type == 'A')
-		strcpy(program, AUDIO);
-	else if (file_type == 'V')
-		strcpy(program, VIDEO);
-	else if (file_type == 'I')
-		strcpy(program, IMAGE);
-	else
-		strcpy(program, TEXT);
-		
-
-	char command[strlen(program) + 1 +strlen(path) + 1 + 1+5];
-	strcpy(command, program);
-	strcat(command, " ");
-	strcat(command, path);
-	//strcat(command, " 2>/dev/null");
-	strcat(command, " &");
-	ret = system(command);
-	*/
-
-	return 1;
-}
 
 int set_default_programs(char* config_path)
 // DEFAULTS is the array of default programs that are passed in
@@ -119,20 +87,35 @@ char* get_extension(char* file_name)
 	// taking dot into consideration, move an addition index forward when starting 
 	// the copy
 	n = 0;
-	for (int i = strlen(file_name)-1; i >= 0; i++) {
+/*
+ * first return statement is returning a null pointer/value
+ * something wrong with iteration	
+ */
+	for (int i = strlen(file_name)-1; i >= 0; i--) {
 		if (file_name[i] == '.') {
 			ext = malloc(sizeof(char)*(strlen(file_name)-i));
-			for (int j = i+1; j < strlen(file_name); j++) {
-				ext[n] = file_name[j];
+			//int j;
+			//j = i;
+			//while (file_name[j] != '\0') {
+			for(int j = i; j < strlen(file_name); j++){
+				*(ext+n) = file_name[j];
 				n++;
 			}
+			*(ext+(strlen(file_name)-i)) = '\0';
 			return ext;
 		}
 	}
 	// if it reaches the end (no period) assume to open with TEXT editor
 	// so set extension to "unknown" or something
 	ext = malloc(sizeof(char)*(7+1));
-	strcpy(ext,"unkown");
+	*(ext+0) = 'u';
+	*(ext+1) = 'n';
+	*(ext+2) = 'k';
+	*(ext+3) = 'n';
+	*(ext+4) = 'o';
+	*(ext+5) = 'w';
+	*(ext+6) = 'n';
+	*(ext+7) = '\0';
 	return ext;
 }
 
@@ -146,28 +129,30 @@ char get_file_type(char* file_name)
 	// check extension against those given in config, or against known types
 	// do it later, hard code nao
 	
+	printf("%s", ext);
+	while(1);
 	// audio
 	if (!strcmp(ext,"mp3") || !strcmp(ext,"flac")||
 		!strcmp(ext,"m4a"))
 		file_type = 'A';
-	/* check audio extension array from config if nothing here */
+	// check audio extension array from config if nothing here
 
 	// video
 	else if (!strcmp(ext,"mkv") || !strcmp(ext,"mp4")||
 		!strcmp(ext,"avi"))
 		file_type = 'V';
-	/* check video extension array from config if nothing here */
+	// check video extension array from config if nothing here 
 
 	// image
 	else if (!strcmp(ext,"jpg") || !strcmp(ext,"jpeg")||
 		!strcmp(ext,"png"))
 		file_type = 'I';
-	/* check image extension array from config if nothing here */
+	// check image extension array from config if nothing here 
 
 	// document
 	else if (!strcmp(ext,"pdf"))
 		file_type = 'D';
-	/* check docs extension array from config if nothing here */
+	// check docs extension array from config if nothing here
 
 	else
 		file_type = '0';
@@ -176,6 +161,39 @@ char get_file_type(char* file_name)
 	free(ext);
 	return file_type;
 }
+
+int open_file(char* cwd, char* file_name)
+{
+	int ret;
+	char file_type;	
+	char program[64];
+   	char path[strlen(cwd) + 1 + strlen(file_name) + 1];
+	strcpy(path,cwd);
+	strcat(path, "/");
+	strcat(path, file_name);
+
+	file_type = get_file_type(file_name);
+	if (file_type == 'A')
+		strcpy(program, AUDIO);
+	else if (file_type == 'V')
+		strcpy(program, VIDEO);
+	else if (file_type == 'I')
+		strcpy(program, IMAGE);
+	else
+		strcpy(program, TEXT);
+		
+
+	char command[strlen(program) + 1 +strlen(path) + 1 + 1+5];
+	strcpy(command, program);
+	strcat(command, " ");
+	strcat(command, path);
+	//strcat(command, " 2>/dev/null");
+	//strcat(command, " &");
+	ret = system(command);
+
+	return 1;
+}
+
 
 
 

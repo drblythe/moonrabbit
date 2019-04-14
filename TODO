@@ -1,0 +1,15 @@
+Add 'parser' for config file to set default programs, etc
+Only toggle dotfiles if dotfile_count > 0!!!
+Add case to switch for numbers...
+As long as the input is a number, record it
+Then as soon as getch() is not a digit, execute the command 'x' times
+Find file in dir with '/', move to index if exists
+Also (later) allow find from command input prompt
+Storing index/position from prev/forw dirs:
+If text printed is longer than columns-1,
+	put ... at the end (or columns-4 i guess)
+When ':' is pressed, start accepting input
+Add directory with mkdir
+Check permissions before chdir or opening file
+Scrolling:
+	upward scrolling

@@ -13,9 +13,10 @@
 #include <limits.h> /* 	limits.h defines:
 						PATH_MAX = 4096
 						NAME_MAX = 255 */
+#include "bindings.h"
 
-#define UP -1
-#define DOWN 1
+//#define UP -1
+//#define DOWN 1
 
 typedef struct ENTRY {
 	char name[NAME_MAX];
