@@ -94,7 +94,8 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i].marked) {
 				//wattron(stdscr, A_UNDERLINE);
-				printw("  ");
+				//wattron(stdscr, A_BLINK);
+				printw("   ");
 			}
 			if ( strlen(entry_arr[i].name) >= COLS-6) {
 				for (int j = 0; j < COLS-6; j++) {
@@ -125,7 +126,7 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i].marked) {
 			//	wattron(stdscr, A_UNDERLINE);
-				printw("  ");
+				printw("   ");
 			}
 			if ( strlen(entry_arr[i+dist].name) >= COLS-6) {
 				for (int j = 0; j < COLS-6; j++) {
@@ -186,7 +187,7 @@ int init_ncurses(WINDOW *win)
 	keypad(stdscr,TRUE);
 	curs_set(0); /* 0, 1, 2 */
 	cbreak();
-	scrollok(stdscr,TRUE);
+	//scrollok(stdscr,TRUE);
 	//start_color();
 	move(0,0);
 	refresh();

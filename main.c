@@ -48,6 +48,7 @@ int main()
 	//int dirs_stored;
 
 	char* cwd;
+	char *config_path;
 	char *input;
 	int current_index;
 	int num_entries;
@@ -77,6 +78,8 @@ int main()
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+	config_path = "/home/haru/documents/moonrabbit/config";
+	set_default_programs(config_path);
 	//move(0,0);
 	//mvprintw(LINES-1,0,"%s/%s",cwd, entry_arr[current_index].name);
 	//mvprintw(LINES-2,0,"index:%d // total entries:%d(-1) // LINES: %d // ncurses cursor pos: y=%d",
@@ -87,7 +90,6 @@ int main()
 
 	//FILE *fp;
    	//char line[255];
-	char *config_path = "/home/haru/Documents/moonrabbit/config";
 	while(run)
 	{
 		flushinp();
@@ -128,7 +130,6 @@ int main()
 			}
 			break;
 		case 'i':
-			set_default_programs(config_path);
 			refresh();
 			break;
 

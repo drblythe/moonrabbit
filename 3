@@ -29,7 +29,6 @@ int open_file(char* cwd, char* file_name)
 	strcat(path, "/");
 	strcat(path, file_name);
 
-	/*
 	file_type = get_file_type(file_name);
 	if (file_type == 'A')
 		strcpy(program, AUDIO);
@@ -48,7 +47,6 @@ int open_file(char* cwd, char* file_name)
 	//strcat(command, " 2>/dev/null");
 	strcat(command, " &");
 	ret = system(command);
-	*/
 
 	return 1;
 }
