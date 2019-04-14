@@ -27,7 +27,7 @@ int main()
 	//int dirs_stored;
 
 	char* cwd;
-	char* ext;
+	//char* ext;
 	char *config_path;
 	char *input;
 	int current_index;
@@ -116,20 +116,20 @@ int main()
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
 				next_dir(&cwd, entry_arr[current_index].name);
-				clear_entries(entry_arr, &num_entries, &current_index);
-				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
 				//ext = get_extension(entry_arr[current_index].name);
 				//free(ext);
-				//open_file(cwd, entry_arr[current_index].name);
+				open_file(cwd, entry_arr[current_index].name);
+				erase();
 			}
 			else {
 				/* damn */
 			}
 			erase();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			clear_entries(entry_arr, &num_entries, &current_index);
+			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			erase();
 			refresh();
 			break;
 

@@ -129,28 +129,26 @@ char get_file_type(char* file_name)
 	// check extension against those given in config, or against known types
 	// do it later, hard code nao
 	
-	printf("%s", ext);
-	while(1);
 	// audio
-	if (!strcmp(ext,"mp3") || !strcmp(ext,"flac")||
-		!strcmp(ext,"m4a"))
+	if (!strcmp(ext,".mp3") || !strcmp(ext,".flac")||
+		!strcmp(ext,".m4a"))
 		file_type = 'A';
 	// check audio extension array from config if nothing here
 
 	// video
-	else if (!strcmp(ext,"mkv") || !strcmp(ext,"mp4")||
-		!strcmp(ext,"avi"))
+	else if (!strcmp(ext,".mkv") || !strcmp(ext,".mp4")||
+		!strcmp(ext,".avi"))
 		file_type = 'V';
 	// check video extension array from config if nothing here 
 
 	// image
-	else if (!strcmp(ext,"jpg") || !strcmp(ext,"jpeg")||
-		!strcmp(ext,"png"))
+	else if (!strcmp(ext,".jpg") || !strcmp(ext,".jpeg")||
+		!strcmp(ext,".png"))
 		file_type = 'I';
 	// check image extension array from config if nothing here 
 
 	// document
-	else if (!strcmp(ext,"pdf"))
+	else if (!strcmp(ext,".pdf"))
 		file_type = 'D';
 	// check docs extension array from config if nothing here
 
@@ -173,14 +171,20 @@ int open_file(char* cwd, char* file_name)
 	strcat(path, file_name);
 
 	file_type = get_file_type(file_name);
-	if (file_type == 'A')
+	switch(file_type){
+	case 'A':
 		strcpy(program, AUDIO);
-	else if (file_type == 'V')
+		break;
+	case 'V':
 		strcpy(program, VIDEO);
-	else if (file_type == 'I')
+		break;
+	case 'I':
 		strcpy(program, IMAGE);
-	else
+		break;
+	default:
 		strcpy(program, TEXT);
+		break;
+	}
 		
 
 	char command[strlen(program) + 1 +strlen(path) + 1 + 1+5];
@@ -190,6 +194,7 @@ int open_file(char* cwd, char* file_name)
 	//strcat(command, " 2>/dev/null");
 	//strcat(command, " &");
 	ret = system(command);
+	printf("***\n%s\n***"command);
 
 	return 1;
 }
