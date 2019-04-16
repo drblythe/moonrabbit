@@ -9,6 +9,7 @@ AUDIO=mpv
 VIDEO=mpv
 IMAGE=feh 
 DOC=zathura
+SHELL=bash
 
 # Set filetype associations
 VIDEO_EXT=[.mp4,.mkv]

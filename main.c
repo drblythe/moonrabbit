@@ -118,8 +118,6 @@ int main()
 				next_dir(&cwd, entry_arr[current_index].name);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				//ext = get_extension(entry_arr[current_index].name);
-				//free(ext);
 				open_file(cwd, entry_arr[current_index].name);
 				erase();
 			}

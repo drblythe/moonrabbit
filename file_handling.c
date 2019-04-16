@@ -165,10 +165,6 @@ int open_file(char* cwd, char* file_name)
 	int ret;
 	char file_type;	
 	char program[64];
-   	char path[strlen(cwd) + 1 + strlen(file_name) + 1];
-	strcpy(path,cwd);
-	strcat(path, "/");
-	strcat(path, file_name);
 
 	file_type = get_file_type(file_name);
 	switch(file_type){
@@ -187,29 +183,26 @@ int open_file(char* cwd, char* file_name)
 	}
 		
 
-	char command[strlen(program) + 1 +strlen(path) + 1 + 1+5];
-	strcpy(command, program);
+	char command[strlen(program) +15+ 1/*space*/ +strlen(cwd) + 1/*slash*/+ strlen(file_name) + 1/*slash*/+ 1/*null*/];
+	strcpy(command, "bash -c");
 	strcat(command, " ");
-	strcat(command, path);
-	//strcat(command, " 2>/dev/null");
-	//strcat(command, " &");
-	ret = system(command);
-	printf("***\n%s\n***"command);
+	strcat(command,"\"");
+	strcat(command, program);
+	strcat(command, " ");
+	strcat(command, cwd);
+	strcat(command, "/");
+	strcat(command, file_name);
+	strcat(command,"\"");
+	//ret = system("vim /home/haru/documents/moonrabbit/bindings.h");
+	printf("--\n%s\n--\n",command);
+	//while(1);
+	//ret = system(command);
+	
+	system(shit);
+	//printf("***\n%s\n***"command);
 
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
