@@ -149,7 +149,8 @@ char get_file_type(char* file_name)
 	// check image extension array from config if nothing here 
 
 	// document
-	else if (!strcmp(ext,".pdf"))
+	else if (!strcmp(ext,".pdf") ||
+		!strcmp(ext,".djvu"))
 		file_type = 'D';
 	// check docs extension array from config if nothing here
 

@@ -1,19 +1,50 @@
 Fork processes that need own window
 	Probably only one that shouldn't be forked is text editor
+
+Parse the config file and store the extensions in the array named AUDIO, DOC, etc
+	start at '[', while loop until ']'
+
+Array of directory names...
+	even numbers (0,2,etc) are the directory names (char*)
+	odd are the current index before switching directories,etc
+	have a finite number of array entries, when the size gets too large fifo it
+
+Add Enter key case in main loop (for opening file, same as 'l')
+
 Issue with opening files that have spaces in the names
 	being read as an array of strings
-Add shortcut/command to clone current moonrabbit into new window
+	If there is a space in the name, insert a literal " before first char and after last char
+		of file name only???ad jfadskf;
+
+Add shortcut/command to clone current moonrabbit instance into new window
+
 Only toggle dotfiles if dotfile_count > 0!!!
+	quick function in entry
+		parameter = entry array
+		return 1 on first hidden file
+		else ret 0
+	OR -> might be better to take in a var for dot_count when making the entry
+		array, and set it to the number of dot files (increment every time filename starts with .)
+
 Add case to switch for numbers...
-As long as the input is a number, record it
+	As long as the input is a number, record it
+
 Then as soon as getch() is not a digit, execute the command 'x' times
+
 Find file in dir with '/', move to index if exists
+
 Also (later) allow find from command input prompt
+
 Storing index/position from prev/forw dirs:
+
 If text printed is longer than columns-1,
 	put ... at the end (or columns-4 i guess)
+
 When ':' is pressed, start accepting input
+
 Add directory with mkdir
+
 Check permissions before chdir or opening file
+
 Scrolling:
 	upward scrolling

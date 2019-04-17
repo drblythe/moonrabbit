@@ -146,7 +146,7 @@ int main()
 			handle_cmd(input,&cwd);
 			free(input);
 			erase();
-			clear_entries(entry_arr, &num_entries, &current_index,0);
+			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
