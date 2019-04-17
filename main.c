@@ -75,8 +75,8 @@ int main()
 		flushinp();
 		getyx(stdscr, y, x);
 		c = getch();
-		display_entries(entry_arr, num_entries, current_index,LINES);
-		display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+		//display_entries(entry_arr, num_entries, current_index,LINES);
+		//display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 		switch(c) {
 		case KEY_DOWN:
 			c = 'j';
@@ -110,9 +110,11 @@ int main()
 				refresh();
 			}
 			break;
+		/*
 		case 'i':
 			refresh();
 			break;
+		*/
 
 		case KEY_RIGHT:
 		case 'l':
@@ -121,17 +123,19 @@ int main()
 			}
 			else if (entry_arr[current_index].type != 'd') {
 				open_file(cwd, entry_arr[current_index].name);
-				erase();
+				//erase();
 			}
 			else {
 				/* damn */
 			}
-			erase();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			//erase();
+			//clear();
 			clear_entries(entry_arr, &num_entries, &current_index);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
-			erase();
+			clear();
+			//erase();
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
 			break;
 

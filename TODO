@@ -1,5 +1,8 @@
 Fork processes that need own window
-Add 'parser' for config file to set default programs, etc
+	Probably only one that shouldn't be forked is text editor
+Issue with opening files that have spaces in the names
+	being read as an array of strings
+Add shortcut/command to clone current moonrabbit into new window
 Only toggle dotfiles if dotfile_count > 0!!!
 Add case to switch for numbers...
 As long as the input is a number, record it
