@@ -183,6 +183,9 @@ int open_file(char* cwd, char* file_name)
 	case 'I':
 		strcpy(command, IMAGE);
 		break;
+	case 'D':
+		strcpy(command, DOC);
+		break;
 	default:
 		strcpy(command,TEXT);
 		break;
