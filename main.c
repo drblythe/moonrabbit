@@ -75,6 +75,8 @@ int main()
 		flushinp();
 		getyx(stdscr, y, x);
 		c = getch();
+		display_entries(entry_arr, num_entries, current_index,LINES);
+		display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 		switch(c) {
 		case KEY_DOWN:
 			c = 'j';
@@ -125,6 +127,8 @@ int main()
 				/* damn */
 			}
 			erase();
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			clear_entries(entry_arr, &num_entries, &current_index);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			erase();
@@ -165,6 +169,7 @@ int main()
 		case 'G':
 			current_index = num_entries -1;
 			erase();
+			clear();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();

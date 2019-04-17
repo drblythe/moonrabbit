@@ -1,3 +1,4 @@
+Fork processes that need own window
 Add 'parser' for config file to set default programs, etc
 Only toggle dotfiles if dotfile_count > 0!!!
 Add case to switch for numbers...

@@ -7,6 +7,7 @@
 TEXT=vim
 AUDIO=mpv
 VIDEO=mpv
+#IMAGE=imv
 IMAGE=feh 
 DOC=zathura
 SHELL=bash
