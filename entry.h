@@ -48,7 +48,7 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots);
 
 int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINES);
 
-int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index);
+int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int reset_index);
 
 int init_ncurses(WINDOW *win);
 

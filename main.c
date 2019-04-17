@@ -103,7 +103,7 @@ int main()
 		case 'h':
 			if (strcmp(cwd, "/")) {
 				prev_dir(&cwd);
-				clear_entries(entry_arr, &num_entries, &current_index);
+				clear_entries(entry_arr, &num_entries, &current_index,1);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 				display_entries(entry_arr, num_entries, current_index,LINES);
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
@@ -120,8 +120,11 @@ int main()
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
 				next_dir(&cwd, entry_arr[current_index].name);
+				clear_entries(entry_arr, &num_entries, &current_index, 1);
+				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
+				//clear_entries(entry_arr, &num_entries, &current_index, 0);
 				open_file(cwd, entry_arr[current_index].name);
 				//erase();
 			}
@@ -130,8 +133,6 @@ int main()
 			}
 			//erase();
 			//clear();
-			clear_entries(entry_arr, &num_entries, &current_index);
-			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			clear();
 			//erase();
 			display_entries(entry_arr, num_entries, current_index,LINES);
@@ -145,7 +146,7 @@ int main()
 			handle_cmd(input,&cwd);
 			free(input);
 			erase();
-			clear_entries(entry_arr, &num_entries, &current_index);
+			clear_entries(entry_arr, &num_entries, &current_index,0);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
@@ -189,7 +190,7 @@ int main()
 
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
-			clear_entries(entry_arr, &num_entries, &current_index);
+			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);

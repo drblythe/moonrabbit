@@ -146,12 +146,13 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 
 
 
-int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index)
+int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int reset_index)
 {
 	//clear();
 	erase();
 	*num_entries = 0;
-	*current_index = 0;
+	if (reset_index)
+		*current_index = 0;
 	return 1;
 }
 
