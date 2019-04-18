@@ -14,9 +14,10 @@ DOC=zathura
 SHELL=bash
 
 # Set filetype associations
-VIDEO_EXT=[.mp4,.mkv]
-AUDIO_EXT=[.mp3,.flac]
-DOC_EXT=[.pdf,.djvu]
+VIDEO_EXT=[.mp4 .mkv .avi]
+AUDIO_EXT=[.mp3 .flac]
+IMAGE_EXT=[.jpg .jpeg .JPG .JPEG .png .PNG]
+DOC_EXT=[.pdf .djvu]
 
 # Settings like margins, etc..
 LEFT_MARGIN=0

@@ -195,13 +195,22 @@ int open_file(char* cwd, char* file_name)
 		strcat(command,TEXT);
 		break;
 	}
-
+	int need_quotes = 0;
+	for (int i = 0; i < strlen(cwd); i++) {
+		if (cwd[i] == ' ' || cwd[i] == '-')
+			need_quotes = 1;
+	}
+			
+			
 	strcat(command, " ");
-	strcat(command,"\"");
+	if (need_quotes)
+		strcat(command,"\"");
 	strcat(command, cwd);
 	strcat(command, "/");
+	if (!need_quotes)
+		strcat(command,"\"");
 	strcat(command, file_name);
-	strcat(command,"\"");
+		strcat(command,"\"");
 	if (send_to_bg)
 		strcat(command, " &");
 	ret = system(command);

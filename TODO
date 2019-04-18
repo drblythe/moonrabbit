@@ -2,27 +2,24 @@
 	   PRIORITY
 ======================
 
-1	Fork processes that need own window correctly
-	Probably only one that shouldn't be forked is text editor
-
-2	/bin/*command* instead of *command* ^^related
-
-3	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
+	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
 	start at '[', while loop until ']'
 
-4	Array of directory names...
+	Array of directory names...
 	even numbers (0,2,etc) are the directory names (char*)
 	odd are the current index before switching directories,etc
 	have a finite number of array entries, when the size gets too large fifo it
 
-5	Add Enter key case in main loop (for opening file, same as 'l')
+	Add Enter key case in main loop (for opening file, same as 'l')
 
 
 ======================
 	   DO LATER 
 ======================
 
-Apostrophes cause a segmentation fault when opening a file or changing into dir
+Still need to use exec because output is still sent/connected to original terminal, but 
+this is lower priority now that the system() version is working termporarily.
+Ideally use an exec() family function instead of system() as it is safer.
 
 Add shortcut/command to clone current moonrabbit instance into new window
 
@@ -44,8 +41,6 @@ Find file in dir with '/', move to index if exists
 Also (later) allow find from command input prompt
 
 Storing index/position from prev/forw dirs:
-
-When ':' is pressed, start accepting input
 
 Add directory with mkdir
 
