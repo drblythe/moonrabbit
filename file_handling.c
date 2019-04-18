@@ -166,37 +166,64 @@ int open_file(char* cwd, char* file_name)
 {
 	int ret;
 	char file_type;	
-/* Change this bullshit below 
- * should be a command char array based on strlen(program)
- */
+
+
+/* Change this bullshit below ... should be a command char array based on strlen(program) */
 	char * command = NULL;
 	command = malloc(sizeof(char)*512);
 	//char program[64];
 
 	file_type = get_file_type(file_name);
+	//strcpy(command,"/bin/");
 	switch(file_type){
 	case 'A':
-		strcpy(command, AUDIO);
+		strcat(command, AUDIO);
 		break;
 	case 'V':
-		strcpy(command, VIDEO);
+		strcat(command, VIDEO);
 		break;
 	case 'I':
-		strcpy(command, IMAGE);
+		strcat(command, IMAGE);
 		break;
 	case 'D':
-		strcpy(command, DOC);
+		strcat(command, DOC);
 		break;
 	default:
-		strcpy(command,TEXT);
+		strcat(command,TEXT);
 		break;
 	}
 		
 
+	    // fork() returns child's pid
+	   /*
+    pid_t pid;
+    pid = fork();
+    if (pid == -1)
+        perror("fork");
+
+	
+    if (!pid) {
+        char *args[] = {program, "-e", "vim", shit, NULL};
+
+        int ret;
+
+        ret = execv("/usr/bin/urxvt", args);
+
+        if (ret == -1) {
+            perror("execv");
+            exit (EXIT_FAILURE);
+        }
+    }
+	   */
+
+	
+
 	strcat(command, " ");
 	strcat(command, cwd);
 	strcat(command, "/");
+	strcat(command,"\"");
 	strcat(command, file_name);
+	strcat(command,"\"");
 	ret = system(command);
 	
 	free(command);

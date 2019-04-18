@@ -15,8 +15,6 @@
 #include "command_handling.h"
 #include "bindings.h"
 
-//#define ctrl(x)		((x) & 0x1f)
-//#define KEY_SPACE	' '
 
 int main()
 {
@@ -24,10 +22,8 @@ int main()
 	WINDOW* win = NULL;
 	ENTRY* entry_arr;
 	U_DIR* dir_arr;
-	//int dirs_stored;
 
 	char* cwd;
-	//char* ext;
 	char *config_path;
 	char *input;
 	int current_index;
@@ -49,7 +45,6 @@ int main()
 	}
 	int run = 1;
 
-	//dirs_stored = 0;
 	dir_arr = malloc(sizeof(U_DIR) * 32);
 	show_dots = 0;
 	current_index = 0;
@@ -60,23 +55,14 @@ int main()
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 	config_path = "/home/haru/documents/moonrabbit/config";
 	set_default_programs(config_path);
-	//move(0,0);
-	//mvprintw(LINES-1,0,"%s/%s",cwd, entry_arr[current_index].name);
-	//mvprintw(LINES-2,0,"index:%d // total entries:%d(-1) // LINES: %d // ncurses cursor pos: y=%d",
-	//	current_index,num_entries,LINES,y);
-
-	//move(y,x);
 	refresh(); /* wrefresh(stdscr); */
 
-	//FILE *fp;
-   	//char line[255];
 	while(run)
 	{
 		flushinp();
 		getyx(stdscr, y, x);
+		//move(0,0);
 		c = getch();
-		//display_entries(entry_arr, num_entries, current_index,LINES);
-		//display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 		switch(c) {
 		case KEY_DOWN:
 			c = 'j';
@@ -110,11 +96,6 @@ int main()
 				refresh();
 			}
 			break;
-		/*
-		case 'i':
-			refresh();
-			break;
-		*/
 
 		case KEY_RIGHT:
 		case 'l':
@@ -124,17 +105,12 @@ int main()
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				//clear_entries(entry_arr, &num_entries, &current_index, 0);
 				open_file(cwd, entry_arr[current_index].name);
-				//erase();
 			}
 			else {
 				/* damn */
 			}
-			//erase();
-			//clear();
 			clear();
-			//erase();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
@@ -156,8 +132,6 @@ int main()
 		case '/':
 			input = malloc(sizeof(char)*128);
 			input = get_input();
-			// find_in_dir(char *name);
-			// move_to_entry();
 			free(input);
 			break;
 
@@ -183,11 +157,9 @@ int main()
 		case 'q':
 			run = 0;
 			break;
-		
 		case 'S':
 			open_shell(cwd);
 			break;
-
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_entries(entry_arr, &num_entries, &current_index,1);

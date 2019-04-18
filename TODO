@@ -1,20 +1,28 @@
-Fork processes that need own window
+======================
+	   PRIORITY
+======================
+
+1b	Open directories with spaces!
+
+2	Fork processes that need own window correctly
 	Probably only one that shouldn't be forked is text editor
 
-Parse the config file and store the extensions in the array named AUDIO, DOC, etc
+3	/bin/*command* instead of *command* ^^related
+
+4	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
 	start at '[', while loop until ']'
 
-Array of directory names...
+5	Array of directory names...
 	even numbers (0,2,etc) are the directory names (char*)
 	odd are the current index before switching directories,etc
 	have a finite number of array entries, when the size gets too large fifo it
 
-Add Enter key case in main loop (for opening file, same as 'l')
+6	Add Enter key case in main loop (for opening file, same as 'l')
 
-Issue with opening files that have spaces in the names
-	being read as an array of strings
-	If there is a space in the name, insert a literal " before first char and after last char
-		of file name only???ad jfadskf;
+
+======================
+	   DO LATER 
+======================
 
 Add shortcut/command to clone current moonrabbit instance into new window
 
@@ -36,9 +44,6 @@ Find file in dir with '/', move to index if exists
 Also (later) allow find from command input prompt
 
 Storing index/position from prev/forw dirs:
-
-If text printed is longer than columns-1,
-	put ... at the end (or columns-4 i guess)
 
 When ':' is pressed, start accepting input
 
