@@ -4,7 +4,6 @@
 #include <ctype.h>
 
 int prev_dir(char** p_cwd)
-/*int prev_dir(&cwd)*/
 {
 	strcat(*p_cwd, "/..");
 	strcpy(*p_cwd,realpath(*p_cwd,NULL));
@@ -14,9 +13,11 @@ int prev_dir(char** p_cwd)
 
 int next_dir(char** p_cwd, char* dir_name)
 {
-	if (strcmp(*p_cwd,"/"))
+	if (strcmp(*p_cwd,"/")){
 		strcat(*p_cwd, "/");
+	}
 	strcat(*p_cwd, dir_name);
+	
 	return 1;
 }
 
@@ -144,7 +145,8 @@ char get_file_type(char* file_name)
 
 	// image
 	else if (!strcmp(ext,".jpg") || !strcmp(ext,".jpeg")||
-		!strcmp(ext,".png"))
+			!strcmp(ext,".JPG") || !strcmp(ext,".JPEG")||
+			!strcmp(ext,".png") || !strcmp(ext,".PNG")) 
 		file_type = 'I';
 	// check image extension array from config if nothing here 
 
@@ -167,14 +169,14 @@ int open_file(char* cwd, char* file_name)
 	int ret;
 	char file_type;	
 
+	int send_to_bg = 1;
 
 /* Change this bullshit below ... should be a command char array based on strlen(program) */
 	char * command = NULL;
 	command = malloc(sizeof(char)*512);
-	//char program[64];
+	//char program[32];
 
 	file_type = get_file_type(file_name);
-	//strcpy(command,"/bin/");
 	switch(file_type){
 	case 'A':
 		strcat(command, AUDIO);
@@ -189,46 +191,22 @@ int open_file(char* cwd, char* file_name)
 		strcat(command, DOC);
 		break;
 	default:
+		send_to_bg = 0;
 		strcat(command,TEXT);
 		break;
 	}
-		
-
-	    // fork() returns child's pid
-	   /*
-    pid_t pid;
-    pid = fork();
-    if (pid == -1)
-        perror("fork");
-
-	
-    if (!pid) {
-        char *args[] = {program, "-e", "vim", shit, NULL};
-
-        int ret;
-
-        ret = execv("/usr/bin/urxvt", args);
-
-        if (ret == -1) {
-            perror("execv");
-            exit (EXIT_FAILURE);
-        }
-    }
-	   */
-
-	
 
 	strcat(command, " ");
+	strcat(command,"\"");
 	strcat(command, cwd);
 	strcat(command, "/");
-	strcat(command,"\"");
 	strcat(command, file_name);
 	strcat(command,"\"");
+	if (send_to_bg)
+		strcat(command, " &");
 	ret = system(command);
-	
 	free(command);
 	
-
 	return 1;
 }
 

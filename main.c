@@ -16,7 +16,7 @@
 #include "bindings.h"
 
 
-int main()
+int main(int argc, char* argv[])
 {
 	int c, x, y;
 	WINDOW* win = NULL;
@@ -37,7 +37,7 @@ int main()
 	}
 
 	cwd = malloc(sizeof(char) * PATH_MAX);
-	cwd = getcwd(NULL,0);
+	argc > 1 ? strcpy(cwd,argv[1]) : (cwd = getcwd(NULL,0));
 	if (!cwd) {
 		endwin();
 		perror("getcwd");

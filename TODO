@@ -2,27 +2,27 @@
 	   PRIORITY
 ======================
 
-1b	Open directories with spaces!
-
-2	Fork processes that need own window correctly
+1	Fork processes that need own window correctly
 	Probably only one that shouldn't be forked is text editor
 
-3	/bin/*command* instead of *command* ^^related
+2	/bin/*command* instead of *command* ^^related
 
-4	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
+3	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
 	start at '[', while loop until ']'
 
-5	Array of directory names...
+4	Array of directory names...
 	even numbers (0,2,etc) are the directory names (char*)
 	odd are the current index before switching directories,etc
 	have a finite number of array entries, when the size gets too large fifo it
 
-6	Add Enter key case in main loop (for opening file, same as 'l')
+5	Add Enter key case in main loop (for opening file, same as 'l')
 
 
 ======================
 	   DO LATER 
 ======================
+
+Apostrophes cause a segmentation fault when opening a file or changing into dir
 
 Add shortcut/command to clone current moonrabbit instance into new window
 
