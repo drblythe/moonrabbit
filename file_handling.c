@@ -14,7 +14,7 @@ int prev_dir(char** p_cwd)
 int next_dir(char** p_cwd, char* dir_name)
 {
 	if (strcmp(*p_cwd,"/")){
-		strcat(*p_cwd, "/");
+		strcat(*p_cwd,"/");
 	}
 	strcat(*p_cwd, dir_name);
 	
@@ -23,27 +23,18 @@ int next_dir(char** p_cwd, char* dir_name)
 
 
 int set_default_programs(char* config_path)
-// DEFAULTS is the array of default programs that are passed in
 {
-	//init, open correct file
 	FILE *fp;
 	int n;
 	int m;
 	char cfg_line[255];
 	char filetype[64];
 	char program[64];
+
 	fp = fopen(config_path,"r");
 	n = 0;
 	m = 0;
 
-	// while there are still lines to read, parse the config file
-	// parsing
-	// 		lines commented by # -- immediately move to next loop if 0 char is #
-	// 		get index of first ' '
-	// 			0 up to index is filetype
-	// 			index up to next space is program
-	// 		copy those chars into filetype and program, terminate with '\0'
-	
 	while (fgets(cfg_line,255,(FILE*)fp)) {
 		n = 0;
 		m = 0;
@@ -76,6 +67,10 @@ int set_default_programs(char* config_path)
 			strcpy(IMAGE,program);
 		else if (!strcmp(filetype,"DOC"))
 			strcpy(DOC,program);
+		else if (!strcmp(filetype,"SHELL"))
+			strcpy(SHELL,program);
+		else if (!strcmp(filetype,"TERMINAL"))
+			strcpy(TERMINAL,program);
 		}
 	}
 
@@ -219,7 +214,18 @@ int open_file(char* cwd, char* file_name)
 	return 1;
 }
 
-
-
+int open_shell(char *cwd)
+{
+	char shell_terminal[strlen(SHELL)+1+2+1+strlen(TERMINAL)+
+		+1+2+1+strlen(cwd)+2+1];
+	strcat(shell_terminal,SHELL);
+	strcat(shell_terminal," -c ");
+	strcat(shell_terminal,TERMINAL);
+	strcat(shell_terminal," ");
+	strcat(shell_terminal,cwd);
+	//strcat(shell_terminal," &");
+	system(shell_terminal);
+	return 1;
+}
 
 

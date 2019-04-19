@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr;
-	U_DIR* dir_arr;
+	//U_DIR* dir_arr;
 
 	char* cwd;
 	char *config_path;
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 	}
 	int run = 1;
 
-	dir_arr = malloc(sizeof(U_DIR) * 32);
+	//dir_arr = malloc(sizeof(U_DIR) * 32);
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
@@ -64,6 +64,18 @@ int main(int argc, char* argv[])
 		//move(0,0);
 		c = getch();
 		switch(c) {
+/*
+ * Cases to add:
+ * shift+l (L) = 'open with'
+ * enter = same as l (open)
+ *
+ * control+r or f5 = refresh
+ *
+ * Trash: maybe? idea: move to 'trash' on delete,
+ * 	on shutdown, clear out trash?
+ *
+ * 
+ */
 		case KEY_DOWN:
 			c = 'j';
 		case ('j'):

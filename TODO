@@ -2,16 +2,15 @@
 	   PRIORITY
 ======================
 
-	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
-	start at '[', while loop until ']'
-
 	Array of directory names...
 	even numbers (0,2,etc) are the directory names (char*)
 	odd are the current index before switching directories,etc
 	have a finite number of array entries, when the size gets too large fifo it
 
-	Add Enter key case in main loop (for opening file, same as 'l')
+	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
+	start at '[', while loop until ']'
 
+	Add Enter key case in main loop (for opening file, same as 'l')
 
 ======================
 	   DO LATER 

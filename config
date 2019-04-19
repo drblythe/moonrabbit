@@ -1,17 +1,21 @@
-## Configuration file for moonrabbit file manager
-## Comment with '#' at beginning of line or the great jeebmeister will h8 u
-## (and so will i)
+# Configuration file for moonrabbit file manager
+#
+# Comment with '#' at beginning of line or the great jeebmeister will h8 u
+# (and so will i)
+#
+# Keybindings (vim/vi for the most part)
+# 	
 
 # Set default Programs
 # TEXT - default text editor... etc
 TEXT=vim
 AUDIO=mpv
 VIDEO=mpv
-TERMINAL=urxvt
 #IMAGE=imv
 IMAGE=feh 
 DOC=zathura
 SHELL=bash
+TERMINAL=urxvt
 
 # Set filetype associations
 VIDEO_EXT=[.mp4 .mkv .avi]
