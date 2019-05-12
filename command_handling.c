@@ -80,8 +80,9 @@ int find_in_dir(char * name)
 	return 1;
 }
 
+/*
 int move_to_entry()
 {
 	return 1;
 }
-
+*/

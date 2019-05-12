@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-	config_path = "/home/haru/documents/moonrabbit/config";
+	config_path = "/home/haru/moonrabbit/config";
 	set_default_programs(config_path);
 	refresh(); /* wrefresh(stdscr); */
 

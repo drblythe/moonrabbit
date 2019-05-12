@@ -7,4 +7,4 @@ int delete_file(char *cwd, char *file_name);
 //int open_shell(char *cwd);
 int handle_cmd(char *input,char **p_cwd);
 int find_in_dir(char *name);
-int move_to_entry(char *name);
+//int move_to_entry(char *name);
