@@ -2,6 +2,10 @@
 	   PRIORITY
 ======================
 
+	Still need to use exec because output is still sent/connected to original terminal, but 
+	this is lower priority now that the system() version is working termporarily.
+	Ideally use an exec() family function instead of system() as it is safer.
+
 	Array of directory names...
 	even numbers (0,2,etc) are the directory names (char*)
 	odd are the current index before switching directories,etc
@@ -16,9 +20,6 @@
 	   DO LATER 
 ======================
 
-Still need to use exec because output is still sent/connected to original terminal, but 
-this is lower priority now that the system() version is working termporarily.
-Ideally use an exec() family function instead of system() as it is safer.
 
 Add shortcut/command to clone current moonrabbit instance into new window
 

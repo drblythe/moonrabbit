@@ -1,5 +1,6 @@
 # Configuration file for moonrabbit file manager
 #
+# Use FULL path to executable
 # Comment with '#' at beginning of line or the great jeebmeister will h8 u
 # (and so will i)
 #
@@ -8,14 +9,13 @@
 
 # Set default Programs
 # TEXT - default text editor... etc
-TEXT=vim
-AUDIO=mpv
-VIDEO=mpv
-#IMAGE=imv
-IMAGE=feh 
-DOC=zathura
-SHELL=bash
-TERMINAL=urxvt
+TEXT=/usr/bin/vim
+AUDIO=/usr/bin/mpv
+VIDEO=/usr/bin/mpv
+IMAGE=/usr/bin/feh 
+DOC=/usr/bin/zathura
+SHELL=/bin/bash
+TERMINAL=/usr/bin/xfce4-terminal
 
 # Set filetype associations
 VIDEO_EXT=[.mp4 .mkv .avi]

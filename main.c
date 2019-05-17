@@ -18,17 +18,34 @@
 
 int main(int argc, char* argv[])
 {
+
+
+
 	int c, x, y;
 	WINDOW* win = NULL;
-	ENTRY* entry_arr;
-	//U_DIR* dir_arr;
-
+	ENTRY* entry_arr = NULL;
 	char* cwd;
 	char *config_path;
 	char *input;
 	int current_index;
 	int num_entries;
 	int show_dots;
+
+	// Storage for program exec paths
+	char TEXT[64]; 
+	char AUDIO[64]; 
+	char VIDEO[64]; 
+	char IMAGE[64]; 
+	char DOC[64]; 
+	char SHELL[64];
+	char TERMINAL[64];
+
+
+
+
+
+
+
 
 	if (!init_ncurses(win)) {
 		endwin();
@@ -43,9 +60,7 @@ int main(int argc, char* argv[])
 		perror("getcwd");
 		exit(EXIT_FAILURE);
 	}
-	int run = 1;
 
-	//dir_arr = malloc(sizeof(U_DIR) * 32);
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
@@ -54,9 +69,11 @@ int main(int argc, char* argv[])
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 	config_path = "/home/haru/moonrabbit/config";
-	set_default_programs(config_path);
 	refresh(); /* wrefresh(stdscr); */
+	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, 
+		SHELL, TERMINAL);
 
+	int run = 1;
 	while(run)
 	{
 		flushinp();
@@ -117,7 +134,9 @@ int main(int argc, char* argv[])
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name);
+				open_file(cwd, entry_arr[current_index].name,TEXT,
+					AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
+
 			}
 			else {
 				/* damn */
@@ -170,7 +189,7 @@ int main(int argc, char* argv[])
 			run = 0;
 			break;
 		case 'S':
-			open_shell(cwd);
+			open_shell(cwd, SHELL, TERMINAL);
 			break;
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);

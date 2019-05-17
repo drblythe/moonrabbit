@@ -20,9 +20,8 @@ int next_dir(char** p_cwd, char* dir_name)
 	
 	return 1;
 }
-
-
-int set_default_programs(char* config_path)
+int	set_default_programs(char* config_path, char* TEXT, char* AUDIO, 
+	char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
 {
 	FILE *fp;
 	int n;
@@ -159,17 +158,18 @@ char get_file_type(char* file_name)
 	return file_type;
 }
 
-int open_file(char* cwd, char* file_name)
+int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO, 
+	char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
 {
 	int ret;
 	char file_type;	
 
 	int send_to_bg = 1;
 
-/* Change this bullshit below ... should be a command char array based on strlen(program) */
-	char * command = NULL;
-	command = malloc(sizeof(char)*512);
-	//char program[32];
+/* Change this bullshit below ... should be a command 
+ * char array based on strlen(program) 
+ */
+	char * command = malloc(sizeof(char)*512);
 
 	file_type = get_file_type(file_name);
 	switch(file_type){
@@ -214,7 +214,7 @@ int open_file(char* cwd, char* file_name)
 	return 1;
 }
 
-int open_shell(char *cwd)
+int open_shell(char *cwd, char* SHELL, char* TERMINAL)
 {
 	char shell_terminal[strlen(SHELL)+1+2+1+strlen(TERMINAL)+
 		+1+2+1+strlen(cwd)+2+1];
