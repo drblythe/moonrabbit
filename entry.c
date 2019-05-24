@@ -259,25 +259,6 @@ int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries
 }
 
 
-int check_permissions(char* action, char* cwd, ENTRY entry)
-{
-	int access = false;
-	if (!strcmp(action,"enter") && entry.type == 'd') {
-		char bit = entry.permission[2];
-		(bit == 'x') ? (access = true) : (access = false);
-	}
-/*
-	char path[PATH_MAX];
-	strcpy(path,cwd);
-	strcat(path,"/");
-	strcat(path,entry.name);
-	if (!access(path,X_OK)) {
-		access = true;
-	}
-*/
-	return access;
-}
-
 char* get_abs_path(char* cwd, char* file_name)
 {
 	int len_cwd = strlen(cwd);

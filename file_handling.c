@@ -174,20 +174,20 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 	file_type = get_file_type(file_name);
 	switch(file_type){
 	case 'A':
-		strcat(command, AUDIO);
+		strcpy(command, AUDIO);
 		break;
 	case 'V':
-		strcat(command, VIDEO);
+		strcpy(command, VIDEO);
 		break;
 	case 'I':
-		strcat(command, IMAGE);
+		strcpy(command, IMAGE);
 		break;
 	case 'D':
-		strcat(command, DOC);
+		strcpy(command, DOC);
 		break;
 	default:
 		send_to_bg = 0;
-		strcat(command,TEXT);
+		strcpy(command,TEXT);
 		break;
 	}
 	int need_quotes = 0;
@@ -197,6 +197,7 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 	}
 			
 			
+/*
 	strcat(command, " ");
 	if (need_quotes)
 		strcat(command,"\"");
@@ -210,21 +211,36 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 		strcat(command, " &");
 	ret = system(command);
 	free(command);
-	
-	return 1;
-}
+*/
+	char full_path[strlen(cwd)+1+strlen(file_name)+1];
+	strcpy(full_path,cwd);
+	strcat(full_path,"/");
+	strcat(full_path,file_name);
 
-int open_shell(char *cwd, char* SHELL, char* TERMINAL)
-{
-	char shell_terminal[strlen(SHELL)+1+2+1+strlen(TERMINAL)+
-		+1+2+1+strlen(cwd)+2+1];
-	strcat(shell_terminal,SHELL);
-	strcat(shell_terminal," -c ");
-	strcat(shell_terminal,TERMINAL);
-	strcat(shell_terminal," ");
-	strcat(shell_terminal,cwd);
-	//strcat(shell_terminal," &");
-	system(shell_terminal);
+
+	//fork a new process so it isnt tied to current terminal
+    pid_t pid;
+    pid = fork();
+    if (pid == -1)
+        perror("fork");
+
+
+    if (!pid) {
+        //char *args[] = {command,full_path, NULL};
+        //char *args[] = {"vim","/home/haru/newfile", NULL};
+
+        int ret;
+        ret = execl(command,full_path,NULL);
+
+
+        if (ret == -1) {
+            perror("execl");
+            exit (EXIT_FAILURE);
+        }
+    }
+
+    exit(EXIT_SUCCESS);
+	
 	return 1;
 }
 

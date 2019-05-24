@@ -1,50 +1,27 @@
-======================
-	   PRIORITY
-======================
-
-	Still need to use exec because output is still sent/connected to original terminal, but 
-	this is lower priority now that the system() version is working termporarily.
-	Ideally use an exec() family function instead of system() as it is safer.
-
-	Array of directory names...
-	even numbers (0,2,etc) are the directory names (char*)
-	odd are the current index before switching directories,etc
-	have a finite number of array entries, when the size gets too large fifo it
-
-	Parse the config file and store the extensions in the array named AUDIO, DOC, etc
-	start at '[', while loop until ']'
+	
 
 	Add Enter key case in main loop (for opening file, same as 'l')
 
-======================
-	   DO LATER 
-======================
+	Fix execv()	
 
+	Store index of *certain* amount of directories 
+		Struct -- int stored_index and char[] stored_dirname
+		Fifo list of 20 or so of those	
 
-Add shortcut/command to clone current moonrabbit instance into new window
+	Number->command functionality
+		As long as the input is a number, record it
+		Then as soon as getch() is not a digit, execute the command 'x' times
 
-Only toggle dotfiles if dotfile_count > 0!!!
-	quick function in entry
-		parameter = entry array
-		return 1 on first hidden file
-		else ret 0
-	OR -> might be better to take in a var for dot_count when making the entry
-		array, and set it to the number of dot files (increment every time filename starts with .)
+	Find file in dir with '/', move to index if exists
 
-Add case to switch for numbers...
-	As long as the input is a number, record it
+	Add directory with mkdir
 
-Then as soon as getch() is not a digit, execute the command 'x' times
+	Create files
 
-Find file in dir with '/', move to index if exists
+	Delete files
 
-Also (later) allow find from command input prompt
+	Move files
 
-Storing index/position from prev/forw dirs:
+	Check permissions before chdir or opening file
 
-Add directory with mkdir
-
-Check permissions before chdir or opening file
-
-Scrolling:
-	upward scrolling
+	Upward scrolling	

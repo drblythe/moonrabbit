@@ -10,7 +10,6 @@
 
 #include "entry.h"
 #include "file_handling.h"
-#include "dir_info.h"
 #include "input.h"
 #include "command_handling.h"
 #include "bindings.h"
@@ -68,7 +67,7 @@ int main(int argc, char* argv[])
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-	config_path = "/home/haru/moonrabbit/config";
+	config_path = "/home/haru/prog/moonrabbit/config";
 	refresh(); /* wrefresh(stdscr); */
 	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, 
 		SHELL, TERMINAL);
@@ -189,7 +188,7 @@ int main(int argc, char* argv[])
 			run = 0;
 			break;
 		case 'S':
-			open_shell(cwd, SHELL, TERMINAL);
+			// open shell here
 			break;
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);

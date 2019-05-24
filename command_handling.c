@@ -11,23 +11,6 @@ int change_dir(char** p_cwd, char* dir_name)
     return 1;
 }
 
-
-int delete_file(char *cwd, char *file_name)
-{
-    return 1;
-}
-/*
-int open_shell(char *cwd)
-{
-	//char command[6+1+strlen(cwd)];
-	//strcpy(command,"$SHELL");
-	//strcat(command, " ");
-	//strcat(command, cwd);
-	system("$SHELL -c urxvt");
-	return 1;
-}
-*/
-
 int handle_cmd(char *input, char** p_cwd)
 {
 /* 
@@ -68,21 +51,3 @@ int handle_cmd(char *input, char** p_cwd)
 
 	return 1;
 }
-
-int confirm()
-{
-	return 1;
-}
-
-
-int find_in_dir(char * name)
-{
-	return 1;
-}
-
-/*
-int move_to_entry()
-{
-	return 1;
-}
-*/
