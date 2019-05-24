@@ -18,6 +18,7 @@
 int main(int argc, char* argv[])
 {
 	// Declare globals
+	//
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
@@ -29,6 +30,7 @@ int main(int argc, char* argv[])
 	int show_dots;
 
 	// Storage for program exec paths
+	//
 	char TEXT[64]; 
 	char AUDIO[64]; 
 	char VIDEO[64]; 
@@ -38,6 +40,7 @@ int main(int argc, char* argv[])
 	char TERMINAL[64];
 
 	// Init ncurses
+	//
 	if (!init_ncurses(win)) {
 		endwin();
 		fprintf(stderr, "Error: failed to init ncurses window\n");
@@ -45,6 +48,7 @@ int main(int argc, char* argv[])
 	}
 
 	// Get current working directory
+	//
 	cwd = malloc(sizeof(char) * PATH_MAX);
 	argc > 1 ? strcpy(cwd,argv[1]) : (cwd = getcwd(NULL,0));
 	if (!cwd) {
@@ -54,12 +58,14 @@ int main(int argc, char* argv[])
 	}
 
 	// Initialize other various globals
+	//
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
 	getyx(stdscr, y, x);
 
 	// Init moonrabbit stuff (read config for program prefs, get files in dir, etc.)
+	//
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
@@ -68,6 +74,7 @@ int main(int argc, char* argv[])
 	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
 
 	// Main loop
+	// 	
 	int run = 1;
 	while(run)
 	{
@@ -131,11 +138,12 @@ int main(int argc, char* argv[])
 		case ':':
 			input = malloc(sizeof(char)*128);
 			input = get_input();
+			printf("\n%s\n",input);
 			handle_cmd(input,&cwd);
 			free(input);
-			erase();
 			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			erase();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();

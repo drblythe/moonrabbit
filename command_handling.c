@@ -38,12 +38,18 @@ int handle_cmd(char *input, char** p_cwd)
 
 	/* appropriate function call */
 	if (!strcmp(cmd, "cd")) {
-		change_dir(p_cwd,args);
+		change_dir(*p_cwd,args);
+	}
+	else if (!strcmp(cmd,"touch")) {
+		int fd;
+		fd = creat (args,0644);
+		if (fd == -1) {
+    		printf("error\n");
+    		return -1;
+		}
+
 	}
 	else if (!strcmp(cmd,"mkdir")) {
-		//char new_dir[strlen(*p_cwd)+arg_len+1];
-		//new_dir = args;
-		//mkdir(new_dir, S_IRWXU | S_IRWXG | S_IRWXO);
 		mkdir(args, S_IRWXU | S_IRWXG | S_IRWXO);
 	}
 		

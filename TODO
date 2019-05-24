@@ -1,8 +1,11 @@
-	
+
+	Files...
+		Create
+		Copy
+		Move 
+		Delete
 
 	Add Enter key case in main loop (for opening file, same as 'l')
-
-	Fix execv()	
 
 	Store index of *certain* amount of directories 
 		Struct -- int stored_index and char[] stored_dirname
@@ -16,12 +19,10 @@
 
 	Add directory with mkdir
 
-	Create files
-
 	Delete files
-
-	Move files
 
 	Check permissions before chdir or opening file
 
 	Upward scrolling	
+
+	Fix execv()	

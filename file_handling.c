@@ -195,7 +195,7 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 		if (cwd[i] == ' ' || cwd[i] == '-')
 			need_quotes = 1;
 	}
-			
+
 	strcat(command, " ");
 	if (need_quotes)
 		strcat(command,"\"");
@@ -224,7 +224,7 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
     if (!pid) {
 
         int ret;
-        ret = execl(command, "feh", full_path, NULL);
+        ret = execl(command, "vim -n -E", full_path, NULL);
 
         if (ret == -1) {
             perror("execl");
