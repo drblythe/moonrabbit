@@ -17,9 +17,7 @@
 
 int main(int argc, char* argv[])
 {
-
-
-
+	// Declare globals
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
@@ -39,19 +37,14 @@ int main(int argc, char* argv[])
 	char SHELL[64];
 	char TERMINAL[64];
 
-
-
-
-
-
-
-
+	// Init ncurses
 	if (!init_ncurses(win)) {
 		endwin();
 		fprintf(stderr, "Error: failed to init ncurses window\n");
 		exit(EXIT_FAILURE);
 	}
 
+	// Get current working directory
 	cwd = malloc(sizeof(char) * PATH_MAX);
 	argc > 1 ? strcpy(cwd,argv[1]) : (cwd = getcwd(NULL,0));
 	if (!cwd) {
@@ -60,40 +53,30 @@ int main(int argc, char* argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	// Initialize other various globals
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
 	getyx(stdscr, y, x);
+
+	// Init moonrabbit stuff (read config for program prefs, get files in dir, etc.)
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 	config_path = "/home/haru/prog/moonrabbit/config";
 	refresh(); /* wrefresh(stdscr); */
-	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, 
-		SHELL, TERMINAL);
+	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
 
+	// Main loop
 	int run = 1;
 	while(run)
 	{
 		flushinp();
 		getyx(stdscr, y, x);
-		//move(0,0);
 		c = getch();
 		switch(c) {
-/*
- * Cases to add:
- * shift+l (L) = 'open with'
- * enter = same as l (open)
- *
- * control+r or f5 = refresh
- *
- * Trash: maybe? idea: move to 'trash' on delete,
- * 	on shutdown, clear out trash?
- *
- * 
- */
+
 		case KEY_DOWN:
-			c = 'j';
 		case ('j'):
 			if (current_index < num_entries -1 ) {
 				update_curr_index(DOWN, &current_index, &num_entries);
@@ -101,10 +84,9 @@ int main(int argc, char* argv[])
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 				refresh();
 			}
-
 			break;
+
 		case KEY_UP:
-			c = 'k';
 		case 'k':
 			if (current_index > 0 ) {
 				update_curr_index(UP, &current_index, &num_entries);
@@ -113,6 +95,7 @@ int main(int argc, char* argv[])
 				refresh();
 			}
 			break;
+
 		case KEY_LEFT:
 		case 'h':
 			if (strcmp(cwd, "/")) {
@@ -133,8 +116,7 @@ int main(int argc, char* argv[])
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name,TEXT,
-					AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
+				open_file(cwd, entry_arr[current_index].name,TEXT,AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
 
 			}
 			else {
@@ -187,9 +169,11 @@ int main(int argc, char* argv[])
 		case 'q':
 			run = 0;
 			break;
+
 		case 'S':
 			// open shell here
 			break;
+
 		case ctrl('h'):
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
@@ -197,6 +181,7 @@ int main(int argc, char* argv[])
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			break;
+
 		case KEY_SPACE:
 			if (!entry_arr[current_index].marked)
 				mark_file(&entry_arr[current_index]);
@@ -210,11 +195,13 @@ int main(int argc, char* argv[])
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			refresh();
 			break;
+
 		default:
 			break;
 		}
 	}
 
+	// Free up malloced mem, clear screen, close
 	free(entry_arr);
 	move(0,0);
 	erase();

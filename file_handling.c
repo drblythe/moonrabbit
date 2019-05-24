@@ -196,8 +196,6 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 			need_quotes = 1;
 	}
 			
-			
-/*
 	strcat(command, " ");
 	if (need_quotes)
 		strcat(command,"\"");
@@ -211,12 +209,11 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 		strcat(command, " &");
 	ret = system(command);
 	free(command);
-*/
+/*	
 	char full_path[strlen(cwd)+1+strlen(file_name)+1];
 	strcpy(full_path,cwd);
 	strcat(full_path,"/");
 	strcat(full_path,file_name);
-
 
 	//fork a new process so it isnt tied to current terminal
     pid_t pid;
@@ -224,23 +221,18 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
     if (pid == -1)
         perror("fork");
 
-
     if (!pid) {
-        //char *args[] = {command,full_path, NULL};
-        //char *args[] = {"vim","/home/haru/newfile", NULL};
 
         int ret;
-        ret = execl(command,full_path,NULL);
-
+        ret = execl(command, "feh", full_path, NULL);
 
         if (ret == -1) {
             perror("execl");
             exit (EXIT_FAILURE);
         }
     }
+*/
 
-    exit(EXIT_SUCCESS);
-	
 	return 1;
 }
 
