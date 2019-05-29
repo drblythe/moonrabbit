@@ -1,8 +1,7 @@
 
 	Files...
-		Copy
-		Move (aka copy and then delete the original)
 		Delete
+		Move (aka copy and then delete the original)
 
 	Add Enter key case in main loop (for opening file, same as 'l')
 

@@ -7,12 +7,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
+#include <assert.h>
+#include <stdio.h>
 
-int change_dir(char** p_cwd, char* dir_name);
-int handle_cmd(const char *input, char** p_cwd);
-int copy(const char *dest, const char *src);
+int cmd_cd(char** p_cwd, char* dir_name);
+int handle_cmd(char **p_input, char** p_cwd);
+int cmd_copy(const char *dest, const char *src);
 /* ^^ https://stackoverflow.com/questions/2180079/how-can-i-copy-a-file-on-unix-using-c  */
-int delete_file(const char * file_path);
-int delete_dir(const char * dir_path, const int num_subitems);
+int cmd_delete(const char * file_path);
 int resolve_path(char * dir_path, char *file_name);
+//char** tokenize_command(char* command, char** p_command);
+char** tokenize_command(char* command);
 #endif

@@ -138,7 +138,7 @@ int main(int argc, char* argv[])
 		case ':':
 			input = malloc(sizeof(char)*128);
 			*input = get_input();
-			handle_cmd(*input,&cwd);
+			handle_cmd(input,&cwd);
 			free(input);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);

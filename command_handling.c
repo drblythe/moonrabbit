@@ -67,7 +67,7 @@ int cmd_copy(const char *dest, const char *src)
         close(fd_src);
 
         /* Success! */
-        return 0;
+        return 1;
     }
 
   out_error:
@@ -81,84 +81,98 @@ int cmd_copy(const char *dest, const char *src)
     return -1;	
 }
 
-int handle_cmd(const char *input, char** p_cwd)
+int handle_cmd(char **p_input, char** p_cwd)
 {
+	char ** arg_vec;
+	arg_vec = tokenize_command(*p_input);
 
-	/* separate command from argument*/
-	int split_index = 0;
-	for (int i = 0; i < strlen(input); i++) 
-		if (input[i] == ' ')
-			split_index = i;
-	printf("split index=%d\n",split_index);
+	if (!arg_vec) {
+		return -1;
+	}
+
+	// command is arg_vec[0]
+	// rest is arguments
 	
-	/*make command variable */
-	char cmd[split_index];
-	//char cmd[3];
-	for (int i = 0; i < split_index; i++)
-		cmd[i] = input[i];
-	cmd[split_index] = '\0';
 
-	/* make arg var */
-	int arg_len = strlen(input) - split_index;
-	char arg[arg_len];
-	for (int i = 0; i < arg_len; i++)
-		arg[i] = input[split_index+1+i];
-
-	/* appropriate function calls */
-	if (!strcmp(cmd, "cd")) {
-		strcpy(*p_cwd,arg);
+	if (!strcmp(arg_vec[0], "cd")) {
+		strcpy(*p_cwd,arg_vec[1]);
 	}
-	else if (!strcmp(cmd,"cp")) {
-		cmd_copy("/home/charlie/careful/test",arg);
+	else if (!strcmp(arg_vec[0],"cp")) {
+		/* Have a "confirm" function called from header with access to ncurses */
+		/*
+		printf("\nCopy %s to %s?",arg_vec[1],arg_vec[2]); 
+		c = getchar();
+		*/
+		cmd_copy(arg_vec[2],arg_vec[1]);
 	}
-	else if (!strcmp(cmd,"touch")) {
+	else if (!strcmp(arg_vec[0],"touch")) {
 		int fd;
-		fd = creat (arg,0644);
+		fd = creat (arg_vec[1],0644);
 		if (fd == -1) {
     		printf("error\n");
     		return -1;
 		}
 
 	}
-	else if (!strcmp(cmd,"mkdir")) {
-		mkdir(arg, S_IRWXU | S_IRWXG | S_IRWXO);
+	else if (!strcmp(arg_vec[0],"mkdir")) {
+		mkdir(arg_vec[1], S_IRWXU | S_IRWXG | S_IRWXO);
 	}
-		
-	//printf("\n--%d--%s--%s--\n",split_index,cmd,arg);
-	//char c = getchar();
 
+	
+	free(arg_vec);
 	return 1;
 }
 
-int split_arguments(const char* argument) 
+char** tokenize_command(char* command) 
 {
-	return 0;
+	/* strtok_r() */
+	/* strtok() */
+	
+	char a_delim = ' ';
+	char** result    = 0;
+    size_t count     = 0;
+    char* tmp        = command;
+    char* last_space = 0;
+    char delim[2];
+    delim[0] = a_delim;
+    delim[1] = 0;
+
+    /* Count how many elements will be extracted. */
+    while (*tmp)
+    {
+        if (a_delim == *tmp)
+        {
+            count++;
+            last_space = tmp;
+        }
+        tmp++;
+    }
+
+    /* Add space for trailing token. */
+    count += last_space < (command + strlen(command) - 1);
+
+    /* Add space for terminating null string so caller
+       knows where the list of returned strings ends. */
+	count++;
+
+    result = malloc(sizeof(char*) * count);
+
+    if (result)
+    {
+        size_t idx  = 0;
+        char* token = strtok(command, delim);
+
+        while (token)
+        {
+            assert(idx < count);
+            *(result + idx++) = strdup(token);
+            token = strtok(0, delim);
+        }
+        assert(idx == count - 1);
+        *(result + idx) = 0;
+    }
+    return result;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
