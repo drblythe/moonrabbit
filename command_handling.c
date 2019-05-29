@@ -15,10 +15,25 @@ int cmd_cd(char** p_cwd, char* dir_name)
 int cmd_delete(const char * file_path)
 {
 /* 'Confirm deletion function' in another file */
+	printf("\nAre you sure you want to delete %s? y/N ",file_path);
+	char c = getchar();
+	if (c != 'y' && c != 'Y')
+		return 0;
+
 	int ret;
 	ret = remove(file_path);
 	if (ret) return 0;
 	else return 1;
+}
+
+int cmd_move(const char *dest, const char *src)
+{
+	if (!cmd_copy(dest,src))
+		return 0;
+	else {
+		cmd_delete(src);
+		return 1;
+	}
 }
 
 
@@ -78,7 +93,7 @@ int cmd_copy(const char *dest, const char *src)
         close(fd_dest);
 
     errno = saved_errno;
-    return -1;	
+    return 0;	
 }
 
 int handle_cmd(char **p_input, char** p_cwd)
@@ -105,6 +120,9 @@ int handle_cmd(char **p_input, char** p_cwd)
 		*/
 		cmd_copy(arg_vec[2],arg_vec[1]);
 	}
+	else if (!strcmp(arg_vec[0], "mv")) {
+		cmd_move(arg_vec[2],arg_vec[1]);
+	}
 	else if (!strcmp(arg_vec[0],"touch")) {
 		int fd;
 		fd = creat (arg_vec[1],0644);
@@ -114,10 +132,12 @@ int handle_cmd(char **p_input, char** p_cwd)
 		}
 
 	}
-	else if (!strcmp(arg_vec[0],"mkdir")) {
+	else if (!strcmp(arg_vec[0], "mkdir")) {
 		mkdir(arg_vec[1], S_IRWXU | S_IRWXG | S_IRWXO);
 	}
-
+	else if (!strcmp(arg_vec[0], "rm")) {
+		cmd_delete(arg_vec[1]);
+	}
 	
 	free(arg_vec);
 	return 1;

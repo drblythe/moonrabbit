@@ -15,7 +15,6 @@ int handle_cmd(char **p_input, char** p_cwd);
 int cmd_copy(const char *dest, const char *src);
 /* ^^ https://stackoverflow.com/questions/2180079/how-can-i-copy-a-file-on-unix-using-c  */
 int cmd_delete(const char * file_path);
-int resolve_path(char * dir_path, char *file_name);
-//char** tokenize_command(char* command, char** p_command);
+int cmd_move(const char* dest, const char* src);
 char** tokenize_command(char* command);
 #endif
