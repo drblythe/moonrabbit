@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
 	ENTRY* entry_arr = NULL;
 	char* cwd;
 	char *config_path;
-	char *input;
+	char **input;
 	int current_index;
 	int num_entries;
 	int show_dots;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-	config_path = "/home/haru/prog/moonrabbit/config";
+	config_path = "/home/charlie/prog/moonrabbit/config";
 	refresh(); /* wrefresh(stdscr); */
 	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
 
@@ -137,9 +137,8 @@ int main(int argc, char* argv[])
 
 		case ':':
 			input = malloc(sizeof(char)*128);
-			input = get_input();
-			printf("\n%s\n",input);
-			handle_cmd(input,&cwd);
+			*input = get_input();
+			handle_cmd(*input,&cwd);
 			free(input);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
@@ -151,7 +150,7 @@ int main(int argc, char* argv[])
 
 		case '/':
 			input = malloc(sizeof(char)*128);
-			input = get_input();
+			*input = get_input();
 			free(input);
 			break;
 

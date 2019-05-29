@@ -1,7 +1,5 @@
 /* file_handling.c */
 #include "file_handling.h"
-#include <stdio.h>
-#include <ctype.h>
 
 int prev_dir(char** p_cwd)
 {

@@ -1,8 +1,7 @@
 
 	Files...
-		Create
 		Copy
-		Move 
+		Move (aka copy and then delete the original)
 		Delete
 
 	Add Enter key case in main loop (for opening file, same as 'l')
@@ -16,10 +15,6 @@
 		Then as soon as getch() is not a digit, execute the command 'x' times
 
 	Find file in dir with '/', move to index if exists
-
-	Add directory with mkdir
-
-	Delete files
 
 	Check permissions before chdir or opening file
 

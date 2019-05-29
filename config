@@ -1,11 +1,9 @@
 # Configuration file for moonrabbit file manager
 #
-# Use FULL path to executable
-# Comment with '#' at beginning of line or the great jeebmeister will h8 u
-# (and so will i)
+# Use FULL path to executable NO SPACES
 #
-# Keybindings (vim/vi for the most part)
-# 	
+# Keybindings are vim for the most part, (movement, etc) aka copied from ranger
+# Ctrl+h to toggle hidden files
 
 # Set default Programs
 # TEXT - default text editor... etc
@@ -18,12 +16,13 @@ SHELL=/bin/bash
 TERMINAL=/usr/bin/xfce4-terminal
 
 # Set filetype associations
-VIDEO_EXT=[.mp4 .mkv .avi]
+VIDEO_EXT=[.mp4 .mkv .avi .gif .webm]
 AUDIO_EXT=[.mp3 .flac]
 IMAGE_EXT=[.jpg .jpeg .JPG .JPEG .png .PNG]
 DOC_EXT=[.pdf .djvu]
 
 # Settings like margins, etc..
+# These do nothing right now lol
 LEFT_MARGIN=0
 RIGHT_MARGIN=COLS
 TOP_MARGIN=0
