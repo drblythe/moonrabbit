@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
-	KEY_VALUE* stored_indexes[MAX_STORED_INDEXES];
+	KEY_VALUE* stored_indexes = malloc(sizeof(KEY_VALUE)*MAX_STORED_INDEXES);
 	KEY_VALUE** p_stored_indexes = &stored_indexes;
 	int num_stored_indexes = 0;
 	char* cwd;
@@ -109,8 +109,11 @@ int main(int argc, char* argv[])
 		case KEY_LEFT:
 		case 'h':
 			if (strcmp(cwd, "/")) {
+				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
+					num_stored_indexes++;
 				prev_dir(&cwd);
 				clear_entries(entry_arr, &num_entries, &current_index,1);
+				load_index(p_stored_indexes, num_stored_indexes, cwd, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 				display_entries(entry_arr, num_entries, current_index,LINES);
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
@@ -121,8 +124,17 @@ int main(int argc, char* argv[])
 		case K_ENTER:
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
+				/*
+				for (int i = 0; i < num_stored_indexes; i++) {
+					printf("/////dir=%s,index=%d//////",stored_indexes[i].key, stored_indexes[i].value );
+					getchar();
+				}
+				*/
+				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
+					num_stored_indexes++;
 				next_dir(&cwd, entry_arr[current_index].name);
 				clear_entries(entry_arr, &num_entries, &current_index, 1);
+				load_index(p_stored_indexes, num_stored_indexes, cwd, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 			}
 			else if (entry_arr[current_index].type != 'd') {
@@ -154,6 +166,12 @@ int main(int argc, char* argv[])
 		case '/':
 			input = malloc(sizeof(char)*128);
 			*input = get_input();
+			if (search_dir(*input,entry_arr,&current_index,num_entries)) {
+				erase();
+				display_entries(entry_arr, num_entries, current_index,LINES);
+				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+				refresh();
+			}
 			free(input);
 			break;
 
@@ -223,6 +241,7 @@ int main(int argc, char* argv[])
 
 	// Free up malloced mem, clear screen, close
 	free(entry_arr);
+	free(stored_indexes);
 	move(0,0);
 	erase();
 	refresh();

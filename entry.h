@@ -46,6 +46,23 @@ char* get_abs_path(char* cwd, char* file_name);
 char* get_permissions(char* cwd, char* file_name);
 
 int update_curr_index(short int direction, int* current_index, int *num_entries);
-int save_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, const char* dir_path, const int index);
-int restore_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, char** p_cwd, int* current_index);
+int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* dir_path, const int index);
+int load_index(KEY_VALUE** p_kvp_arr, const int num_stored, const char* cwd, int* current_index);
+
+int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, const int num_entries);
 #endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

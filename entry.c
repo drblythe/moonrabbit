@@ -14,7 +14,6 @@ int is_directory(char* cwd, char* name)
 
 	(stat(abs_path, &sb) == 0 && S_ISDIR(sb.st_mode)) ? (ret=1) : (ret=0);
 
-
 	return ret;
 }
 
@@ -148,48 +147,66 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 }
 
 /* KEY_VALUE** is pointer to an array */
-int save_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, const char* cwd, const int current_index)
+int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int current_index)
 {
 	char already_stored = 0;
-	for (int i = 0; i < *p_num_stored; i++) 
+	//int array_index = num_stored;
+	//printf("\n--array_index%d--",array_index);
+		
+	for (int i = 0; i < num_stored; i++) 
 		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
 			already_stored = 1;
 			break;
 		}
-	if (already_stored)
+	if (already_stored) {
+	//	printf("\n--ALREADY STORED--");
 		return 0;
+	}
 	else {
+		//printf("\n--NEWLY STORED--");
 		int index_to_use;
-		if ( (*p_num_stored) + 1 > 20) {
-			// index it will be stored at is the front =  0
+		if ( (num_stored) + 1 > 20) {
+			//printf("--NUM > 20--");
 			index_to_use = 0;
 			// move all others up by one (19 will be overwritten)
-			for (int i = 0; i < 20; i++) {
+			for (int i = 0; i < 19; i++) {
 				strcpy((*p_kvp_arr + i + 1)->key, (*p_kvp_arr + i)->key);
 				(*p_kvp_arr + i + 1)->value = (*p_kvp_arr + i)->value;
 			}
 			
 		}
 		else {
-			index_to_use = *p_num_stored;
-			p_num_stored++;
+			//printf("--NUM < 20--");
+			index_to_use = current_index;
 		}
+
 		strcpy((*p_kvp_arr + index_to_use)->key,cwd);
 		(*p_kvp_arr + index_to_use)->value = current_index;
+		//printf("--index-to-use=%d--",index_to_use);
+		//printf("--SAVED AS cwd=%s,index=%d--",  (*p_kvp_arr + index_to_use)->key ,(*p_kvp_arr + index_to_use)->value );
 	}
 
-	/* if *p_num_stored + 1  > 20, remove the kvp at 20 */
-	/* else, just put it at *p_num_stored+1; , increment *p_num_stored++ */
+	//printf("--NEW NUM STORED=%d--",num_stored);
+	//getchar();
 	
 	return 1;
 }
 
-int restore_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, char** p_cwd, int* current_index)
+int load_index(KEY_VALUE** p_kvp_arr, const int num_stored, const char* cwd, int* current_index)
 {
-	/* 1. from 0 to < *p_num_stored, check if *p_cwd == ((*p_kvp_arr)+i)->key */
-
-	/* 2. if it is, return 1; if not return 0 */
-
+	char already_stored = 0;
+	int return_index = -1;
+	for (int i = 0; i < num_stored; i++) 
+		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
+			already_stored = 1;
+			return_index = i;
+			break;
+		}
+	if (!already_stored)
+		return 0;
+	else {
+		*current_index = return_index;
+	}
 	return 1;
 }
 
@@ -321,6 +338,28 @@ char* get_abs_path(char* cwd, char* file_name)
 
 	return abs_path;
 }
+
+
+int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, const int num_entries)
+{
+	for (int i = 0; i < num_entries; i++) {
+		if (!strcmp(entry_arr[i].name,file_name)) {
+			*current_index = entry_arr[i].index;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

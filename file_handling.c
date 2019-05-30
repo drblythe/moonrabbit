@@ -131,7 +131,7 @@ char get_file_type(char* file_name)
 
 	// video
 	else if (!strcmp(ext,".mkv") || !strcmp(ext,".mp4")||
-		!strcmp(ext,".avi"))
+		!strcmp(ext,".avi") || !strcmp(ext,".gif"))
 		file_type = 'V';
 	// check video extension array from config if nothing here 
 
