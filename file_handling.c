@@ -206,6 +206,10 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 	if (send_to_bg)
 		strcat(command, " &");
 	ret = system(command);
+	if (ret) {
+		perror("system");
+		return -1;
+	}
 	free(command);
 /*	
 	char full_path[strlen(cwd)+1+strlen(file_name)+1];

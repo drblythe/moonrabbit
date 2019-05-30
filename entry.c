@@ -57,6 +57,10 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 			
 			sb = malloc(sizeof(struct stat));
 			ret = stat(abs_path, sb);
+			if (ret) {
+				perror("stat");
+				return -1;
+			}
 
 			((*entry_arr) +(entry_index))->marked = 0;
 			
@@ -116,7 +120,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 			dist = 0;
 
 		for (int i = 0; i <= PRINT_STOP; i++) {
-
 			if (dist > 0)
 				current_index = SCROLL_STOP_BOTTOM;
 
@@ -144,6 +147,51 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 	return -1;
 }
 
+/* KEY_VALUE** is pointer to an array */
+int save_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, const char* cwd, const int current_index)
+{
+	char already_stored = 0;
+	for (int i = 0; i < *p_num_stored; i++) 
+		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
+			already_stored = 1;
+			break;
+		}
+	if (already_stored)
+		return 0;
+	else {
+		int index_to_use;
+		if ( (*p_num_stored) + 1 > 20) {
+			// index it will be stored at is the front =  0
+			index_to_use = 0;
+			// move all others up by one (19 will be overwritten)
+			for (int i = 0; i < 20; i++) {
+				strcpy((*p_kvp_arr + i + 1)->key, (*p_kvp_arr + i)->key);
+				(*p_kvp_arr + i + 1)->value = (*p_kvp_arr + i)->value;
+			}
+			
+		}
+		else {
+			index_to_use = *p_num_stored;
+			p_num_stored++;
+		}
+		strcpy((*p_kvp_arr + index_to_use)->key,cwd);
+		(*p_kvp_arr + index_to_use)->value = current_index;
+	}
+
+	/* if *p_num_stored + 1  > 20, remove the kvp at 20 */
+	/* else, just put it at *p_num_stored+1; , increment *p_num_stored++ */
+	
+	return 1;
+}
+
+int restore_index(KEY_VALUE** p_kvp_arr, int* p_num_stored, char** p_cwd, int* current_index)
+{
+	/* 1. from 0 to < *p_num_stored, check if *p_cwd == ((*p_kvp_arr)+i)->key */
+
+	/* 2. if it is, return 1; if not return 0 */
+
+	return 1;
+}
 
 
 int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int reset_index)

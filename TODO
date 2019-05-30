@@ -1,13 +1,6 @@
 
-	Files...
-		Delete
-		Move (aka copy and then delete the original)
-
-	Add Enter key case in main loop (for opening file, same as 'l')
 
 	Store index of *certain* amount of directories 
-		Struct -- int stored_index and char[] stored_dirname
-		Fifo list of 20 or so of those	
 
 	Number->command functionality
 		As long as the input is a number, record it

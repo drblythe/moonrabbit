@@ -22,6 +22,9 @@ int main(int argc, char* argv[])
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
+	KEY_VALUE* stored_indexes[MAX_STORED_INDEXES];
+	KEY_VALUE** p_stored_indexes = &stored_indexes;
+	int num_stored_indexes = 0;
 	char* cwd;
 	char *config_path;
 	char **input;
@@ -115,7 +118,7 @@ int main(int argc, char* argv[])
 			}
 			break;
 
-		case KEY_RIGHT:
+		case K_ENTER:
 		case 'l':
 			if (entry_arr[current_index].type == 'd') {
 				next_dir(&cwd, entry_arr[current_index].name);
@@ -189,7 +192,17 @@ int main(int argc, char* argv[])
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			break;
 
-		case KEY_SPACE:
+		
+		case ctrl('r'):
+			erase();
+			//mvprintw(10,20,"--keycode=%d--",c);
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh();
+			break;
+
+
+		case K_SPACE:
 			if (!entry_arr[current_index].marked)
 				mark_file(&entry_arr[current_index]);
 			else
@@ -214,5 +227,11 @@ int main(int argc, char* argv[])
 	erase();
 	refresh();
 	endwin();
+
+	/* So GCC will shut up */
+	x += y;
+	num_stored_indexes--;
+	p_stored_indexes++;
+
 	exit(EXIT_SUCCESS);
 }

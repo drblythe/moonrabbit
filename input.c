@@ -24,16 +24,18 @@ char* get_input(void)
 	while (read) {
 		c = getch();
 		switch (c) {
-		case ENTER:
+		case K_ENTER:
 			read = 0;
 			break;
-		case BACKSPACE:
+		case K_BACKSPACE:
 			command[cmd_index] = '\0';
 			cmd_index--;
 			break;
+		/*
 		case 'q':
 			read = 0;
 			break;
+		*/
 		default:
 			command[cmd_index] = c;
 			cmd_index++;
