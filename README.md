@@ -8,7 +8,8 @@ Keybindings are vim for the most part
     
 ## Compile  
 Before compiling edit the config... yeah  
+    
     gcc -lncurses *.c -o moonrabbit  
     
 ## Also: moonrabbits!  
- ![moonrabbits](drblythe.github.com/moonrabbit/img/moonrabbits.jpg)
+ ![moonrabbits](https://github.com/drblythe/moonrabbit/img/moonrabbits.jpg)
