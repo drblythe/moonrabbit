@@ -11,5 +11,4 @@ Before compiling edit the config... yeah
     
     gcc -lncurses *.c -o moonrabbit  
     
-## Also: moonrabbits!  
  ![moonrabbits](https://raw.githubusercontent.com/drblythe/moonrabbit/master/img/moonrabbits.jpg)
