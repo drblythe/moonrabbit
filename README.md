@@ -12,4 +12,4 @@ Before compiling edit the config... yeah
     gcc -lncurses *.c -o moonrabbit  
     
 ## Also: moonrabbits!  
- ![moonrabbits](https://github.com/drblythe/moonrabbit/img/moonrabbits.jpg)
+ ![moonrabbits](https://raw.githubusercontent.com/drblythe/moonrabbit/master/img/moonrabbits.jpg)
