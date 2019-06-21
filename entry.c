@@ -246,19 +246,6 @@ int unmark_file(ENTRY *p_entry)
 }
 
 
-int init_ncurses(WINDOW *win)
-{
-	initscr();
-	noecho();
-	keypad(stdscr,TRUE);
-	curs_set(0); /* 0, 1, 2 */
-	cbreak();
-	//scrollok(stdscr,TRUE);
-	//start_color();
-	move(0,0);
-	refresh();
-	return 1;
-}
 
 char* get_permissions(char* cwd, char* file_name)
 {
@@ -350,6 +337,7 @@ int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, cons
 	}
 	return 0;
 }
+
 
 
 

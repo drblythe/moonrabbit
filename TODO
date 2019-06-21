@@ -1,15 +1,16 @@
 
+-c config seg faults
 
-	Store index of *certain* amount of directories 
+Store index of *certain* amount of directories 
 
-	Number->command functionality
-		As long as the input is a number, record it
-		Then as soon as getch() is not a digit, execute the command 'x' times
+Number->command functionality
+	As long as the input is a number, record it
+	Then as soon as getch() is not a digit, execute the command 'x' times
 
-	Find file in dir with '/', move to index if exists
+Find file in dir with '/', move to index if exists
 
-	Check permissions before chdir or opening file
+Check permissions before chdir or opening file
 
-	Upward scrolling	
+Upward scrolling	
 
-	Fix execv()	
+Fix execv()	

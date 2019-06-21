@@ -13,6 +13,8 @@
 #include "input.h"
 #include "command_handling.h"
 #include "bindings.h"
+#include "init.h"
+#include "utils.h"
 
 
 int main(int argc, char* argv[])
@@ -26,7 +28,8 @@ int main(int argc, char* argv[])
 	KEY_VALUE** p_stored_indexes = &stored_indexes;
 	int num_stored_indexes = 0;
 	char* cwd;
-	char *config_path;
+	//char *config_path;
+	char config_path[255];
 	char **input;
 	int current_index;
 	int num_entries;
@@ -34,13 +37,13 @@ int main(int argc, char* argv[])
 
 	// Storage for program exec paths
 	//
-	char TEXT[64]; 
-	char AUDIO[64]; 
-	char VIDEO[64]; 
-	char IMAGE[64]; 
-	char DOC[64]; 
-	char SHELL[64];
-	char TERMINAL[64];
+	char TEXT[MAX_PROG_PATH_LEN]; 
+	char AUDIO[MAX_PROG_PATH_LEN]; 
+	char VIDEO[MAX_PROG_PATH_LEN]; 
+	char IMAGE[MAX_PROG_PATH_LEN]; 
+	char DOC[MAX_PROG_PATH_LEN]; 
+	char SHELL[MAX_PROG_PATH_LEN];
+	char TERMINAL[MAX_PROG_PATH_LEN];
 
 	// Init ncurses
 	//
@@ -67,14 +70,41 @@ int main(int argc, char* argv[])
 	num_entries = 0;
 	getyx(stdscr, y, x);
 
+	/* Config Path */
+	int user_cfg = 0;
+	while (argc > 1) {
+		if (argv[1][0] == '-') {
+			if (argv[1][1] == 'c') {
+				user_cfg = 1;
+			}
+			else {
+				fprintf(stderr, "Error: unrecognized option %s\n", argv[1]);
+				exit(EXIT_FAILURE);
+			}
+			argc--;
+			argv++;
+		}
+		else
+			break;
+	}
+	if (user_cfg) {
+		strcpy(config_path,argv[1]);
+	}
+	else {
+		char username[128] ;
+		getlogin_r(username,128);
+		strcpy(config_path, "/home/");
+		strcat(config_path, username);
+		strcat(config_path, "/.config/moonrabbit/config");
+	}
+
 	// Init moonrabbit stuff (read config for program prefs, get files in dir, etc.)
 	//
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-	config_path = "/home/charlie/prog/moonrabbit/config";
 	refresh(); /* wrefresh(stdscr); */
-	set_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
+	init_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
 
 	// Main loop
 	// 	
@@ -166,7 +196,8 @@ int main(int argc, char* argv[])
 		case '/':
 			input = malloc(sizeof(char)*128);
 			*input = get_input();
-			if (search_dir(*input,entry_arr,&current_index,num_entries)) {
+			//if (search_dir(*input,entry_arr,&current_index,num_entries)) {
+			if (binarysearch_entry(*input, entry_arr, num_entries, &current_index)) {
 				erase();
 				display_entries(entry_arr, num_entries, current_index,LINES);
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);

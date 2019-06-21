@@ -9,8 +9,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
-
-int set_default_programs(char* config_path, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL);
+#include <ncurses.h>
 
 int prev_dir(char **p_cwd);
 
