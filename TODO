@@ -7,10 +7,10 @@ Number->command functionality
 	As long as the input is a number, record it
 	Then as soon as getch() is not a digit, execute the command 'x' times
 
-Find file in dir with '/', move to index if exists
-
 Check permissions before chdir or opening file
 
 Upward scrolling	
 
 Fix execv()	
+
+clear copy buffer on chdir

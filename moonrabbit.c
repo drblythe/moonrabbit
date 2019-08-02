@@ -14,7 +14,6 @@
 #include "command_handling.h"
 #include "bindings.h"
 #include "init.h"
-#include "utils.h"
 
 
 int main(int argc, char* argv[])
@@ -24,12 +23,18 @@ int main(int argc, char* argv[])
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
+
+	char **copy_buffer = NULL;// put these in a struct
+	// bool in_use;
+	int copy_buff_del = 0;//
+	int copy_buff_size = 0;//
+
 	KEY_VALUE* stored_indexes = malloc(sizeof(KEY_VALUE)*MAX_STORED_INDEXES);
 	KEY_VALUE** p_stored_indexes = &stored_indexes;
 	int num_stored_indexes = 0;
 	char* cwd;
 	//char *config_path;
-	char config_path[255];
+	char config_path[PATH_MAX];
 	char **input;
 	int current_index;
 	int num_entries;
@@ -37,13 +42,13 @@ int main(int argc, char* argv[])
 
 	// Storage for program exec paths
 	//
-	char TEXT[MAX_PROG_PATH_LEN]; 
-	char AUDIO[MAX_PROG_PATH_LEN]; 
-	char VIDEO[MAX_PROG_PATH_LEN]; 
-	char IMAGE[MAX_PROG_PATH_LEN]; 
-	char DOC[MAX_PROG_PATH_LEN]; 
-	char SHELL[MAX_PROG_PATH_LEN];
-	char TERMINAL[MAX_PROG_PATH_LEN];
+	char TEXT[PATH_MAX]; 
+	char AUDIO[PATH_MAX]; 
+	char VIDEO[PATH_MAX]; 
+	char IMAGE[PATH_MAX]; 
+	char DOC[PATH_MAX]; 
+	char SHELL[PATH_MAX];
+	char TERMINAL[PATH_MAX];
 
 	// Init ncurses
 	//
@@ -206,9 +211,31 @@ int main(int argc, char* argv[])
 			free(input);
 			break;
 
-		case 'g':
-			if ( (c = getch()) == 'g'){
-				current_index = 0;
+		// Copy
+		case 'y':
+			if ( (c = getch()) == 'y'){
+				copy_buff_size = get_num_marked(num_entries, entry_arr);
+				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+				copy_buff_del = 0;
+			}
+			break;
+
+		// Cut
+		case 'd':
+			if ( (c = getch()) == 'd'){
+				copy_buff_size = get_num_marked(num_entries, entry_arr);
+				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+				copy_buff_del = 1;
+			}
+			break;
+
+		// Paste
+		case 'p':
+			if ( (c = getch()) == 'p'){
+				file_buff_cp(copy_buff_del, cwd, copy_buffer, &copy_buff_size);
+				empty_copy_buffer(&copy_buffer, &copy_buff_size);
+				clear_entries(entry_arr, &num_entries, &current_index,1);
+				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 				erase();
 				display_entries(entry_arr, num_entries, current_index,LINES);
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
@@ -216,13 +243,26 @@ int main(int argc, char* argv[])
 			}
 			break;
 
+
+		case 'g':
+			if ( (c = getch()) == 'g'){
+				current_index = 0;
+				//erase();
+				clear();
+				display_entries(entry_arr, num_entries, current_index,LINES);
+				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+				//refresh();
+			}
+			break;
+
+
 		case 'G':
 			current_index = num_entries -1;
-			erase();
+			//erase();
 			clear();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			//refresh();
 			break;
 
 		case 'q':
@@ -233,7 +273,8 @@ int main(int argc, char* argv[])
 			// open shell here
 			break;
 
-		case ctrl('h'):
+		//case ctrl('h'):
+		case 'H':
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
@@ -242,12 +283,11 @@ int main(int argc, char* argv[])
 			break;
 
 		
-		case ctrl('r'):
-			erase();
-			//mvprintw(10,20,"--keycode=%d--",c);
+		//case ctrl('r'):
+		case 'r':
+			clear();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
 			break;
 
 

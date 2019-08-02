@@ -1,21 +1,5 @@
 /* entry.c*/
-
 #include "entry.h"
-
-int is_directory(char* cwd, char* name)
-{
-
-	struct stat sb;
-	int ret;
-	char abs_path[100];
-	strcpy(abs_path,cwd);
-	strcat(abs_path,"/");
-	strcat(abs_path,name);
-
-	(stat(abs_path, &sb) == 0 && S_ISDIR(sb.st_mode)) ? (ret=1) : (ret=0);
-
-	return ret;
-}
 
 
 int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
@@ -247,46 +231,11 @@ int unmark_file(ENTRY *p_entry)
 
 
 
-char* get_permissions(char* cwd, char* file_name)
-{
-	int len_cwd = strlen(cwd);
-	int len_name = strlen(file_name);
-	int len_file_path = len_cwd + len_name + 1;
-
-	char file_path[len_file_path];
-	strcpy(file_path, cwd);
-	strcat(file_path,"/");
-	strcat(file_path,file_name);
-
-	struct stat st;
-	char *modeval = malloc(sizeof(char)*9 + 1);
-	if (stat(file_path, &st) == 0) {
-        mode_t perm = st.st_mode;
-		modeval[0] = (perm & S_IRUSR) ? 'r' : '-';
-		modeval[1] = (perm & S_IWUSR) ? 'w' : '-';
-	    modeval[2] = (perm & S_IXUSR) ? 'x' : '-';
-	    modeval[3] = (perm & S_IRGRP) ? 'r' : '-';
-	    modeval[4] = (perm & S_IWGRP) ? 'w' : '-';
-	    modeval[5] = (perm & S_IXGRP) ? 'x' : '-';
-	    modeval[6] = (perm & S_IROTH) ? 'r' : '-';
-	    modeval[7] = (perm & S_IWOTH) ? 'w' : '-';
-	    modeval[8] = (perm & S_IXOTH) ? 'x' : '-';
-	}
-	else{
-	    //return strerror(errno);
-	    for (int i = 0; i < 9; i++) {
-	    	modeval[i] = '-';
-	    }
-	}
-	modeval[9] = '\0';
-
-	return modeval;
-}
-
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
 	char* perm = get_permissions(cwd, entry.name);
-	mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	//mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
+	mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
 	free(perm);
 	wattron(stdscr,A_BOLD);
 	if (strcmp(cwd, "/")) {
@@ -311,22 +260,6 @@ int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries
 }
 
 
-char* get_abs_path(char* cwd, char* file_name)
-{
-	int len_cwd = strlen(cwd);
-    int len_file_name = strlen(file_name);
-    int len_abs_path = len_cwd + len_file_name + 1;
-	char* abs_path;
-
-	abs_path = malloc(sizeof(char)*len_abs_path);
-	strcpy(abs_path,cwd);
-	strcat(abs_path,"/");
-	strcat(abs_path,file_name);
-
-	return abs_path;
-}
-
-
 int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, const int num_entries)
 {
 	for (int i = 0; i < num_entries; i++) {
@@ -337,6 +270,84 @@ int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, cons
 	}
 	return 0;
 }
+
+int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries, int* current_index)
+{
+	int low = 0;
+	int high = num_entries;
+	int mid;
+
+	while (low <= high) {
+		mid = (low+high)/2;
+		if (strcmp(file_name, arr[mid].name) == 0) {
+			*current_index = arr[mid].index;
+			return 1;
+		}
+		else if (strcmp(file_name, arr[mid].name) < 0) 
+			high = mid-1;
+		else if (strcmp(file_name, arr[mid].name ) > 0) 
+			low = mid+1;
+	}
+
+	return -1;
+}
+
+
+int get_num_marked(int num_entries, ENTRY* entry_arr)
+{
+	int n = 0;
+	for (int i = 0; i < num_entries; i++) {
+			if (entry_arr[i].marked) {
+				n++;
+			}
+	}
+	return n;
+}
+
+
+int fill_copy_buffer(char*** copy_buff, int buff_size, int num_entries, ENTRY* entry_arr, char* cwd)
+{
+	//printf("---%x\n---",copy_buff);
+	int n = 0;
+	*copy_buff = malloc(sizeof(char*)*buff_size);
+	for (int i = 0; i < num_entries && n < buff_size; i++) {
+		if (entry_arr[i].marked) {
+			*((*copy_buff)+n) = malloc(sizeof(char) * (strlen(cwd)+1+strlen(entry_arr[i].name)+1));
+			strcpy(*((*copy_buff)+n),cwd);
+			strcat(*((*copy_buff)+n),"/");
+			strcat(*((*copy_buff)+n),entry_arr[i].name);
+			n++;
+		}
+	}
+	return 1;
+}
+
+int print(char*** copy_buff, int buff_size)
+{
+	FILE* fp;
+	fp = fopen("./output","w");
+	for (int i = 0; i < buff_size; i++) {
+		fputs(*(*(copy_buff)+i),fp);
+		fputs("\n",fp);
+		printf("---%s---\n",*(*(copy_buff)+i));
+	}
+	fclose(fp);
+	return 1;
+}
+
+int empty_copy_buffer(char*** copy_buff, int* buff_size)
+{
+	for (int i = 0; i < *buff_size; i++)
+		free(*((*copy_buff)+i));
+	free(*copy_buff);
+	*buff_size= 0;
+	return 1;
+}
+
+
+
+
+
 
 
 

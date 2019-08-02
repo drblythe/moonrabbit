@@ -1,6 +1,9 @@
-/* utils.h */
 #ifndef UTILS_H
 #define UTILS_H
-#include "entry.h"
-int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries, int* current_index);
+#include <sys/stat.h>
+#include <string.h>
+#include <stdlib.h>
+int is_directory(char* cwd, char* name);
+int is_directory_fullpath(char* path);
+char* get_permissions(char* cwd, char* file_name);
 #endif

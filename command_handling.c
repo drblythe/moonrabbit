@@ -11,14 +11,68 @@ int cmd_cd(char** p_cwd, char* dir_name)
     return 1;
 }
 
+int cmd_mkdir(char* path)
+{
+	mkdir(path, S_IRWXU | S_IRWXG | S_IRWXO);
+	return 1;
+}
+
+int cmd_mkdir_splitpath(char* path, char* file_name)
+{
+	char full_path[strlen(path)+1+strlen(file_name)+1];
+	strcpy(full_path,path);
+	strcat(full_path, "/");
+	strcat(full_path, file_name);
+	mkdir(full_path, S_IRWXU | S_IRWXG | S_IRWXO);
+	return 1;
+}
+
+int cmd_copy_dir(char* dest_dir, char* src_dir)
+{
+	struct dirent **dir_contents;
+	//struct stat *sb;
+	int dir_size;
+
+	FILE * fp;
+	fp = fopen("./output","w");
+	
+	dir_size = scandir(src_dir, &dir_contents, NULL, alphasort);
+	cmd_mkdir(dest_dir);
+
+	for (int i = 0; i < dir_size; i++) {
+		if (!strcmp(dir_contents[i]->d_name, ".") || !strcmp(dir_contents[i]->d_name, "..")) {
+			continue;
+		}
+		char sub_dest_path[strlen(dest_dir)+1+strlen(dir_contents[i]->d_name)+1];
+		strcpy(sub_dest_path, dest_dir);
+		strcat(sub_dest_path, "/");
+		strcat(sub_dest_path, dir_contents[i]->d_name);
+
+		char sub_src_path[strlen(src_dir)+1+strlen(dir_contents[i]->d_name)+1];
+		strcpy(sub_src_path, src_dir);
+		strcat(sub_src_path, "/");
+		strcat(sub_src_path, dir_contents[i]->d_name);
+
+		if (is_directory(src_dir,dir_contents[i]->d_name)) {
+			cmd_copy_dir(sub_dest_path, sub_src_path);
+		}
+		else {
+			cmd_copy(sub_dest_path, sub_src_path);
+		}
+	}
+	fclose(fp);
+	return 1;
+}
 
 int cmd_delete(const char * file_path)
 {
 /* 'Confirm deletion function' in another file */
+	/*
 	printf("\nAre you sure you want to delete %s? y/N ",file_path);
 	char c = getchar();
 	if (c != 'y' && c != 'Y')
 		return 0;
+	*/
 
 	int ret;
 	ret = remove(file_path);

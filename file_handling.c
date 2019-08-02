@@ -183,4 +183,125 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 	return 1;
 }
 
+int file_name_len(char* path)
+{
+	int len = 0;
+	for(int i = strlen(path)-1; i >= 0; i--) {
+		if (path[i] == '/') 
+			break;
+		len++;
+	}
+	return len;
+
+}
+
+/*
+int extract_file_name(char** buff, char* path)
+{
+	int len = file_name_len(path);
+	for (int i = 0; i < len; i++) {
+		*(buff+i) = path[strlen(path)-1-len];
+	}
+	char temp[len+1];
+	for (int i = start_index; i < strlen(path); i++) {
+		temp[i-start_index] = path[i];
+	}
+	temp[len] = '\0';
+	printf("--%s--\n",temp);
+	printf("--%d--\n",strlen(path));
+	printf("--%d--\n",start_index);
+	printf("--%d--\n",strlen(path)-start_index);
+	printf("--%d--\n",strlen(path)-start_index+1);
+	strcpy(*buff,temp);
+	return strlen(path)-start_index+1;
+	return 1;
+}
+*/
+
+int extract_file_name(char** buff, const char* path)
+{
+	int len = 0;
+	int slash_index = 0;
+	for(int i = strlen(path)-1; i >= 0; i--) {
+		if (path[i] == '/') {
+			slash_index = i;
+			break;
+		}
+		len++;
+	}
+	*buff = malloc(sizeof(char)*(len+1));
+	for (int i = 0; i < len; i++) {
+		*(*buff+i) = path[slash_index+1+i];
+		//printf("--%c--\n",*(*buff+i));
+	}
+	*(*buff+len) = '\0';
+
+	return len;
+}
+
+int append_to_path(char* new_path, const char* old_path, const char* filename) 
+{
+	strcpy(new_path, old_path);
+	strcat(new_path, "/");
+	strcat(new_path,filename);
+	return 1;
+}
+
+/*
+int copy_dir_rec(char* dest_path,)
+{
+	for (int i = 0; i < num_dirents; i++) {
+		// create a new dir at dest path
+		// copy contents of 
+		if (entries[i].is_directory) 
+			copy_dir_rec();
+		else
+			command
+
+	}
+	return 1;
+}
+*/
+
+int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size)
+{
+	for (int i = 0; i < *size; i++) {
+		char *filename;
+		char ** p = &filename;
+		int len = 0;
+		//extract file name
+		len = extract_file_name(p,*(file_buffer+i));
+		//append filename to new path
+		char new_path[strlen(dest)+1+len+1];
+		append_to_path(new_path, dest, filename);
+
+		if (is_directory_fullpath(*(file_buffer+i))) {
+			cmd_copy_dir(new_path, *(file_buffer+i));
+		}
+		else {
+			//move files if del_after_copy
+			if (del_after_copy)
+				cmd_move(new_path, *(file_buffer+i));
+			else
+				cmd_copy(new_path, *(file_buffer+i));
+			//copy otherwise
+		}
+		free(*p);
+	}
+	return 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
