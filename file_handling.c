@@ -276,7 +276,7 @@ int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* 
 		append_to_path(new_path, dest, filename);
 
 		if (is_directory_fullpath(*(file_buffer+i))) {
-			cmd_copy_dir(new_path, *(file_buffer+i));
+			cmd_copy_dir(del_after_copy, new_path, *(file_buffer+i));
 		}
 		else {
 			//move files if del_after_copy

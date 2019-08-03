@@ -1,7 +1,16 @@
 
--c config seg faults
+TODO:
 
-Store index of *certain* amount of directories 
+1. Clear copy buffer on chdir
+
+2. Store index of *certain* amount of directories 
+
+
+================================================================================
+
+Whatever
+
+-c config seg faults
 
 Number->command functionality
 	As long as the input is a number, record it
@@ -13,4 +22,3 @@ Upward scrolling
 
 Fix execv()	
 
-clear copy buffer on chdir

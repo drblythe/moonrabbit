@@ -27,7 +27,7 @@ int cmd_mkdir_splitpath(char* path, char* file_name)
 	return 1;
 }
 
-int cmd_copy_dir(char* dest_dir, char* src_dir)
+int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 {
 	struct dirent **dir_contents;
 	//struct stat *sb;
@@ -54,12 +54,18 @@ int cmd_copy_dir(char* dest_dir, char* src_dir)
 		strcat(sub_src_path, dir_contents[i]->d_name);
 
 		if (is_directory(src_dir,dir_contents[i]->d_name)) {
-			cmd_copy_dir(sub_dest_path, sub_src_path);
+			cmd_copy_dir(del_after_move, sub_dest_path, sub_src_path);
+			if (del_after_move)
+				cmd_delete(sub_src_path);
 		}
 		else {
 			cmd_copy(sub_dest_path, sub_src_path);
+			if (del_after_move)
+				cmd_delete(sub_src_path);
 		}
 	}
+	if (del_after_move)
+		cmd_delete(src_dir);
 	fclose(fp);
 	return 1;
 }

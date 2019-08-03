@@ -15,7 +15,7 @@
 int cmd_cd(char** p_cwd, char* dir_name);
 int handle_cmd(char **p_input, char** p_cwd);
 int cmd_copy(const char *dest, const char *src);
-int cmd_copy_dir(char* dest_dir, char* src_dir);
+int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir);
 /* ^^ https://stackoverflow.com/questions/2180079/how-can-i-copy-a-file-on-unix-using-c  */
 int cmd_delete(const char * file_path);
 int cmd_move(const char* dest, const char* src);
