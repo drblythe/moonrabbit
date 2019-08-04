@@ -4,6 +4,11 @@ TODO:
 2. 'xx' or something like that to delete
    add warning/confirmation system for the text
 
+3. Recursive dir delete is written
+	Already had cmd_delete for regular files
+	Make a function that is called in main that deletes while 
+		determining if file or dir (like file_buff_copy())
+
 4. Store index of *certain* amount of directories 
 
 

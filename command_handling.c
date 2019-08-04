@@ -69,33 +69,32 @@ int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 
 int cmd_delete_dir(const char* dir_path) 
 {
-	/*
 	struct dirent **dir_contents;
 	int dir_size;
-
 	dir_size = scandir(dir_path, &dir_contents, NULL, alphasort);
+
 
 	for (int i = 0; i < dir_size; i++) {
 		if (!strcmp(dir_contents[i]->d_name, ".") || !strcmp(dir_contents[i]->d_name, "..")) {
 			continue;
 		}
-		if (is_directory(src_dir,dir_contents[i]->d_name)) {
-			cmd_copy_dir(del_after_move, sub_dest_path, sub_src_path);
-			cmd_delete_dir(
-			if (del_after_move)
-				cmd_delete(sub_src_path);
+		char sub_path[strlen(dir_path)+1+strlen(dir_contents[i]->d_name)+1];
+		strcpy(sub_path, dir_path);
+		strcat(sub_path, "/");
+		strcat(sub_path, dir_contents[i]->d_name);
+
+
+		if (is_directory(sub_path,dir_contents[i]->d_name)) {
+			cmd_delete_dir(sub_path);
 		}
 		else {
-			cmd_copy(sub_dest_path, sub_src_path);
-			if (del_after_move)
-				cmd_delete(sub_src_path);
+			cmd_delete(sub_path);
 		}
-		free(dir_contents[n]);
+		free(dir_contents[i]);
 	}
-	if (del_after_move)
-		cmd_delete(src_dir);
+
+	cmd_delete(dir_path);
 	free(dir_contents);
-	*/
 	return 1;
 }
 
