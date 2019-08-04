@@ -29,6 +29,8 @@ int main(int argc, char* argv[])
 	int copy_buff_del = 0;//
 	int copy_buff_size = 0;//
 
+	int num_selected = 0;
+
 	KEY_VALUE* stored_indexes = malloc(sizeof(KEY_VALUE)*MAX_STORED_INDEXES);
 	KEY_VALUE** p_stored_indexes = &stored_indexes;
 	int num_stored_indexes = 0;
@@ -158,6 +160,8 @@ int main(int argc, char* argv[])
 
 		case K_ENTER:
 		case 'l':
+			if (!num_entries)
+				break;
 			if (entry_arr[current_index].type == 'd') {
 				/*
 				for (int i = 0; i < num_stored_indexes; i++) {
@@ -243,6 +247,18 @@ int main(int argc, char* argv[])
 			}
 			break;
 
+		case 'x':
+			if ( (c = getch()) == 'x') {
+				int ret = confirm_deletion(LINES-4, 0, num_selected);
+				if (ret) {
+					//mvprintw(LINES-4, 0, "deleted");
+				}
+					
+				else {
+					//mvprintw(LINES-4, 0, "cancelled");
+				}
+			}
+			break;
 
 		case 'g':
 			if ( (c = getch()) == 'g'){
@@ -292,10 +308,10 @@ int main(int argc, char* argv[])
 
 
 		case K_SPACE:
-			if (!entry_arr[current_index].marked)
-				mark_file(&entry_arr[current_index]);
-			else
-				unmark_file(&entry_arr[current_index]);
+			if (!entry_arr[current_index].marked) 
+				mark_file(&entry_arr[current_index],&num_selected);
+			else 
+				unmark_file(&entry_arr[current_index],&num_selected);
 			if (current_index < num_entries -1) 
 				update_curr_index(DOWN, &current_index, &num_entries);
 			else 
@@ -314,6 +330,7 @@ int main(int argc, char* argv[])
 	free(entry_arr);
 	free(stored_indexes);
 	move(0,0);
+	//clear();
 	erase();
 	refresh();
 	endwin();

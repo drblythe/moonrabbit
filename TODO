@@ -1,9 +1,10 @@
 
 TODO:
 
-1. Clear copy buffer on chdir
+2. 'xx' or something like that to delete
+   add warning/confirmation system for the text
 
-2. Store index of *certain* amount of directories 
+4. Store index of *certain* amount of directories 
 
 
 ================================================================================

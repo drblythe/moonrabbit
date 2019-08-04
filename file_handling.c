@@ -291,6 +291,10 @@ int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* 
 	return 1;
 }
 
+int delete_selection()
+{
+	return 1;
+}
 
 
 

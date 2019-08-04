@@ -216,16 +216,18 @@ int update_curr_index(short int direction, int* current_index, int *num_entries)
 }
 
 
-int mark_file(ENTRY *p_entry)
+int mark_file(ENTRY *p_entry, int *num_selected)
 {
 	p_entry->marked = 1;
+	(*num_selected)++;
 	return 1;
 }
 
 
-int unmark_file(ENTRY *p_entry) 
+int unmark_file(ENTRY *p_entry, int *num_selected) 
 {
 	p_entry->marked = 0;
+	(*num_selected)--;
 	return 1;
 }
 
@@ -233,6 +235,8 @@ int unmark_file(ENTRY *p_entry)
 
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
+	if (!num_entries)
+		return 0;
 	char* perm = get_permissions(cwd, entry.name);
 	//mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);

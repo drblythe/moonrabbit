@@ -39,8 +39,8 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots);
 int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINES);
 int display_file_info(char* cwd, ENTRY entry,int current_index, int num_entries);
 
-int mark_file(ENTRY *p_entry);
-int unmark_file(ENTRY *p_entry);
+int mark_file(ENTRY *p_entry, int *num_selected);
+int unmark_file(ENTRY *p_entry, int *num_selected);
 
 int update_curr_index(short int direction, int* current_index, int *num_entries);
 int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* dir_path, const int index);

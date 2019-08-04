@@ -30,12 +30,8 @@ int cmd_mkdir_splitpath(char* path, char* file_name)
 int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 {
 	struct dirent **dir_contents;
-	//struct stat *sb;
 	int dir_size;
 
-	FILE * fp;
-	fp = fopen("./output","w");
-	
 	dir_size = scandir(src_dir, &dir_contents, NULL, alphasort);
 	cmd_mkdir(dest_dir);
 
@@ -63,23 +59,49 @@ int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 			if (del_after_move)
 				cmd_delete(sub_src_path);
 		}
+		free(dir_contents[i]);
 	}
 	if (del_after_move)
 		cmd_delete(src_dir);
-	fclose(fp);
+	free(dir_contents);
 	return 1;
 }
 
+int cmd_delete_dir(const char* dir_path) 
+{
+	/*
+	struct dirent **dir_contents;
+	int dir_size;
+
+	dir_size = scandir(dir_path, &dir_contents, NULL, alphasort);
+
+	for (int i = 0; i < dir_size; i++) {
+		if (!strcmp(dir_contents[i]->d_name, ".") || !strcmp(dir_contents[i]->d_name, "..")) {
+			continue;
+		}
+		if (is_directory(src_dir,dir_contents[i]->d_name)) {
+			cmd_copy_dir(del_after_move, sub_dest_path, sub_src_path);
+			cmd_delete_dir(
+			if (del_after_move)
+				cmd_delete(sub_src_path);
+		}
+		else {
+			cmd_copy(sub_dest_path, sub_src_path);
+			if (del_after_move)
+				cmd_delete(sub_src_path);
+		}
+		free(dir_contents[n]);
+	}
+	if (del_after_move)
+		cmd_delete(src_dir);
+	free(dir_contents);
+	*/
+	return 1;
+}
+
+
 int cmd_delete(const char * file_path)
 {
-/* 'Confirm deletion function' in another file */
-	/*
-	printf("\nAre you sure you want to delete %s? y/N ",file_path);
-	char c = getchar();
-	if (c != 'y' && c != 'Y')
-		return 0;
-	*/
-
 	int ret;
 	ret = remove(file_path);
 	if (ret) return 0;
