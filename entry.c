@@ -311,7 +311,6 @@ int get_num_marked(int num_entries, ENTRY* entry_arr)
 
 int fill_copy_buffer(char*** copy_buff, int buff_size, int num_entries, ENTRY* entry_arr, char* cwd)
 {
-	//printf("---%x\n---",copy_buff);
 	int n = 0;
 	*copy_buff = malloc(sizeof(char*)*buff_size);
 	for (int i = 0; i < num_entries && n < buff_size; i++) {

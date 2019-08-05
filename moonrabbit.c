@@ -163,18 +163,13 @@ int main(int argc, char* argv[])
 			if (!num_entries)
 				break;
 			if (entry_arr[current_index].type == 'd') {
-				/*
-				for (int i = 0; i < num_stored_indexes; i++) {
-					printf("/////dir=%s,index=%d//////",stored_indexes[i].key, stored_indexes[i].value );
-					getchar();
-				}
-				*/
 				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
 					num_stored_indexes++;
 				next_dir(&cwd, entry_arr[current_index].name);
 				clear_entries(entry_arr, &num_entries, &current_index, 1);
 				load_index(p_stored_indexes, num_stored_indexes, cwd, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
+				num_selected = 0;
 			}
 			else if (entry_arr[current_index].type != 'd') {
 				open_file(cwd, entry_arr[current_index].name,TEXT,AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
@@ -248,14 +243,21 @@ int main(int argc, char* argv[])
 			break;
 
 		case 'x':
-			if ( (c = getch()) == 'x') {
+			if ( (c = getch()) == 'x' && num_selected > 0) {
 				int ret = confirm_deletion(LINES-4, 0, num_selected);
 				if (ret) {
-					//mvprintw(LINES-4, 0, "deleted");
-				}
-					
-				else {
-					//mvprintw(LINES-4, 0, "cancelled");
+					copy_buff_size = get_num_marked(num_entries, entry_arr);
+					fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+					copy_buff_del = 0;
+					delete_selection(copy_buffer, &copy_buff_size);
+					empty_copy_buffer(&copy_buffer, &copy_buff_size);
+					clear_entries(entry_arr, &num_entries, &current_index,1);
+					get_entries(cwd, &entry_arr, &num_entries, show_dots);
+					erase();
+					display_entries(entry_arr, num_entries, current_index,LINES);
+					display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+					refresh();
+					num_selected = 0;
 				}
 			}
 			break;

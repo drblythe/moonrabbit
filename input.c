@@ -52,7 +52,8 @@ char* get_input(void)
 
 int confirm_deletion(int x_pos, int y_pos, int num_selected)
 {
-	mvprintw(x_pos, y_pos, "Delete %d files? (y/N)", num_selected);
+	//mvprintw(x_pos, y_pos, "Delete %d files? (y/N)", num_selected);
+	mvprintw(x_pos, y_pos, "Delete selection? (y/N)", num_selected);
 	char c = getch();
 	if (c == 'y' || c == 'Y')
 		return 1;

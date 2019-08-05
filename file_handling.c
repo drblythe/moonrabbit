@@ -156,30 +156,6 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 		return -1;
 	}
 	free(command);
-/*	
-	char full_path[strlen(cwd)+1+strlen(file_name)+1];
-	strcpy(full_path,cwd);
-	strcat(full_path,"/");
-	strcat(full_path,file_name);
-
-	//fork a new process so it isnt tied to current terminal
-    pid_t pid;
-    pid = fork();
-    if (pid == -1)
-        perror("fork");
-
-    if (!pid) {
-
-        int ret;
-        ret = execl(command, "vim -n -E", full_path, NULL);
-
-        if (ret == -1) {
-            perror("execl");
-            exit (EXIT_FAILURE);
-        }
-    }
-*/
-
 	return 1;
 }
 
@@ -195,28 +171,6 @@ int file_name_len(char* path)
 
 }
 
-/*
-int extract_file_name(char** buff, char* path)
-{
-	int len = file_name_len(path);
-	for (int i = 0; i < len; i++) {
-		*(buff+i) = path[strlen(path)-1-len];
-	}
-	char temp[len+1];
-	for (int i = start_index; i < strlen(path); i++) {
-		temp[i-start_index] = path[i];
-	}
-	temp[len] = '\0';
-	printf("--%s--\n",temp);
-	printf("--%d--\n",strlen(path));
-	printf("--%d--\n",start_index);
-	printf("--%d--\n",strlen(path)-start_index);
-	printf("--%d--\n",strlen(path)-start_index+1);
-	strcpy(*buff,temp);
-	return strlen(path)-start_index+1;
-	return 1;
-}
-*/
 
 int extract_file_name(char** buff, const char* path)
 {
@@ -247,21 +201,6 @@ int append_to_path(char* new_path, const char* old_path, const char* filename)
 	return 1;
 }
 
-/*
-int copy_dir_rec(char* dest_path,)
-{
-	for (int i = 0; i < num_dirents; i++) {
-		// create a new dir at dest path
-		// copy contents of 
-		if (entries[i].is_directory) 
-			copy_dir_rec();
-		else
-			command
-
-	}
-	return 1;
-}
-*/
 
 int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size)
 {
@@ -291,8 +230,18 @@ int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* 
 	return 1;
 }
 
-int delete_selection()
+int delete_selection(char** file_buffer, int* num_selected)
 {
+	for (int i = 0; i < *num_selected; i++) {
+		if (is_directory_fullpath(*(file_buffer+i))) {
+			cmd_delete_dir(*(file_buffer+i));
+		}
+		else {
+			cmd_delete(*(file_buffer+i));
+		}
+	}
+	
+	*num_selected = 0;
 	return 1;
 }
 

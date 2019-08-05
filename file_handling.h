@@ -32,5 +32,7 @@ int append_to_path(char* new_path, const char* old_path, const char* filename);
 
 int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size);
 
+int delete_selection(char** file_buffer, int* num_selected);
+
 #endif
 
