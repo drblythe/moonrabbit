@@ -13,7 +13,7 @@ VIDEO=/usr/bin/mpv
 IMAGE=/usr/bin/feh 
 DOC=/usr/bin/zathura
 SHELL=/bin/bash
-TERMINAL=/usr/bin/xfce4-terminal
+TERMINAL=/usr/bin/urxvt
 
 # Set filetype associations
 VIDEO_EXT=[.mp4 .mkv .avi .gif .webm]

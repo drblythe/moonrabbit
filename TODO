@@ -1,16 +1,9 @@
 
 TODO:
 
-2. 'xx' or something like that to delete
-   add warning/confirmation system for the text
+1. Store index of *certain* amount of directories 
 
-3. Recursive dir delete is written
-	Already had cmd_delete for regular files
-	Make a function that is called in main that deletes while 
-		determining if file or dir (like file_buff_copy())
-
-4. Store index of *certain* amount of directories 
-
+2. Spaces in file name are causing the crashes
 
 ================================================================================
 
@@ -22,7 +15,7 @@ Number->command functionality
 	As long as the input is a number, record it
 	Then as soon as getch() is not a digit, execute the command 'x' times
 
-Check permissions before chdir or opening file
+Check permissions
 
 Upward scrolling	
 
