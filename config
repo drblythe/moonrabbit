@@ -3,7 +3,7 @@
 # Use FULL path to executable NO SPACES
 #
 # Keybindings are vim for the most part, (movement, etc) aka copied from ranger
-# Ctrl+h to toggle hidden files
+# Shift+h to toggle hidden files
 
 # Set default Programs
 # TEXT - default text editor... etc
@@ -15,6 +15,7 @@ DOC=/usr/bin/zathura
 SHELL=/bin/bash
 TERMINAL=/usr/bin/urxvt
 
+# Below this line does nothing as of now. I hardcoded filetypes for testing, so I will have to make the shameful switch :(
 # Set filetype associations
 VIDEO_EXT=[.mp4 .mkv .avi .gif .webm]
 AUDIO_EXT=[.mp3 .flac]
@@ -22,7 +23,7 @@ IMAGE_EXT=[.jpg .jpeg .JPG .JPEG .png .PNG]
 DOC_EXT=[.pdf .djvu]
 
 # Settings like margins, etc..
-# These do nothing right now lol
+
 LEFT_MARGIN=0
 RIGHT_MARGIN=COLS
 TOP_MARGIN=0
