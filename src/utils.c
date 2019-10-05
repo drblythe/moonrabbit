@@ -5,7 +5,7 @@ int is_directory(char* cwd, char* name)
 
 	struct stat sb;
 	int ret;
-	char abs_path[100];
+	char abs_path[NAME_MAX];
 	strcpy(abs_path,cwd);
 	strcat(abs_path,"/");
 	strcat(abs_path,name);

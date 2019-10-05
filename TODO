@@ -3,11 +3,7 @@ TODO:
 
 1. Store index of *certain* amount of directories 
 
-2. Spaces in file name are causing the crashes
-
 ================================================================================
-
-Change name of 'copy_buffer' to file buffer ( or selection buffer, etc) so it includes the selection for deletion
 
 -c config seg faults
 
@@ -15,7 +11,7 @@ Number->command functionality
 	As long as the input is a number, record it
 	Then as soon as getch() is not a digit, execute the command 'x' times
 
-Check permissions
+Check permissions CORRECTLY
 
 Upward scrolling	
 
