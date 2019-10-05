@@ -49,11 +49,10 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 			
 			entry_index++;
 		}
-		free(namelist[n]);
+		//free(namelist[n]);
 		free(sb);
 		free(perm);
 	}
-
 	free(namelist);
 	*num_entries -= 2;
 	if (!show_dots)
