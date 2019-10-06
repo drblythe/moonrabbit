@@ -1,6 +1,4 @@
-/* entry.c*/
 #include "entry.h"
-
 
 int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 {
@@ -63,6 +61,7 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 
 int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINES)
 {
+	unsigned int RIGHT_PADDING = 0 + 4;
 	int PRINT_STOP = LINES - 3;
 	int SCROLL_STOP_BOTTOM = PRINT_STOP - 5;
 	//int SCROLL_STOP_TOP = 10;
@@ -83,8 +82,8 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 				//wattron(stdscr, A_BLINK);
 				printw("   ");
 			}
-			if ( strlen(entry_arr[i].name) >= COLS-6) {
-				for (int j = 0; j < COLS-6; j++) {
+			if ( strlen(entry_arr[i].name) >= COLS-RIGHT_PADDING) {
+				for (int j = 0; j < COLS-RIGHT_PADDING; j++) {
 					printw("%c",entry_arr[i].name[j]);
 				}
 				printw("...\n");
@@ -113,8 +112,8 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 			//	wattron(stdscr, A_UNDERLINE);
 				printw("   ");
 			}
-			if ( strlen(entry_arr[i+dist].name) >= COLS-6) {
-				for (int j = 0; j < COLS-6; j++) {
+			if ( strlen(entry_arr[i+dist].name) >= COLS-RIGHT_PADDING) {
+				for (int j = 0; j < COLS-RIGHT_PADDING; j++) {
 					printw("%c",entry_arr[i+dist].name[j]);
 				}
 				printw("...\n");
@@ -234,31 +233,46 @@ int unmark_file(ENTRY *p_entry, int *num_selected)
 
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
+	int RIGHT_PADDING = 0 + 4;
 	if (!num_entries)
 		return 0;
 	char* perm = get_permissions(cwd, entry.name);
+	int path_len = strlen(cwd) + 1 + 1 + strlen(entry.name) + 1;
 	//mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
 	free(perm);
+
+	// Print path
+	// If full path is less than the width of the term, just print it
 	wattron(stdscr,A_BOLD);
-	if (strcmp(cwd, "/")) {
-		mvprintw(LINES-1, 0, "%s/", cwd);
+	if (path_len < COLS-RIGHT_PADDING) {
+		mvprintw(LINES-1, 0, "%s",cwd);
 		wattroff(stdscr,A_BOLD);
-		if ( (strlen(cwd)+1+strlen(entry.name) ) >= COLS-6) {
-			move(LINES-1, strlen(cwd)+1);
-			for (int i = 0; i < COLS-6-strlen(cwd)-1; i++) {
-				printw("%c",entry.name[i]);
-			}
-			printw("...");
+		if (strcmp(cwd,"/")) {
+			mvprintw(LINES-1, strlen(cwd), "/", entry.name);
+			mvprintw(LINES-1, strlen(cwd)+1, "%s", entry.name);
 		}
-		else
-			mvprintw(LINES-1, strlen(cwd)+1, "%s",entry.name);
+		else {
+			mvprintw(LINES-1, strlen(cwd), "%s", entry.name);
+		}
 	}
+	// If full path is greater than width of term, 
 	else {
-		mvprintw(LINES-1, 0, "%s", cwd);
-		wattroff(stdscr,A_BOLD);
-		mvprintw(LINES-1, strlen(cwd), "%s",entry.name);
+		char path[path_len];
+		strcpy(path,cwd);
+		if (!strcmp(cwd,"/")) {
+			strcat(path, "/");
+		}
+		strcat(path, entry.name);
+		for (int i = 0; i < COLS-RIGHT_PADDING; i++) {
+			if (i > strlen(cwd)) {
+				wattroff(stdscr,A_BOLD);
+			}
+			mvprintw(LINES-1, i, "%c", path[i]);
+		}
+		mvprintw(LINES-1, COLS-RIGHT_PADDING, "...");
 	}
+
 	return 1;
 }
 
@@ -345,23 +359,4 @@ int empty_copy_buffer(char*** copy_buff, int* buff_size)
 	*buff_size= 0;
 	return 1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

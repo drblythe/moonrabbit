@@ -145,7 +145,9 @@ int main(int argc, char* argv[])
 
 		case KEY_LEFT:
 		case 'h':
+#if 0
 			if (strcmp(cwd, "/")) {
+#endif
 				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
 					num_stored_indexes++;
 				prev_dir(&cwd);
@@ -155,7 +157,7 @@ int main(int argc, char* argv[])
 				display_entries(entry_arr, num_entries, current_index,LINES);
 				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 				refresh();
-			}
+	//		}
 			break;
 
 		case K_ENTER:
