@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <limits.h>
 #include <ncurses.h>
+#include <locale.h>
 
 #include "entry.h"
 #include "file_handling.h"

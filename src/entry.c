@@ -233,7 +233,7 @@ int unmark_file(ENTRY *p_entry, int *num_selected)
 
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
-	int RIGHT_PADDING = 0 + 4;
+	int RIGHT_PADDING = 0 + 5;
 	if (!num_entries)
 		return 0;
 	char* perm = get_permissions(cwd, entry.name);

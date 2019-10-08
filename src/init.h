@@ -5,6 +5,7 @@
 #define MAX_PROG_PATH_LEN 64
 int init_ncurses(WINDOW *win)
 {
+	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
 	initscr();
 	noecho();
 	keypad(stdscr,TRUE);

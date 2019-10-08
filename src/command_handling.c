@@ -69,6 +69,7 @@ int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 
 int cmd_delete_dir(const char* dir_path) 
 {
+
 	struct dirent **dir_contents;
 	int dir_size;
 	dir_size = scandir(dir_path, &dir_contents, NULL, alphasort);
