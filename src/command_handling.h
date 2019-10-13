@@ -22,5 +22,4 @@ int cmd_delete_dir(const char* dir_path);
 int cmd_move(const char* dest, const char* src);
 int cmd_mkdir(char* path);
 int cmd_mkdir_splitpath(char* path, char* file_name);
-char** tokenize_command(char* command);
 #endif

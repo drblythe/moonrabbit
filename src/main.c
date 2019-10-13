@@ -43,16 +43,6 @@ int main(int argc, char* argv[])
 	int num_entries;
 	int show_dots;
 
-	// Storage for program exec paths
-	//
-	char TEXT[PATH_MAX]; 
-	char AUDIO[PATH_MAX]; 
-	char VIDEO[PATH_MAX]; 
-	char IMAGE[PATH_MAX]; 
-	char DOC[PATH_MAX]; 
-	char SHELL[PATH_MAX];
-	char TERMINAL[PATH_MAX];
-
 	// Init ncurses
 	//
 	if (!init_ncurses(win)) {
@@ -112,7 +102,8 @@ int main(int argc, char* argv[])
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 	refresh(); /* wrefresh(stdscr); */
-	init_default_programs(config_path, TEXT, AUDIO, VIDEO, IMAGE, DOC, SHELL, TERMINAL);
+	//init_default_programs(config_path);
+	parse_config(config_path);
 
 	// Main loop
 	// 	

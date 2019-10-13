@@ -1,8 +1,28 @@
 #ifndef INIT_H
 #define INIT_H
 #include <ncurses.h>
+#include <limits.h>
+#include "vector.h"
+#include "utils.h"
 
 #define MAX_PROG_PATH_LEN 64
+
+char TEXT[PATH_MAX]; 
+char AUDIO[PATH_MAX]; 
+char VIDEO[PATH_MAX]; 
+char IMAGE[PATH_MAX]; 
+char DOC[PATH_MAX]; 
+char SHELL[PATH_MAX];
+char TERMINAL[PATH_MAX];
+
+char** AUDIO_EXTENSIONS;
+char** VIDEO_EXTENSIONS;
+char** IMAGE_EXTENSIONS;
+char** DOC_EXTENSIONS;
+
+
+
+
 int init_ncurses(WINDOW *win)
 {
 	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
@@ -18,20 +38,20 @@ int init_ncurses(WINDOW *win)
 	return 1;
 }
 
-int	init_default_programs(char* config_path, char* TEXT, char* AUDIO, 
-	char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
+//int	init_default_programs(char* config_path, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
+int init_default_programs(char* config_path)
 {
 	FILE *fp;
 	int n;
 	int m;
 	char cfg_line[255];
 	char filetype[64];
-	char program[64];
+	char program[PATH_MAX];
 
 	fp = fopen(config_path,"r");
 	if (!fp) {
 		endwin();
-		fprintf(stderr, "ERROR: Could not locate at default location $USER/.config/moonrabbit/config. Put one there or specify a full path with -c option.)\n");
+		fprintf(stderr, "ERROR: Could not locate at default location $USER/.config/moonrabbit/config.\nPut one there or specify a full path with -c option.)\n");
 		perror("fopen");
 		exit(EXIT_FAILURE);
 	}
@@ -80,5 +100,127 @@ int	init_default_programs(char* config_path, char* TEXT, char* AUDIO,
 	fclose(fp);
     return 1;
 }
+
+int parse_config(char* config_path)
+{
+	FILE *stream;
+	int n;
+	int m;
+	char *line = NULL;
+	ssize_t len = 0;
+	size_t nread;
+	unsigned char reading_programs = 0;
+	unsigned char reading_file_types = 0;
+	unsigned short reading_extensions = 0;
+
+	stream = fopen(config_path,"r");
+	if (!stream) {
+		endwin();
+		fprintf(stderr, "ERROR: Could not locate at default location $USER/.config/moonrabbit/config.\nPut one there or specify a full path with -c option.)\n");
+		perror("fopen");
+		exit(EXIT_FAILURE);
+	}
+
+	FILE * temp = fopen("/home/gab/temp123","w");
+
+	VECTOR_INIT(prog_vec);
+	VECTOR_INIT(ext_vec);
+
+	while ((nread = getline(&line, &len, stream)) != -1) {
+		if (line[0] == '#' || line[0] == '\n') {
+		}
+		else if (line[0] == '}') {
+			reading_extensions = 0;
+		}
+		else if (line[0] == '[') {
+			int k = 0;
+			while (line[k] != ']') {
+				k++;
+			}
+			k--;
+			char section_title[k];
+			section_title[k] = '\0';
+			for (int i = 0; i < k; i++) {
+				section_title[i] = line[i+1];
+			}
+			if (!strcmp(section_title,"Programs")) {
+				reading_programs = 1;
+				reading_file_types = 0;
+				reading_extensions = 0;
+			}
+			else if (!strcmp(section_title,"File Types")) {
+				reading_programs = 0;
+				reading_file_types = 1;
+				reading_extensions = 0;
+			}
+			else if (!strcmp(section_title,"End")) {
+				reading_programs = 0;
+				reading_file_types = 0;
+				reading_extensions = 0;
+			}
+		}
+		else {
+			if (reading_programs) {
+
+			}
+			else if (reading_extensions) {
+				int start = 0;
+				int end = 0;
+				int count = 0;
+
+				for (int i = 0; i < strlen(line); i++) {
+					if (line[i] == ' ' || line[i] == '\t') {
+						continue;
+					}
+					else if (line[i] == '.') {
+						int start = i;
+						i++;
+						while (line[i] != '.' && i < strlen(line)) {
+							i++;
+						}
+						int end = i;
+						int ext_len = end - start - 1;
+						char *ext = malloc(sizeof(char) * ext_len);
+						for (int j = 0; j < ext_len; j++) {
+							ext[j] = line[start+j];
+						}
+						VECTOR_ADD(ext_vec,ext);
+						i--;
+					}
+				}
+			}
+			else if (reading_file_types) {
+				int k = 0;
+				while (line[k] != '{') {
+					k++;
+				}
+				char * program_path = malloc(sizeof(char)*k);
+				for (int i = 0; i < k; i++) {
+					program_path[i] = line[i];
+				}
+				VECTOR_ADD(prog_vec, program_path);
+				VECTOR_ADD(ext_vec, program_path);
+				reading_extensions = 1;
+			}
+		}
+	}
+	for (int i = 0; i < VECTOR_TOTAL(ext_vec); i++) {
+		if (*(VECTOR_GET(ext_vec,char*,i)) != '.') {
+			fputs("\n",temp);
+			fputs(VECTOR_GET(ext_vec,char*,i), temp);
+			fputs("\n",temp);
+		}
+		else {
+			fputs(VECTOR_GET(ext_vec,char*,i), temp);
+		}
+	}
+	free(line);
+	fclose(temp);
+	fclose(stream);
+	VECTOR_FREE(prog_vec);
+	VECTOR_FREE(ext_vec);
+	return 1;
+}
+
 
 #endif

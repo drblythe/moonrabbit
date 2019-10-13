@@ -3,10 +3,6 @@ TODO:
 
 1. Store index of *certain* amount of directories 
 
-2. Bug fix: If cwd string length > COLS, segfault
-
-3. Bug fix: Files not showing if first char is not a letter!
-
 4. Remember that removal of free inside get_entries where it was conditionally freeing pointers not returned by malloc? Yeah, fix that.
 
 5a. Why the hell are file associations still hardcoded?
