@@ -174,14 +174,26 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 	char * command = malloc(sizeof(char)*512);
 
 	char *ext = get_extension(file_name);
-	char *program_name = ct_str_search_table(ct, ext);
+	char **p = ct_str_search_table(ct, ext);
+	/*
+	FILE * stream = fopen("/home/gab/temp123","a");
+	fputs("\n",stream);
+	fputs(*p,stream);
+	fclose(stream);
+	*/
+
+
+
+
+
+	#if 0
 	/*
 	printf("----------%s------/n",ext);
 	getchar();
 	*/
-	printf("-----%d-----\n",strlen(program_name));
 	printf("------%s-------\n",program_name);
 	getchar();
+	printf("-----%d-----\n",strlen(program_name));
 
 	for (int i = 0; i < strlen(program_name); i++) {
 		*(command+i) = program_name[i];
@@ -213,6 +225,7 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 		break;
 	}
 	*/
+	#endif
 
 	int need_quotes = 0;
 	for (int i = 0; i < strlen(cwd); i++) {
@@ -239,7 +252,6 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 
 
 	free(command);
-	free(program_name);
 	return 1;
 }
 

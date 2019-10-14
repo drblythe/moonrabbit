@@ -185,6 +185,7 @@ int parse_config(char* config_path)
 						for (int j = 0; j < ext_len; j++) {
 							ext[j] = line[start+j];
 						}
+						str_remove_outer_ws(ext);
 						ct_str_ins_into_list(&ct, current_program_path, ext);
 						i--;
 					}
@@ -201,6 +202,7 @@ int parse_config(char* config_path)
 					program_path[i] = line[i];
 				}
 				program_path[k] = '\0';
+				str_remove_outer_ws(program_path);
 				ct_str_add_new_list(&ct, program_path);
 				reading_extensions = 1;
 				if (current_program_path == (char*) NULL) {

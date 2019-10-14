@@ -109,3 +109,21 @@ char** tokenize_command(char* command)
     return result;
 }
 
+
+int str_remove_outer_ws(char* str)
+{
+	int len = strlen(str);
+	int m = len - 1;
+	int n = 0;
+	while (str[m] == ' ') {
+		str[m] = '\0';
+		m--;
+	}
+	while (str[n] == ' ') {
+		n++;
+	}
+	for (int i = n; i < len; i++) {
+		str[i-n] = str[i];
+	}
+	return 0;
+}
