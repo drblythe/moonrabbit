@@ -104,6 +104,7 @@ int main(int argc, char* argv[])
 	refresh(); /* wrefresh(stdscr); */
 	//init_default_programs(config_path);
 	parse_config(config_path);
+	set_default_programs();
 
 	// Main loop
 	// 	
@@ -166,7 +167,7 @@ int main(int argc, char* argv[])
 				num_selected = 0;
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name,TEXT,AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
+				open_file(cwd, entry_arr[current_index].name, &ct, TEXT,AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
 
 			}
 			else {

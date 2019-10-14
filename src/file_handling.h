@@ -12,11 +12,15 @@
 #include <ncurses.h>
 #include "command_handling.h" 
 #include "entry.h"
+#include "chained_table.h"
+
 int prev_dir(char **p_cwd);
 
 int next_dir(char **p_cwd, char *dir_name);
 
-int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL);
+//int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL);
+int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL);
+//int open_file(const char* cwd, const char* file_path);
 
 char* get_extension(char *file_name);
 

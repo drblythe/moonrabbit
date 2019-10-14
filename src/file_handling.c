@@ -101,6 +101,7 @@ char get_file_type(char* file_name)
 	return file_type;
 }
 
+#if 0
 int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO, 
 	char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
 {
@@ -156,6 +157,89 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 		return -1;
 	}
 	free(command);
+	return 1;
+}
+#endif
+
+int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
+{
+	int ret;
+	char file_type;	
+
+	int send_to_bg = 1;
+
+/* Change this bullshit below ... should be a command 
+ * char array based on strlen(program) 
+ */
+	char * command = malloc(sizeof(char)*512);
+
+	char *ext = get_extension(file_name);
+	char *program_name = ct_str_search_table(ct, ext);
+	/*
+	printf("----------%s------/n",ext);
+	getchar();
+	*/
+	printf("-----%d-----\n",strlen(program_name));
+	printf("------%s-------\n",program_name);
+	getchar();
+
+	for (int i = 0; i < strlen(program_name); i++) {
+		*(command+i) = program_name[i];
+	}
+
+	//strcpy(command, program_name);
+	if (!strcmp("/usr/bin/vim ",program_name)) {
+		send_to_bg = 0;
+	}
+
+	/*
+	file_type = get_file_type(file_name);
+	switch(file_type){
+	case 'A':
+		strcpy(command, AUDIO);
+		break;
+	case 'V':
+		strcpy(command, VIDEO);
+		break;
+	case 'I':
+		strcpy(command, IMAGE);
+		break;
+	case 'D':
+		strcpy(command, DOC);
+		break;
+	default:
+		send_to_bg = 0;
+		strcpy(command,TEXT);
+		break;
+	}
+	*/
+
+	int need_quotes = 0;
+	for (int i = 0; i < strlen(cwd); i++) {
+		if (cwd[i] == ' ' || cwd[i] == '-')
+			need_quotes = 1;
+	}
+
+	strcat(command, " ");
+	if (need_quotes)
+		strcat(command,"\"");
+	strcat(command, cwd);
+	strcat(command, "/");
+	if (!need_quotes)
+		strcat(command,"\"");
+	strcat(command, file_name);
+		strcat(command,"\"");
+	if (send_to_bg)
+		strcat(command, " &");
+	ret = system(command);
+	if (ret) {
+		perror("system");
+		return -1;
+	}
+
+
+	free(command);
+	free(program_name);
 	return 1;
 }
 

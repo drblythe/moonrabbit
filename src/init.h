@@ -2,8 +2,8 @@
 #define INIT_H
 #include <ncurses.h>
 #include <limits.h>
-#include "vector.h"
 #include "utils.h"
+#include "chained_table.h"
 
 #define MAX_PROG_PATH_LEN 64
 
@@ -20,7 +20,7 @@ char** VIDEO_EXTENSIONS;
 char** IMAGE_EXTENSIONS;
 char** DOC_EXTENSIONS;
 
-
+chained_table_str ct;
 
 
 int init_ncurses(WINDOW *win)
@@ -113,6 +113,8 @@ int parse_config(char* config_path)
 	unsigned char reading_file_types = 0;
 	unsigned short reading_extensions = 0;
 
+	char* current_program_path = NULL;
+
 	stream = fopen(config_path,"r");
 	if (!stream) {
 		endwin();
@@ -121,10 +123,7 @@ int parse_config(char* config_path)
 		exit(EXIT_FAILURE);
 	}
 
-	FILE * temp = fopen("/home/gab/temp123","w");
-
-	VECTOR_INIT(prog_vec);
-	VECTOR_INIT(ext_vec);
+	ct_str_init(&ct);
 
 	while ((nread = getline(&line, &len, stream)) != -1) {
 		if (line[0] == '#' || line[0] == '\n') {
@@ -163,7 +162,7 @@ int parse_config(char* config_path)
 			if (reading_programs) {
 
 			}
-			else if (reading_extensions) {
+			else if (reading_extensions) { // This HAS TO BE BEFORE *else if (reading_file_types)*
 				int start = 0;
 				int end = 0;
 				int count = 0;
@@ -180,11 +179,13 @@ int parse_config(char* config_path)
 						}
 						int end = i;
 						int ext_len = end - start - 1;
-						char *ext = malloc(sizeof(char) * ext_len);
+						//char *ext = malloc(sizeof(char) * ext_len);
+						char ext[ext_len];
+						ext[ext_len] = '\0';
 						for (int j = 0; j < ext_len; j++) {
 							ext[j] = line[start+j];
 						}
-						VECTOR_ADD(ext_vec,ext);
+						ct_str_ins_into_list(&ct, current_program_path, ext);
 						i--;
 					}
 				}
@@ -194,32 +195,49 @@ int parse_config(char* config_path)
 				while (line[k] != '{') {
 					k++;
 				}
-				char * program_path = malloc(sizeof(char)*k);
+				//char * program_path = malloc(sizeof(char)*k);
+				char program_path[k];
 				for (int i = 0; i < k; i++) {
 					program_path[i] = line[i];
 				}
-				VECTOR_ADD(prog_vec, program_path);
-				VECTOR_ADD(ext_vec, program_path);
+				program_path[k] = '\0';
+				ct_str_add_new_list(&ct, program_path);
 				reading_extensions = 1;
+				if (current_program_path == (char*) NULL) {
+					free(current_program_path);
+				}
+				current_program_path = malloc(sizeof(char) * k);
+				strcpy(current_program_path, program_path);
 			}
 		}
 	}
-	for (int i = 0; i < VECTOR_TOTAL(ext_vec); i++) {
-		if (*(VECTOR_GET(ext_vec,char*,i)) != '.') {
-			fputs("\n",temp);
-			fputs(VECTOR_GET(ext_vec,char*,i), temp);
-			fputs("\n",temp);
-		}
-		else {
-			fputs(VECTOR_GET(ext_vec,char*,i), temp);
-		}
-	}
 	free(line);
-	fclose(temp);
 	fclose(stream);
-	VECTOR_FREE(prog_vec);
-	VECTOR_FREE(ext_vec);
 	return 1;
+}
+
+int set_default_programs() 
+{
+	FILE* stream = fopen("/home/gab/temp123","w");
+	char n[12];
+	sprintf(n,"%d",ct.size);
+	fputs(n,stream);
+	fputs("\n",stream);
+
+	for (int i = 0; i < ct.size; i++) {
+		fputs(ct.list[i].title, stream);
+
+		node_str* temp = ct.list[i].head;
+		while (temp != NULL) {
+			fputs(" -> ",stream);
+			fputs(temp->data,stream);
+			temp = temp->next;
+		}
+		fputs("\n",stream);
+	};
+
+	fclose(stream);
+	return 0;
 }
 
 
