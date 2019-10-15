@@ -74,7 +74,7 @@ int ct_str_ins_into_list(chained_table_str* c_table, const char* title, const ch
 	return -1;
 }
 
-char** ct_str_search_table(chained_table_str* c_table, const char* search_term)
+char* ct_str_search_table(chained_table_str* c_table, const char* search_term)
 {
 	for (int i = 0; i < c_table->size; i++) {
 		node_str *temp = c_table->list[i].head;
@@ -83,12 +83,12 @@ char** ct_str_search_table(chained_table_str* c_table, const char* search_term)
 				//int len = strlen(c_table->list[i].title);
 				//char* new_str = malloc(sizeof(char)*(len+1));
 				//strcpy(new_str,c_table->list[i].title);
-				return &(c_table->list[i].title);
+				return c_table->list[i].title;
 			}
 			temp = temp->next;
 		}
 	}
-	return (char**) NULL;
+	return (char*) NULL;
 }
 
 int ct_str_free_table(chained_table_str* c_table)

@@ -165,68 +165,73 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 {
 	int ret;
 	char file_type;	
-
 	int send_to_bg = 1;
-
-/* Change this bullshit below ... should be a command 
- * char array based on strlen(program) 
- */
-	char * command = malloc(sizeof(char)*512);
-
+	//char * command = malloc(sizeof(char)*512);
 	char *ext = get_extension(file_name);
-	char **p = ct_str_search_table(ct, ext);
-	/*
-	FILE * stream = fopen("/home/gab/temp123","a");
-	fputs("\n",stream);
-	fputs(*p,stream);
-	fclose(stream);
-	*/
-
-
-
-
-
-	#if 0
-	/*
-	printf("----------%s------/n",ext);
-	getchar();
-	*/
-	printf("------%s-------\n",program_name);
-	getchar();
-	printf("-----%d-----\n",strlen(program_name));
-
-	for (int i = 0; i < strlen(program_name); i++) {
-		*(command+i) = program_name[i];
+	char *program_path = ct_str_search_table(ct, ext);
+	if (program_path == NULL) {
+		return -1;
 	}
+	char * full_filepath = str_concat_cwd_filename(cwd, file_name);
 
-	//strcpy(command, program_name);
-	if (!strcmp("/usr/bin/vim ",program_name)) {
-		send_to_bg = 0;
-	}
+	#define PIPE 1
 
-	/*
-	file_type = get_file_type(file_name);
-	switch(file_type){
-	case 'A':
-		strcpy(command, AUDIO);
-		break;
-	case 'V':
-		strcpy(command, VIDEO);
-		break;
-	case 'I':
-		strcpy(command, IMAGE);
-		break;
-	case 'D':
-		strcpy(command, DOC);
-		break;
-	default:
-		send_to_bg = 0;
-		strcpy(command,TEXT);
-		break;
+	#if PIPE
+	int filedes[2];
+	if (pipe(filedes) == -1) {
+	  perror("pipe");
+	  exit(1);
 	}
-	*/
 	#endif
 
+	pid_t pid = fork();
+	if (pid < 0) {
+		perror("Could not fork process.");
+		exit(1);
+	}
+
+	else if (pid == 0) {
+		#if PIPE
+		// Call dup2 twice: once for stdout, again for stderr
+		while ((dup2(filedes[1], STDOUT_FILENO) == -1) && (errno == EINTR)) {}
+		while ((dup2(filedes[1], STDERR_FILENO) == -1) && (errno == EINTR)) {}
+		close(filedes[1]);
+		close(filedes[0]);
+		#endif
+		char* args[] = {
+			program_path,
+			full_filepath,
+			NULL
+		};
+		execv(args[0],args);
+	}
+	#if PIPE
+	close(filedes[1]);
+	#endif
+
+
+	
+	#if 0
+	FILE * stream = fopen("/home/gab/temp123","w");
+	fputs("\n",stream);
+	fputs(program_path,stream);
+	fputs("\n",stream);
+	fputs(cwd, stream);
+	fputs("\n",stream);
+	fputs(file_name,stream);
+	fputs("\n",stream);
+	fputs(full_filepath, stream);
+	fclose(stream);
+	#endif
+
+	//free(command);
+	free(ext);
+	free(full_filepath);
+	return 1;
+
+
+
+/*
 	int need_quotes = 0;
 	for (int i = 0; i < strlen(cwd); i++) {
 		if (cwd[i] == ' ' || cwd[i] == '-')
@@ -252,7 +257,7 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 
 
 	free(command);
-	return 1;
+	*/
 }
 
 int file_name_len(char* path)

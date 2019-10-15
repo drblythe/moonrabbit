@@ -27,7 +27,7 @@ int ct_str_init(chained_table_str* c_table);
 int ct_str_grow(chained_table_str* c_table);
 int ct_str_add_new_list(chained_table_str* c_table, const char *title);
 int ct_str_ins_into_list(chained_table_str* c_table, const char* title, const char* str);
-char** ct_str_search_table(chained_table_str* c_table, const char* search_term);
+char* ct_str_search_table(chained_table_str* c_table, const char* search_term);
 int ct_str_free_table(chained_table_str* c_table);
 
 #endif

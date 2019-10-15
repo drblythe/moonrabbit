@@ -127,3 +127,14 @@ int str_remove_outer_ws(char* str)
 	}
 	return 0;
 }
+
+char* str_concat_cwd_filename(const char* cwd, const char* filename)
+{
+	unsigned int len = strlen(cwd) + 1 + strlen(filename) + 1;
+	char* full_path = malloc(sizeof(char) * len);
+	strcpy(full_path,cwd);
+	strcat(full_path,"/");
+	strcat(full_path,filename);
+	full_path[len] = '\0';
+	return full_path;
+}
