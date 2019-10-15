@@ -161,12 +161,11 @@ int open_file(char *cwd, char *file_name, char* TEXT, char* AUDIO,
 }
 #endif
 
-int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
+int open_file(char *cwd, char *file_name, chained_table_str* ct)
 {
 	int ret;
 	char file_type;	
 	int send_to_bg = 1;
-	//char * command = malloc(sizeof(char)*512);
 	char *ext = get_extension(file_name);
 	char *program_path = ct_str_search_table(ct, ext);
 	if (program_path == NULL) {
@@ -224,7 +223,6 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct, char* TEXT, cha
 	fclose(stream);
 	#endif
 
-	//free(command);
 	free(ext);
 	free(full_filepath);
 	return 1;
