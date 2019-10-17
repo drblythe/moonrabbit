@@ -14,6 +14,7 @@ typedef struct node_str {
 typedef struct ll_str {
 	struct node_str* head;
 	char* title;
+	short exec_in_term;
 } ll_str;
 
 typedef struct chained_table_str {
@@ -29,5 +30,6 @@ int ct_str_add_new_list(chained_table_str* c_table, const char *title);
 int ct_str_ins_into_list(chained_table_str* c_table, const char* title, const char* str);
 char* ct_str_search_table(chained_table_str* c_table, const char* search_term);
 int ct_str_free_table(chained_table_str* c_table);
+short ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title);
 
 #endif

@@ -5,21 +5,6 @@
 #include "utils.h"
 #include "chained_table.h"
 
-#define MAX_PROG_PATH_LEN 64
-
-char TEXT[PATH_MAX]; 
-char AUDIO[PATH_MAX]; 
-char VIDEO[PATH_MAX]; 
-char IMAGE[PATH_MAX]; 
-char DOC[PATH_MAX]; 
-char SHELL[PATH_MAX];
-char TERMINAL[PATH_MAX];
-
-char** AUDIO_EXTENSIONS;
-char** VIDEO_EXTENSIONS;
-char** IMAGE_EXTENSIONS;
-char** DOC_EXTENSIONS;
-
 chained_table_str ct;
 
 
@@ -36,69 +21,6 @@ int init_ncurses(WINDOW *win)
 	move(0,0);
 	refresh();
 	return 1;
-}
-
-//int	init_default_programs(char* config_path, char* TEXT, char* AUDIO, char* VIDEO, char* IMAGE, char* DOC, char* SHELL, char* TERMINAL)
-int init_default_programs(char* config_path)
-{
-	FILE *fp;
-	int n;
-	int m;
-	char cfg_line[255];
-	char filetype[64];
-	char program[PATH_MAX];
-
-	fp = fopen(config_path,"r");
-	if (!fp) {
-		endwin();
-		fprintf(stderr, "ERROR: Could not locate at default location $USER/.config/moonrabbit/config.\nPut one there or specify a full path with -c option.)\n");
-		perror("fopen");
-		exit(EXIT_FAILURE);
-	}
-	n = 0;
-	m = 0;
-
-	while (fgets(cfg_line,255,(FILE*)fp)) {
-		n = 0;
-		m = 0;
-		if (cfg_line[0] == '#' || cfg_line[0] == '\n')
-			continue;
-		else {
-			while(cfg_line[n] != '='){
-				filetype[n] = cfg_line[n];
-				n++;
-			}
-			filetype[n] = '\0';
-			while(cfg_line[n] != '\0') {
-				program[m] =  cfg_line[n+1];
-				n++;
-				m++;
-			}
-			program[m] = '\0';
-		// get ridda that dang ole newline that bugged mah sheeit
-		for (int i = 0; i < strlen(program); i++)
-			if (program[i] == '\n')
-				program[i] = '\0';
-		// check file type, set appropriate char array
-		if (!strcmp(filetype,"TEXT")) 
-			strcpy(TEXT,program);
-		else if (!strcmp(filetype,"AUDIO"))
-			strcpy(AUDIO,program);
-		else if (!strcmp(filetype,"VIDEO"))
-			strcpy(VIDEO,program);
-		else if (!strcmp(filetype,"IMAGE"))
-			strcpy(IMAGE,program);
-		else if (!strcmp(filetype,"DOC"))
-			strcpy(DOC,program);
-		else if (!strcmp(filetype,"SHELL"))
-			strcpy(SHELL,program);
-		else if (!strcmp(filetype,"TERMINAL"))
-			strcpy(TERMINAL,program);
-		}
-	}
-
-	fclose(fp);
-    return 1;
 }
 
 int parse_config(char* config_path)
@@ -192,18 +114,25 @@ int parse_config(char* config_path)
 				}
 			}
 			else if (reading_file_types) {
+				int exec_in_term = line[0] == '$' ? 1 : 0;
+
 				int k = 0;
 				while (line[k] != '{') {
 					k++;
 				}
-				//char * program_path = malloc(sizeof(char)*k);
-				char program_path[k];
-				for (int i = 0; i < k; i++) {
-					program_path[i] = line[i];
+				char program_path[k-exec_in_term];
+				for (int i = 0; i < k-exec_in_term; i++) {
+					program_path[i] = line[i+exec_in_term];
 				}
-				program_path[k] = '\0';
+				program_path[k-exec_in_term] = '\0';
 				str_remove_outer_ws(program_path);
 				ct_str_add_new_list(&ct, program_path);
+				if (exec_in_term == 1) {
+					ct.list[ct.size-1].exec_in_term = 1;
+				}
+				else {
+					ct.list[ct.size-1].exec_in_term = 0;
+				}
 				reading_extensions = 1;
 				if (current_program_path == (char*) NULL) {
 					free(current_program_path);
@@ -217,30 +146,5 @@ int parse_config(char* config_path)
 	fclose(stream);
 	return 1;
 }
-
-int set_default_programs() 
-{
-	FILE* stream = fopen("/home/gab/temp123","w");
-	char n[12];
-	sprintf(n,"%d",ct.size);
-	fputs(n,stream);
-	fputs("\n",stream);
-
-	for (int i = 0; i < ct.size; i++) {
-		fputs(ct.list[i].title, stream);
-
-		node_str* temp = ct.list[i].head;
-		while (temp != NULL) {
-			fputs(" -> ",stream);
-			fputs(temp->data,stream);
-			temp = temp->next;
-		}
-		fputs("\n",stream);
-	};
-
-	fclose(stream);
-	return 0;
-}
-
 
 #endif

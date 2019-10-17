@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
 	refresh(); /* wrefresh(stdscr); */
 	//init_default_programs(config_path);
 	parse_config(config_path);
-	set_default_programs();
+	//set_default_programs();
 
 	// Main loop
 	// 	
@@ -167,8 +167,7 @@ int main(int argc, char* argv[])
 				num_selected = 0;
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name, &ct, TEXT,AUDIO,VIDEO,IMAGE,DOC,SHELL,TERMINAL);
-
+				open_file(cwd, entry_arr[current_index].name, &ct);
 			}
 			else {
 				/* damn */
@@ -286,11 +285,12 @@ int main(int argc, char* argv[])
 			// open shell here
 			break;
 
-		//case ctrl('h'):
+		case ctrl('h'):
 		case 'H':
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
 			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			clear();
 			display_entries(entry_arr, num_entries, current_index,LINES);
 			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 			break;

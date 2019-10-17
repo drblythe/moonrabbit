@@ -5,8 +5,6 @@ TODO:
 
 4. Remember that removal of free inside get_entries where it was conditionally freeing pointers not returned by malloc? Yeah, fix that.
 
-5a. Why the hell are file associations still hardcoded?
-
 5b. While you are at it, make keybindings part of the config as well
 
 6. Providing a command line argument that is not correct segfaults
@@ -22,6 +20,3 @@ Number->command functionality
 Check permissions CORRECTLY
 
 Upward scrolling	
-
-Fix execv()	
-

@@ -95,3 +95,13 @@ int ct_str_free_table(chained_table_str* c_table)
 {
 	return 0;
 }
+
+short ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title)
+{
+	for (int i = 0; i < c_table->size; i++) {
+		if (!strcmp(prog_title, c_table->list[i].title)) {
+			return c_table->list[i].exec_in_term;
+		}
+	}
+	return 0;
+}
