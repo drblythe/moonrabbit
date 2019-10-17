@@ -101,7 +101,6 @@ int parse_config(char* config_path)
 						}
 						int end = i;
 						int ext_len = end - start - 1;
-						//char *ext = malloc(sizeof(char) * ext_len);
 						char ext[ext_len];
 						ext[ext_len] = '\0';
 						for (int j = 0; j < ext_len; j++) {

@@ -8,7 +8,6 @@
 
 int preview_text_file(char *cwd, char *file_name)
 {
-    //FILE *fopen( const char * filename, const char * mode );  
     FILE *fp;
     char line[255];
 	

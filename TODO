@@ -5,13 +5,9 @@ TODO:
 
 4. Remember that removal of free inside get_entries where it was conditionally freeing pointers not returned by malloc? Yeah, fix that.
 
-5b. While you are at it, make keybindings part of the config as well
-
 6. Providing a command line argument that is not correct segfaults
 
 ================================================================================
-
--c config seg faults
 
 Number->command functionality
 	As long as the input is a number, record it
@@ -19,4 +15,4 @@ Number->command functionality
 
 Check permissions CORRECTLY
 
-Upward scrolling	
+Upward scrolling fix

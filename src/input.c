@@ -31,11 +31,6 @@ char* get_input(void)
 			command[cmd_index] = '\0';
 			cmd_index--;
 			break;
-		/*
-		case 'q':
-			read = 0;
-			break;
-		*/
 		default:
 			command[cmd_index] = c;
 			cmd_index++;
@@ -52,7 +47,6 @@ char* get_input(void)
 
 int confirm_deletion(int x_pos, int y_pos, int num_selected)
 {
-	//mvprintw(x_pos, y_pos, "Delete %d files? (y/N)", num_selected);
 	mvprintw(x_pos, y_pos, "Delete selection? (y/N)", num_selected);
 	char c = getch();
 	if (c == 'y' || c == 'Y')

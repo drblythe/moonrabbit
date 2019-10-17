@@ -45,6 +45,7 @@ int main(int argc, char* argv[])
 
 	// Init ncurses
 	//
+
 	if (!init_ncurses(win)) {
 		endwin();
 		fprintf(stderr, "Error: failed to init ncurses window\n");

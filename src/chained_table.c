@@ -80,9 +80,6 @@ char* ct_str_search_table(chained_table_str* c_table, const char* search_term)
 		node_str *temp = c_table->list[i].head;
 		while (temp != NULL) {
 			if (!strcmp(temp->data, search_term)) {
-				//int len = strlen(c_table->list[i].title);
-				//char* new_str = malloc(sizeof(char)*(len+1));
-				//strcpy(new_str,c_table->list[i].title);
 				return c_table->list[i].title;
 			}
 			temp = temp->next;

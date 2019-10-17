@@ -2,12 +2,7 @@
 
 int cmd_cd(char** p_cwd, char* dir_name)
 {
-/*
-    strcat(*p_cwd, "/");
-    strcat(*p_cwd, dir_name);
-*/
 	strcpy(*p_cwd,dir_name);
-	/* return 0 if the specified dir is not valid*/
     return 1;
 }
 
@@ -187,19 +182,11 @@ int handle_cmd(char **p_input, char** p_cwd)
 		return -1;
 	}
 
-	// command is arg_vec[0]
-	// rest is arguments
-	
 
 	if (!strcmp(arg_vec[0], "cd")) {
 		strcpy(*p_cwd,arg_vec[1]);
 	}
 	else if (!strcmp(arg_vec[0],"cp")) {
-		/* Have a "confirm" function called from header with access to ncurses */
-		/*
-		printf("\nCopy %s to %s?",arg_vec[1],arg_vec[2]); 
-		c = getchar();
-		*/
 		cmd_copy(arg_vec[2],arg_vec[1]);
 	}
 	else if (!strcmp(arg_vec[0], "mv")) {

@@ -7,6 +7,6 @@ My goal is to make something like Ranger, but in C and with as little resource u
 ## Dependencies  
     ncurses  
     
-## Compile      
-    gcc -lncurses *.c -o moonrabbit  
+## Compile (Use -lncursesw rather than -lncurses for wide char/unicode compatibility
+    gcc -lncursesw *.c -o moonrabbit  
    

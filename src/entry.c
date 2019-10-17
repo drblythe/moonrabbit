@@ -132,8 +132,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int current_index)
 {
 	char already_stored = 0;
-	//int array_index = num_stored;
-	//printf("\n--array_index%d--",array_index);
 		
 	for (int i = 0; i < num_stored; i++) 
 		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
@@ -141,16 +139,12 @@ int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int
 			break;
 		}
 	if (already_stored) {
-	//	printf("\n--ALREADY STORED--");
 		return 0;
 	}
 	else {
-		//printf("\n--NEWLY STORED--");
 		int index_to_use;
 		if ( (num_stored) + 1 > 20) {
-			//printf("--NUM > 20--");
 			index_to_use = 0;
-			// move all others up by one (19 will be overwritten)
 			for (int i = 0; i < 19; i++) {
 				strcpy((*p_kvp_arr + i + 1)->key, (*p_kvp_arr + i)->key);
 				(*p_kvp_arr + i + 1)->value = (*p_kvp_arr + i)->value;
@@ -158,19 +152,12 @@ int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int
 			
 		}
 		else {
-			//printf("--NUM < 20--");
 			index_to_use = current_index;
 		}
 
 		strcpy((*p_kvp_arr + index_to_use)->key,cwd);
 		(*p_kvp_arr + index_to_use)->value = current_index;
-		//printf("--index-to-use=%d--",index_to_use);
-		//printf("--SAVED AS cwd=%s,index=%d--",  (*p_kvp_arr + index_to_use)->key ,(*p_kvp_arr + index_to_use)->value );
 	}
-
-	//printf("--NEW NUM STORED=%d--",num_stored);
-	//getchar();
-	
 	return 1;
 }
 
@@ -205,7 +192,6 @@ int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int r
 
 
 int update_curr_index(short int direction, int* current_index, int *num_entries)
-/* int update_pos(UP or DOWN, &current_index, &num_entries) */
 {
 	erase();
 	if (*current_index < *num_entries || *current_index > 0)
