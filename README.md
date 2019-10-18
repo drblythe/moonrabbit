@@ -47,7 +47,6 @@ This all goes between the section brackets that starts with File Types and ends 
 I parse the config this way because I wanted a simple/easy way to have unambiguous file associtions without an external mimetype library.  
 
 Two notes:  
-
     .<none> is the extension of files like "foo" and "bar", i.e. with no extension.  
     To have a program open IN terminal (like you might want for vim, or other text editors, prepend a '$' to the program path. This is shown for /usr/share/vim in the config. Otherwise the program is forked to the background and not waited on within the current process.
 
