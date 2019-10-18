@@ -7,18 +7,21 @@ Keybindings are vim for the most part. They are detailed further below.
 The name Moonrabbit comes from the Touhou game series.  
 
 ### Dependencies  
-    libncurses  
+You will need the ncurses development libraries from your distro  
+
+    libncurses5-dev  
+    libncursesw5-dev
     
 ### Compile
-    gcc $(ncursesw6-config --cflags --libs) *.c -o moonrabbit  
+    gcc $(ncursesw5-config --cflags --libs) *.c -o moonrabbit  
     
-The ncursesw6-config... is a helper script that outputs the correct cflags and libs to compile with.  
-It might also be ncursesw5-config, depending on the version you have installed
+The ncursesw5-config... is a helper script that outputs the correct cflags and libs to compile with.  
+It might also be ncursesw6-config, depending on the version you have installed
 For me it just boiled down to  
     
     -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -lncursesw -ltinfo -ldl  
     
-ncursesw is required over ncurses in order to render unicode wide chars correctly.  
+ncursesw is required in order to render unicode wide chars correctly.  
 
 ### Keybindings  
 I plan to make the keybindings configurable in the config, but currently it is basically vim:  
