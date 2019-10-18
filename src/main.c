@@ -1,3 +1,5 @@
+#define _XOPEN_SOURCE_EXTENDED
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -19,41 +21,30 @@
 
 int main(int argc, char* argv[])
 {
-	// Declare globals
-	//
 	int c, x, y;
 	WINDOW* win = NULL;
 	ENTRY* entry_arr = NULL;
-
-	char **copy_buffer = NULL;// put these in a struct
-	// bool in_use;
-	int copy_buff_del = 0;//
-	int copy_buff_size = 0;//
-
+	char **copy_buffer = NULL;
+	int copy_buff_del = 0;
+	int copy_buff_size = 0;
 	int num_selected = 0;
-
-	KEY_VALUE* stored_indexes = malloc(sizeof(KEY_VALUE)*MAX_STORED_INDEXES);
-	KEY_VALUE** p_stored_indexes = &stored_indexes;
-	int num_stored_indexes = 0;
+	index_table stored_indexes;
 	char* cwd;
-	//char *config_path;
 	char config_path[PATH_MAX];
 	char **input;
 	int current_index;
 	int num_entries;
 	int show_dots;
 
-	// Init ncurses
-	//
 
+
+	// Init ncurses
 	if (!init_ncurses(win)) {
 		endwin();
 		fprintf(stderr, "Error: failed to init ncurses window\n");
 		exit(EXIT_FAILURE);
 	}
 
-	// Get current working directory
-	//
 	cwd = malloc(sizeof(char) * PATH_MAX);
 	argc > 1 ? strcpy(cwd,argv[1]) : (cwd = getcwd(NULL,0));
 	if (!cwd) {
@@ -61,9 +52,6 @@ int main(int argc, char* argv[])
 		perror("getcwd");
 		exit(EXIT_FAILURE);
 	}
-
-	// Initialize other various globals
-	//
 	show_dots = 0;
 	current_index = 0;
 	num_entries = 0;
@@ -98,17 +86,15 @@ int main(int argc, char* argv[])
 	}
 
 	// Init moonrabbit stuff (read config for program prefs, get files in dir, etc.)
-	//
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
 	display_entries(entry_arr, num_entries, current_index,LINES);
 	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
 	refresh(); /* wrefresh(stdscr); */
-	//init_default_programs(config_path);
 	parse_config(config_path);
-	//set_default_programs();
+	index_table_init(&stored_indexes);
 
-	// Main loop
-	// 	
+
+
 	int run = 1;
 	while(run)
 	{
@@ -139,18 +125,14 @@ int main(int argc, char* argv[])
 
 		case KEY_LEFT:
 		case 'h':
-#if 0
-			if (strcmp(cwd, "/")) {
-#endif
-				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
-					num_stored_indexes++;
-				prev_dir(&cwd);
-				clear_entries(entry_arr, &num_entries, &current_index,1);
-				load_index(p_stored_indexes, num_stored_indexes, cwd, &current_index);
-				get_entries(cwd, &entry_arr, &num_entries, show_dots);
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-				refresh();
+			index_table_store(&stored_indexes, cwd, current_index);
+			prev_dir(&cwd);
+			clear_entries(entry_arr, &num_entries, &current_index,1);
+			index_table_load(&stored_indexes, cwd, &current_index);
+			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh();
 	//		}
 			break;
 
@@ -159,11 +141,14 @@ int main(int argc, char* argv[])
 			if (!num_entries)
 				break;
 			if (entry_arr[current_index].type == 'd') {
+				index_table_store(&stored_indexes, cwd, current_index);
+				/*
 				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
 					num_stored_indexes++;
+				*/
 				next_dir(&cwd, entry_arr[current_index].name);
 				clear_entries(entry_arr, &num_entries, &current_index, 1);
-				load_index(p_stored_indexes, num_stored_indexes, cwd, &current_index);
+				index_table_load(&stored_indexes, cwd, &current_index);
 				get_entries(cwd, &entry_arr, &num_entries, show_dots);
 				num_selected = 0;
 			}
@@ -171,7 +156,6 @@ int main(int argc, char* argv[])
 				open_file(cwd, entry_arr[current_index].name, &ct);
 			}
 			else {
-				/* damn */
 			}
 			clear();
 			display_entries(entry_arr, num_entries, current_index,LINES);
@@ -181,7 +165,7 @@ int main(int argc, char* argv[])
 
 		case ':':
 			input = malloc(sizeof(char)*128);
-			*input = get_input();
+			*input = get_input(0);
 			handle_cmd(input,&cwd);
 			free(input);
 			clear_entries(entry_arr, &num_entries, &current_index,1);
@@ -194,14 +178,13 @@ int main(int argc, char* argv[])
 
 		case '/':
 			input = malloc(sizeof(char)*128);
-			*input = get_input();
-			//if (search_dir(*input,entry_arr,&current_index,num_entries)) {
-			if (binarysearch_entry(*input, entry_arr, num_entries, &current_index)) {
-				erase();
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-				refresh();
-			}
+			*input = get_input(1);
+			search_dir(*input,entry_arr,&current_index,num_entries);
+			//binarysearch_entry(*input, entry_arr, num_entries, &current_index);
+			erase();
+			display_entries(entry_arr, num_entries, current_index,LINES);
+			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh();
 			free(input);
 			break;
 
@@ -324,19 +307,13 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	// Free up malloced mem, clear screen, close
 	free(entry_arr);
-	free(stored_indexes);
+	index_table_free(&stored_indexes);
 	move(0,0);
-	//clear();
+	clear();
 	erase();
 	refresh();
 	endwin();
-
-	/* So GCC will shut up */
 	x += y;
-	num_stored_indexes--;
-	p_stored_indexes++;
-
 	exit(EXIT_SUCCESS);
 }

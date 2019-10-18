@@ -1,5 +1,6 @@
 #ifndef INIT_H
 #define INIT_H
+#include <stdbool.h>
 #include <ncurses.h>
 #include <limits.h>
 #include "utils.h"
@@ -31,9 +32,9 @@ int parse_config(char* config_path)
 	char *line = NULL;
 	ssize_t len = 0;
 	size_t nread;
-	unsigned char reading_programs = 0;
-	unsigned char reading_file_types = 0;
-	unsigned short reading_extensions = 0;
+	bool reading_programs = 0;
+	bool reading_file_types = 0;
+	bool reading_extensions = 0;
 
 	char* current_program_path = NULL;
 

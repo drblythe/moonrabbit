@@ -28,6 +28,7 @@ int ct_str_grow(chained_table_str* c_table)
 	free(c_table->list);
 	c_table->list = new_list;
 	c_table->capacity *= 2;
+	return 0;
 }
 
 int ct_str_add_new_list(chained_table_str* c_table, const char *title)
@@ -93,7 +94,7 @@ int ct_str_free_table(chained_table_str* c_table)
 	return 0;
 }
 
-short ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title)
+bool ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title)
 {
 	for (int i = 0; i < c_table->size; i++) {
 		if (!strcmp(prog_title, c_table->list[i].title)) {

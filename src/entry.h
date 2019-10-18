@@ -15,7 +15,8 @@
 #include "bindings.h"
 #include "command_handling.h"
 #include "utils.h"
-#define MAX_STORED_INDEXES 20
+#include "chained_table.h"
+
 
 typedef struct ENTRY {
 	char name[NAME_MAX];
@@ -25,14 +26,26 @@ typedef struct ENTRY {
 	char permission[10];
 	gid_t gid;
 	uid_t uid;
-	unsigned short marked; // change to bool or bit stuff!
+	bool marked; // change to bool or bit stuff!
 	//char owner[255];
 } ENTRY;
 
-typedef struct KEY_VALUE {
-	char key[NAME_MAX];
-	unsigned int value;
-} KEY_VALUE;
+
+typedef struct dir_index_pair {
+	char *dir_name;
+	int index;
+} dir_index_pair;
+
+typedef struct index_table {
+	int capacity;
+	int size;
+	dir_index_pair* stored_index_array;
+} index_table;
+
+int index_table_init(index_table* table);
+int index_table_store(index_table* table, const char* cwd, int current_index);
+int index_table_load(index_table* table, const char* cwd, int* current_index);
+int index_table_free(index_table*table);
 
 int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int reset_index);
 int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots);
@@ -43,8 +56,6 @@ int mark_file(ENTRY *p_entry, int *num_selected);
 int unmark_file(ENTRY *p_entry, int *num_selected);
 
 int update_curr_index(short int direction, int* current_index, int *num_entries);
-int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* dir_path, const int index);
-int load_index(KEY_VALUE** p_kvp_arr, const int num_stored, const char* cwd, int* current_index);
 
 int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, const int num_entries);
 int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries, int* current_index);

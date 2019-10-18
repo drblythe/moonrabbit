@@ -14,7 +14,6 @@ int next_dir(char** p_cwd, char* dir_name)
 		strcat(*p_cwd,"/");
 	}
 	strcat(*p_cwd, dir_name);
-	
 	return 1;
 }
 
@@ -51,7 +50,7 @@ char* get_extension(char* file_name)
 
 int open_file(char *cwd, char *file_name, chained_table_str* ct)
 {
-	int exec_in_term = 0;
+	bool exec_in_term = 0;
 	char file_type;	
 	int ret;
 	char *ext = get_extension(file_name);
@@ -83,7 +82,6 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct)
 		execv(args[0],args);
 	}
 	if (exec_in_term) {
-		//wait(NULL);
 		waitpid(pid, &status, 0);
 	}
 	else {
@@ -104,9 +102,7 @@ int file_name_len(char* path)
 		len++;
 	}
 	return len;
-
 }
-
 
 int extract_file_name(char** buff, const char* path)
 {
@@ -122,7 +118,6 @@ int extract_file_name(char** buff, const char* path)
 	*buff = malloc(sizeof(char)*(len+1));
 	for (int i = 0; i < len; i++) {
 		*(*buff+i) = path[slash_index+1+i];
-		//printf("--%c--\n",*(*buff+i));
 	}
 	*(*buff+len) = '\0';
 
@@ -176,7 +171,6 @@ int delete_selection(char** file_buffer, int* num_selected)
 			cmd_delete(*(file_buffer+i));
 		}
 	}
-	
 	*num_selected = 0;
 	return 1;
 }

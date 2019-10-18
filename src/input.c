@@ -1,7 +1,7 @@
 /* input.c */
 #include "input.h"
 
-char* get_input(void)
+char* get_input(bool search_mode)
 {
 	char * command;
 	command = malloc(sizeof(char) * 255);
@@ -10,7 +10,12 @@ char* get_input(void)
 		mvprintw(LINES-2,i, " ");
 		mvprintw(LINES-1,i, " ");
 	}
-	mvprintw(LINES-1,0, ":");
+	if (search_mode) {
+		mvprintw(LINES-1,0, "/");
+	}
+	else {
+		mvprintw(LINES-1,0, ":");
+	}
 
 	/* turn terminal feedback on */
 	echo();
@@ -45,7 +50,7 @@ char* get_input(void)
 	return command;
 }
 
-int confirm_deletion(int x_pos, int y_pos, int num_selected)
+bool confirm_deletion(int x_pos, int y_pos, int num_selected)
 {
 	mvprintw(x_pos, y_pos, "Delete selection? (y/N)", num_selected);
 	char c = getch();

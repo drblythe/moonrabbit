@@ -128,7 +128,9 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 	return -1;
 }
 
+
 /* KEY_VALUE** is pointer to an array */
+#if 0
 int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int current_index)
 {
 	char already_stored = 0;
@@ -178,7 +180,81 @@ int load_index(KEY_VALUE** p_kvp_arr, const int num_stored, const char* cwd, int
 	}
 	return 1;
 }
+#endif
 
+
+int index_table_init(index_table* table)
+{
+	// Initial array size is 20
+	table->capacity = 20;
+	table->size = 0;
+	table->stored_index_array = (dir_index_pair*) malloc(sizeof(dir_index_pair) * table->capacity);
+	return 0;
+}
+
+int index_table_grow(index_table* table)
+{
+	dir_index_pair* new_array = (dir_index_pair*) malloc(sizeof(dir_index_pair) * (2*(table->capacity)));
+	for (int i = 0; i < table->size; i++) {
+		new_array[i].dir_name = malloc(sizeof(char) * (strlen(table->stored_index_array[i].dir_name) + 1) );
+		strcpy(new_array[i].dir_name, table->stored_index_array[i].dir_name);
+		free(table->stored_index_array[i].dir_name);
+	}
+	table->capacity *= 2;
+	free(table->stored_index_array);
+	table->stored_index_array = new_array;
+	return 0;
+}
+
+int index_table_search(index_table* table, const char* cwd)
+{
+	for (int i = 0; i < table->size; i++) {
+		if (!strcmp(table->stored_index_array[i].dir_name, cwd)) {
+			return table->stored_index_array[i].index;
+		}
+	}
+	return -1;
+}
+
+int index_table_store(index_table* table, const char* cwd, int current_index)
+{
+	for (int i = 0; i < table->size; i++) {
+		if (!strcmp(table->stored_index_array[i].dir_name, cwd)) {
+			table->stored_index_array[i].index = current_index;
+			return 1;
+		}
+	}
+
+	if (table->size == table->capacity) {
+		index_table_grow(table);
+	}
+	table->stored_index_array[table->size].dir_name = (char*) malloc(sizeof(char) * (strlen(cwd)+1) );
+	strcpy(table->stored_index_array[table->size].dir_name, cwd);
+	table->stored_index_array[table->size].index = current_index;
+	table->size++;
+	return 0;
+}
+
+int index_table_load(index_table* table, const char* cwd, int* current_index)
+{
+	for (int i = 0; i < table->size; i++) {
+		if (!strcmp(table->stored_index_array[i].dir_name,cwd)) {
+			*current_index = table->stored_index_array[i].index;
+			return 0;
+		}
+	}
+	*current_index = 0;
+	return -1;
+}
+
+int index_table_free(index_table*table)
+{
+	for (int i = 0; i < table->size; i++) {
+		free(table->stored_index_array[i].dir_name);
+	}
+	free(table->stored_index_array);
+	return 0;
+}
 
 int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int reset_index)
 {
@@ -292,7 +368,7 @@ int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries,
 			low = mid+1;
 	}
 
-	return -1;
+	return 0;
 }
 
 

@@ -21,11 +21,11 @@ typedef struct hash_table_str {
 int init_hash_table_str(hash_table_str *ht, unsigned int m) 
 {
 	ht->size = m;
-	ht->list = (node_str*) malloc(sizeof(node_str) * m);
+	ht->list = (ll_str*) malloc(sizeof(node_str) * m);
 	for (int i = 0; i < m; i++) {
 		ht->list[i].head = NULL;
 	}
-	ht->list_name = malloc(sizeof(char*) * m);
+	ht->list_name = (char**) malloc(sizeof(char*) * m);
 	return 0;
 }
 
@@ -47,7 +47,7 @@ int hash_func_str(hash_table_str *ht, const char *key)
 
 int insert_str(hash_table_str *ht, const char* key)
 {
-	node_str* new_node = malloc(sizeof(node_str));
+	node_str* new_node = (node_str*) malloc(sizeof(node_str));
 	strcpy(new_node->data,key);
 	new_node->next=NULL;
 
