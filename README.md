@@ -39,6 +39,7 @@ I plan to make the keybindings configurable in the config, but currently it is b
     r = refresh display  
     H = toggle hidden files  
     ctrl+h = toggle hidden files (I have noticed this has not worked across all distros!)  
+    q = quit  
     
 
 ### Config File Howto  
