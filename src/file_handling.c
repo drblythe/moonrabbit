@@ -10,6 +10,10 @@ int prev_dir(char** p_cwd)
 
 int next_dir(char** p_cwd, char* dir_name)
 {
+	if (!open_dir_allowed(*p_cwd,dir_name)) {
+		//print warning
+		return 0;
+	}
 	if (strcmp(*p_cwd,"/")){
 		strcat(*p_cwd,"/");
 	}

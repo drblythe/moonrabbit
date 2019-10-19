@@ -38,36 +38,3 @@ $/usr/bin/vim {
 }
 [End]
 
-
-# Custom keybindings not being parsed yet!! :^)
-#[Keybindings]
-#
-#up {
-#	UP k
-#}
-#
-#down {
-#	DOWN j
-#}
-#
-#prev {
-#	LEFT h
-#}
-#
-#forward/open {
-#	RIGHT l 
-#}
-#
-#select file {
-#	SPACE
-#}
-#
-#refresh display {
-#	r
-#}
-#
-#show hidden {
-#	shift+h
-#}
-#
-#[End]

@@ -128,61 +128,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 	return -1;
 }
 
-
-/* KEY_VALUE** is pointer to an array */
-#if 0
-int save_index(KEY_VALUE** p_kvp_arr, int num_stored, const char* cwd, const int current_index)
-{
-	char already_stored = 0;
-		
-	for (int i = 0; i < num_stored; i++) 
-		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
-			already_stored = 1;
-			break;
-		}
-	if (already_stored) {
-		return 0;
-	}
-	else {
-		int index_to_use;
-		if ( (num_stored) + 1 > 20) {
-			index_to_use = 0;
-			for (int i = 0; i < 19; i++) {
-				strcpy((*p_kvp_arr + i + 1)->key, (*p_kvp_arr + i)->key);
-				(*p_kvp_arr + i + 1)->value = (*p_kvp_arr + i)->value;
-			}
-			
-		}
-		else {
-			index_to_use = current_index;
-		}
-
-		strcpy((*p_kvp_arr + index_to_use)->key,cwd);
-		(*p_kvp_arr + index_to_use)->value = current_index;
-	}
-	return 1;
-}
-
-int load_index(KEY_VALUE** p_kvp_arr, const int num_stored, const char* cwd, int* current_index)
-{
-	char already_stored = 0;
-	int return_index = -1;
-	for (int i = 0; i < num_stored; i++) 
-		if (!strcmp((*p_kvp_arr+i)->key, cwd)) {
-			already_stored = 1;
-			return_index = i;
-			break;
-		}
-	if (!already_stored)
-		return 0;
-	else {
-		*current_index = return_index;
-	}
-	return 1;
-}
-#endif
-
-
 int index_table_init(index_table* table)
 {
 	// Initial array size is 20

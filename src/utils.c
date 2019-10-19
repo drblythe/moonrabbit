@@ -21,7 +21,38 @@ int is_directory_fullpath(char* path)
 	return ret;
 }
 
-char* get_permissions(char* cwd, char* file_name)
+bool open_dir_allowed(const char* cwd, const char* file_name)
+{
+	bool allowed = 0;
+	char* perm;
+	uid_t uid = getuid();
+	gid_t gid = getgid();
+	char* fullpath = str_concat_cwd_filename(cwd, file_name);
+
+	if (uid == 0){
+		allowed = 1;
+	}
+	else {
+		struct stat sb;
+		int ret = stat(fullpath, &sb);
+		perm = get_permissions(cwd, file_name);
+		if (perm[8] == 'x') {
+			allowed = 1;
+		}
+		else if (sb.st_uid == uid && perm[2] == 'x'){
+			allowed = 1;
+		}
+		else if (sb.st_gid == gid && perm[5] == 'x'){
+			allowed = 1;
+		}
+	}
+
+	free(fullpath);
+	free(perm);
+	return allowed;
+}
+
+char* get_permissions(const char* cwd, const char* file_name)
 {
 	int len_cwd = strlen(cwd);
 	int len_name = strlen(file_name);

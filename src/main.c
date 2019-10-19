@@ -150,10 +150,6 @@ int main(int argc, char* argv[])
 				break;
 			if (entry_arr[current_index].type == 'd') {
 				index_table_store(&stored_indexes, cwd, current_index);
-				/*
-				if (save_index(p_stored_indexes, num_stored_indexes, cwd, current_index))
-					num_stored_indexes++;
-				*/
 				next_dir(&cwd, entry_arr[current_index].name);
 				clear_entries(entry_arr, &num_entries, &current_index, 1);
 				index_table_load(&stored_indexes, cwd, &current_index);
