@@ -1,13 +1,7 @@
 
 TODO:
 
-1. Store index of *certain* amount of directories 
-
-4. Remember that removal of free inside get_entries where it was conditionally freeing pointers not returned by malloc? Yeah, fix that.
-
-6. Providing a command line argument that is not correct segfaults
-
-================================================================================
+Remember that removal of free inside get_entries where it was conditionally freeing pointers not returned by malloc? Yeah, fix that.
 
 Number->command functionality
 	As long as the input is a number, record it

@@ -39,14 +39,9 @@ int main(int argc, char* argv[])
 
 
 	// Init ncurses
-	if (!init_ncurses(win)) {
-		endwin();
-		fprintf(stderr, "Error: failed to init ncurses window\n");
-		exit(EXIT_FAILURE);
-	}
-
+	
 	cwd = malloc(sizeof(char) * PATH_MAX);
-	argc > 1 ? strcpy(cwd,argv[1]) : (cwd = getcwd(NULL,0));
+	cwd = getcwd(NULL,0);
 	if (!cwd) {
 		endwin();
 		perror("getcwd");
@@ -62,7 +57,16 @@ int main(int argc, char* argv[])
 	while (argc > 1) {
 		if (argv[1][0] == '-') {
 			if (argv[1][1] == 'c') {
-				user_cfg = 1;
+				if (argc > 2) {
+					user_cfg = 1;
+					strcpy(config_path, argv[2]);
+					argc--;
+					argv++;
+				}
+				else {
+					fprintf(stderr, "%s -c [/path/to/config]\n", argv[0]);
+					exit(EXIT_FAILURE);
+				}
 			}
 			else {
 				fprintf(stderr, "Error: unrecognized option %s\n", argv[1]);
@@ -74,16 +78,20 @@ int main(int argc, char* argv[])
 		else
 			break;
 	}
-	if (user_cfg) {
-		strcpy(config_path,argv[1]);
-	}
-	else {
+	if (!user_cfg) {
 		char username[128] ;
 		getlogin_r(username,128);
 		strcpy(config_path, "/home/");
 		strcat(config_path, username);
 		strcat(config_path, "/.config/moonrabbit/config");
 	}
+
+	if (!init_ncurses(win)) {
+		endwin();
+		fprintf(stderr, "Error: failed to init ncurses window\n");
+		exit(EXIT_FAILURE);
+	}
+
 
 	// Init moonrabbit stuff (read config for program prefs, get files in dir, etc.)
 	get_entries(cwd, &entry_arr, &num_entries, show_dots);
