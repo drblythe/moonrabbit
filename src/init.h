@@ -12,7 +12,7 @@ chained_table_str ct;
 int init_ncurses(WINDOW *win)
 {
 	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
-	initscr();
+	win = initscr();
 	noecho();
 	keypad(stdscr,TRUE);
 	curs_set(0); /* 0, 1, 2 */
@@ -36,7 +36,8 @@ int parse_config(char* config_path)
 	bool reading_file_types = 0;
 	bool reading_extensions = 0;
 
-	char* current_program_path = NULL;
+	//char* current_program_path = NULL;
+	char current_program_path[PATH_MAX];
 
 	stream = fopen(config_path,"r");
 	if (!stream) {
@@ -134,10 +135,12 @@ int parse_config(char* config_path)
 					ct.list[ct.size-1].exec_in_term = 0;
 				}
 				reading_extensions = 1;
+				/*
 				if (current_program_path == (char*) NULL) {
 					free(current_program_path);
 				}
-				current_program_path = malloc(sizeof(char) * k);
+				*/
+				//current_program_path = malloc(sizeof(char) * k);
 				strcpy(current_program_path, program_path);
 			}
 		}

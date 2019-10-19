@@ -56,7 +56,7 @@ char* get_permissions(const char* cwd, const char* file_name)
 {
 	int len_cwd = strlen(cwd);
 	int len_name = strlen(file_name);
-	int len_file_path = len_cwd + len_name + 1;
+	int len_file_path = len_cwd + 1 + len_name + 1;
 
 	char file_path[len_file_path];
 	strcpy(file_path, cwd);
@@ -166,6 +166,5 @@ char* str_concat_cwd_filename(const char* cwd, const char* filename)
 	strcpy(full_path,cwd);
 	strcat(full_path,"/");
 	strcat(full_path,filename);
-	full_path[len] = '\0';
 	return full_path;
 }

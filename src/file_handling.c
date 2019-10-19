@@ -3,8 +3,11 @@
 
 int prev_dir(char** p_cwd)
 {
-	strcat(*p_cwd, "/..");
-	strcpy(*p_cwd,realpath(*p_cwd,NULL));
+	char tmp[strlen(*p_cwd) + 4];
+	strcpy(tmp, *p_cwd);
+	strcat(tmp,"/..");
+	free(*p_cwd);
+	*p_cwd = realpath(tmp,NULL);
 	return 1;
 }
 
@@ -27,28 +30,22 @@ char* get_extension(char* file_name)
 	char *ext;
 	n = 0;
 
-	for (int i = strlen(file_name)-1; i >= 0; i--) {
+	for (int i = strlen(file_name)-1; i >= 1; i--) {
 		if (file_name[i] == '.') {
 			ext = malloc(sizeof(char)*(strlen(file_name)-i));
+			char temp[strlen(file_name)-i + 1];
 			for(int j = i; j < strlen(file_name); j++){
-				*(ext+n) = file_name[j];
+				temp[n] = file_name[j];
 				n++;
 			}
-			*(ext+(strlen(file_name)-i)) = '\0';
+			temp[strlen(file_name)-i] = '\0';
+			strcpy(ext, temp);
 			return ext;
 		}
 	}
-
 	// If there is no extension, set to ".<none>"
 	ext = malloc(sizeof(char)*(7+1));
-	*(ext+0) = '.';
-	*(ext+1) = '<';
-	*(ext+2) = 'n';
-	*(ext+3) = 'o';
-	*(ext+4) = 'n';
-	*(ext+5) = 'e';
-	*(ext+6) = '>';
-	*(ext+7) = '\0';
+	strcpy(ext,".<none>");
 	return ext;
 }
 

@@ -14,6 +14,22 @@ int ct_str_init(chained_table_str* c_table)
 	return 0;
 }
 
+int ct_str_free_table(chained_table_str* c_table)
+{
+	for (int i = 0; i < c_table->size; i++) {
+		free(c_table->list[i].title);
+		node_str *tmp;
+		while (c_table->list[i].head != NULL) {
+			tmp = c_table->list[i].head;
+			c_table->list[i].head = c_table->list[i].head->next;
+			free(tmp->data);
+			free(tmp);
+		}
+	}
+	free(c_table->list);
+	return 0;
+}
+
 int ct_str_grow(chained_table_str* c_table)
 {
 	ll_str* new_list = (ll_str*) malloc(sizeof(ll_str) * (c_table->capacity * 2));
@@ -89,10 +105,6 @@ char* ct_str_search_table(chained_table_str* c_table, const char* search_term)
 	return (char*) NULL;
 }
 
-int ct_str_free_table(chained_table_str* c_table)
-{
-	return 0;
-}
 
 bool ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title)
 {

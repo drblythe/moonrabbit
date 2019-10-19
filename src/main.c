@@ -40,7 +40,8 @@ int main(int argc, char* argv[])
 
 	// Init ncurses
 	
-	cwd = malloc(sizeof(char) * PATH_MAX);
+	//cwd = malloc(sizeof(char) * PATH_MAX);
+	//strcpy(cwd,getcwd(NULL,0));
 	cwd = getcwd(NULL,0);
 	if (!cwd) {
 		endwin();
@@ -312,7 +313,10 @@ int main(int argc, char* argv[])
 	}
 
 	free(entry_arr);
+	free(cwd);
+	free(win);
 	index_table_free(&stored_indexes);
+	ct_str_free_table(&ct);
 	move(0,0);
 	clear();
 	erase();

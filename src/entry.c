@@ -3,12 +3,13 @@
 int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 {
 	struct dirent **namelist;
-	struct stat *sb;
 	char* perm;
 	int dot_count, entry_index, ret;
 	*num_entries = scandir(cwd, &namelist,NULL,alphasort);
+	if (*entry_arr != NULL) {
+		free(*entry_arr);
+	}
 	*entry_arr = malloc(sizeof(ENTRY) * (*num_entries - 2) );
-	perm = malloc(sizeof(char) * (9+1));
 	dot_count = 0;
 	entry_index = 0;
 
@@ -17,7 +18,6 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 	for (int n = 2; n < *num_entries; n++) {
 		if (!show_dots && namelist[n]->d_name[0] == '.') {
 			dot_count++;
-			continue;
 		}
 		else {
 			memset(( (*entry_arr) +(entry_index))->name,'\0', sizeof( ( (*entry_arr) +(entry_index))->name));
@@ -36,21 +36,15 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 			strcat(abs_path,"/");
 			strcat(abs_path, ((*entry_arr) +(entry_index))->name);
 			
-			sb = malloc(sizeof(struct stat));
-			ret = stat(abs_path, sb);
-			if (ret) {
-				perror("stat");
-				return -1;
-			}
-
 			((*entry_arr) +(entry_index))->marked = 0;
 			
 			entry_index++;
+			free(perm);
 		}
-		//free(namelist[n]);
-		free(sb);
-		free(perm);
+		free(namelist[n]);
 	}
+	free(namelist[0]);
+	free(namelist[1]);
 	free(namelist);
 	*num_entries -= 2;
 	if (!show_dots)
