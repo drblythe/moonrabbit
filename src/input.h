@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "bindings.h"
 
 char* get_input(bool search_mode);
