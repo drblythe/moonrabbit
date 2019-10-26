@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <stdio.h>
+#include <ftw.h>
 #include "utils.h"
 
 int cmd_cd(char** p_cwd, char* dir_name);

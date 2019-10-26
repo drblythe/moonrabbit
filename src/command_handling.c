@@ -62,36 +62,29 @@ int cmd_copy_dir(int del_after_move, char* dest_dir, char* src_dir)
 	return 1;
 }
 
-int cmd_delete_dir(const char* dir_path) 
+int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW *ftwbuf)
 {
+    int rv = remove(fpath);
 
-	struct dirent **dir_contents;
-	int dir_size;
-	dir_size = scandir(dir_path, &dir_contents, NULL, alphasort);
+    if (rv)
+        perror(fpath);
 
-
-	for (int i = 0; i < dir_size; i++) {
-		if (!strcmp(dir_contents[i]->d_name, ".") || !strcmp(dir_contents[i]->d_name, "..")) {
-			continue;
-		}
-		char sub_path[strlen(dir_path)+1+strlen(dir_contents[i]->d_name)+1];
-		strcpy(sub_path, dir_path);
-		strcat(sub_path, "/");
-		strcat(sub_path, dir_contents[i]->d_name);
+    return rv;
+}
 
 
-		if (is_directory(sub_path,dir_contents[i]->d_name)) {
-			cmd_delete_dir(sub_path);
-		}
-		else {
-			cmd_delete(sub_path);
-		}
-		free(dir_contents[i]);
+int rmrf(const char *path)
+{
+	if(!strcmp(path,"/")) {
+		return -1;
 	}
+    return nftw(path, unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
+}
 
-	cmd_delete(dir_path);
-	free(dir_contents);
-	return 1;
+
+int cmd_delete_dir(const char* dir_path)
+{
+	rmrf(dir_path);
 }
 
 
