@@ -50,7 +50,7 @@ In the config file there is an explanation for how to set file associations, wit
 You need to give the FULL path to your program path (i.e. /usr/bin/mpv).  
 Then within the brackets you give a space separated list of extensions (i.e. .mp3) that will be opened with that program.  
 This all goes between the section brackets that starts with File Types and ends with End.  
-I parse the config this way because I wanted a simple/easy way to have unambiguous file associtions without an external mimetype library.  
+I parse the config this way because I wanted a simple/easy way to have unambiguous file associations without an external mimetype library.  
 
 Two notes:  
     - .\<none> is the extension of files like "foo" and "bar", i.e. with no extension.  
