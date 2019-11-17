@@ -109,6 +109,7 @@ int main(int argc, char* argv[])
 	{
 		flushinp();
 		getyx(stdscr, y, x);
+		refresh();
 		c = getch();
 		switch(c) {
 
