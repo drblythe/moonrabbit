@@ -13,14 +13,8 @@ You will need the ncurses development libraries from your distro
     libncursesw5-dev
     
 ### Compile
-    gcc $(ncursesw5-config --cflags --libs) *.c -o moonrabbit  
-    
-The ncursesw5-config... is a helper script that outputs the correct cflags and libs to compile with.  
-It might also be ncursesw6-config, depending on the version you have installed
-For me it just boiled down to  
-    
-    -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600 -lncursesw -ltinfo -ldl  
-    
+    gcc -D_DEFAULT_SOURCE -lncursesw -ltinfo -ldl *.c -o moonrabbit  
+
 ncursesw is required in order to render unicode wide chars correctly.  
 
 ### Keybindings  
@@ -41,7 +35,7 @@ I plan to make the keybindings configurable in the config, but currently it is b
     xx = permanently delete selected files (you will get a y/N prompt)  
     r = refresh display  
     H = toggle hidden files  
-    ctrl+h = toggle hidden files (I have noticed this has not worked across all distros!)  
+    ctrl+h = toggle hidden files (I have noticed this has not worked on all terminal emulators!)  
     q = quit  
     
 
@@ -64,7 +58,7 @@ You can pass the argument
 to read from a different location
 
 ### Notes (specifically for URxvt on Debian Stable)
-I have tested moonrabbit on several distros (Arch, Gentoo, Debian, ...) and also macOS.  
+I have tested moonrabbit on several distros (Arch, Gentoo, Debian, ...), FreeBSD, and also macOS.  
 The only issue I have had has been on Debian Stable (Buster at this time) and only with URxvt terminal.  
 If there is any issue with odd characters rendering, make sure you have:  
 
