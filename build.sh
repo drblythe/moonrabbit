@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc $(ncursesw6-config --cflags --libs) ./src/*.c -o moonrabbit
+gcc src/*c $(ncursesw6-config --cflags --libs) -o moonrabbit
