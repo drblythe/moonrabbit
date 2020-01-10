@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 	int copy_buff_del = 0;
 	int copy_buff_size = 0;
 	int num_selected = 0;
+	bool exec_in_term = false;
 	index_table stored_indexes;
 	char* cwd;
 	char config_path[PATH_MAX];
@@ -107,6 +108,7 @@ int main(int argc, char* argv[])
 	int run = 1;
 	while(run)
 	{
+		if (exec_in_term) continue;
 		flushinp();
 		getyx(stdscr, y, x);
 		refresh();
@@ -159,7 +161,7 @@ int main(int argc, char* argv[])
 				num_selected = 0;
 			}
 			else if (entry_arr[current_index].type != 'd') {
-				open_file(cwd, entry_arr[current_index].name, &ct);
+				open_file(&exec_in_term, cwd, entry_arr[current_index].name, &ct);
 			}
 			else {
 			}

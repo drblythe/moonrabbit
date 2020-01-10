@@ -19,7 +19,7 @@
 
 int prev_dir(char **p_cwd);
 int next_dir(char **p_cwd, char *dir_name);
-int open_file(char *cwd, char *file_name, chained_table_str* ct);
+int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct);
 char* get_extension(char *file_name);
 int file_name_len(char* path);
 int get_path_length(char* cwd, char* file_name);// +1!!

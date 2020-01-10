@@ -1,5 +1,6 @@
 /* file_handling.c */
 #include "file_handling.h"
+#include <sys/wait.h>
 
 int prev_dir(char** p_cwd)
 {
@@ -49,9 +50,9 @@ char* get_extension(char* file_name)
 	return ext;
 }
 
-int open_file(char *cwd, char *file_name, chained_table_str* ct)
+int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct)
 {
-	bool exec_in_term = 0;
+	//bool exec_in_term = 0;
 	char file_type;	
 	int ret;
 	char *ext = get_extension(file_name);
@@ -60,7 +61,7 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct)
 		return -1;
 	}
 	char * full_filepath = str_concat_cwd_filename(cwd, file_name);
-	exec_in_term = ct_str_exec_in_term(ct,program_path);
+	*exec_in_term = ct_str_exec_in_term(ct,program_path);
 	int status;
 
 
@@ -70,7 +71,7 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct)
 		exit(1);
 	}
 	else if (pid == 0) {
-		if (!exec_in_term) {
+	if (!*exec_in_term) {
 			int fd = open("/dev/null", O_WRONLY);
 			dup2(fd, 1);
 			dup2(fd, 2);
@@ -82,8 +83,10 @@ int open_file(char *cwd, char *file_name, chained_table_str* ct)
 		};
 		execv(args[0],args);
 	}
-	if (exec_in_term) {
+	if (*exec_in_term) {
 		waitpid(pid, &status, 0);
+		*exec_in_term = false;
+		//wait(&status);
 	}
 	else {
 		waitpid(pid, &status, WNOHANG);
