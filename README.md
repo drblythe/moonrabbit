@@ -1,12 +1,14 @@
 ## Moonrabbit file manager  
 
-![gif](vid/moonrabbit.gif)  
-
 Moonrabbit is a low resource, terminal/ncurses file manager written in C. I liked Ranger, but hated that it was written in Python and how complicated the config files were, so that is why this exists! :^)  
 My goal was to make it as efficient and tiny as possible, and not use any outside libraries aside from ncurses.  
 It should run on any Posix system.  
 Keybindings are vim for the most part. They are detailed further below.  
 The name Moonrabbit comes from the Touhou game series.  
+
+<br>  
+<img "align="center" height="350px" width="auto" src="vid/moonrabbit.gif">  
+<br>  
 
 ### Dependencies  
 You will need the ncurses development libraries from your distro  
@@ -67,4 +69,5 @@ If there is any issue with odd characters rendering, make sure you have:
     URxvt.termName: rxvt-256color  
     
 in your .Xresources (and of course have rxvt-unicode-256color installed!)
+
 
