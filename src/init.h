@@ -164,12 +164,6 @@ int parse_config_file(char* config_path)
 					ct.list[ct.size-1].exec_in_term = 0;
 				}
 				reading_extensions = 1;
-				/*
-				if (current_program_path == (char*) NULL) {
-					free(current_program_path);
-				}
-				*/
-				//current_program_path = malloc(sizeof(char) * k);
 				strcpy(current_program_path, program_path);
 			}
 		}

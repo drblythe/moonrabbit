@@ -148,7 +148,6 @@ int cmd_copy(const char *dest, const char *src)
         }
         close(fd_src);
 
-        /* Success! */
         return 1;
     }
 

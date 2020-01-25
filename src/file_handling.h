@@ -22,7 +22,7 @@ int next_dir(char **p_cwd, char *dir_name);
 int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct);
 char* get_extension(char *file_name);
 int file_name_len(char* path);
-int get_path_length(char* cwd, char* file_name);// +1!!
+int get_path_length(char* cwd, char* file_name);
 int extract_file_name(char** buff, const char* path);
 int append_to_path(char* new_path, const char* old_path, const char* filename);
 int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size);
