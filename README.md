@@ -1,27 +1,27 @@
 ## Moonrabbit file manager  
 
-Moonrabbit is a low resource, terminal/ncurses file manager written in C. I liked Ranger, but hated that it was written in Python and how complicated the config files were, so that is why this exists! :^)  
-My goal was to make it as efficient and tiny as possible, and not use any outside libraries aside from ncurses.  
+Moonrabbit is a low resource, terminal/ncurses file manager written in C. I liked Ranger (Python), but think that C is more efficient and appropriate for a program that uses any kind of syscalls. The config file(s) are also so ridiculous and complicated that it makes me mad just thinking about it.  
+My goal was to make it as efficient and tiny as possible (including the config -\_-), and not use any outside libraries aside from ncurses.  
 It should run on any Posix system.  
 Keybindings are vim for the most part. They are detailed further below.  
 The name Moonrabbit comes from the Touhou game series.  
 
-<br>  
+<br>
 <img "align="center" height="350px" width="auto" src="vid/moonrabbit.gif">  
-<br>  
 
 ### Dependencies  
 You will need the ncurses development libraries from your distro  
 
-    libncurses*-dev  
-    libncursesw*-dev
+    libncurses  
+    libncursesw  
     
 ### Compile
 
 	cd moonrabbit
 	./build.sh
 
-build.sh uses "ncursesw*-config", which is a script that comes with the ncurses/ncurses development library. If it doesn't work, check the version (i.e. ncursesw5-config vs ncursesw6-config)
+build.sh uses "ncursesw*-config", which is a script that comes with the ncurses/ncurses development library.  
+If it doesn't work, check the version (i.e. ncursesw5-config vs ncursesw6-config).  
 ncursesw is required in order to render unicode wide chars correctly.  
 
 The cflags and libs I needed boiled down to:
@@ -58,8 +58,8 @@ This all goes between the section brackets that starts with File Types and ends 
 I parse the config this way because I wanted a simple/easy way to have unambiguous file associations without an external mimetype library.  
 
 Two notes:  
-    - .\<none> is the extension of files like "foo" and "bar", i.e. with no extension.  
-    - To have a program open IN terminal (like you might want for vim, or other text editors, prepend a '$' to the program path. This is shown for /usr/share/vim in the config. Otherwise the program is forked to the background and not waited on within the current process.
+    - ".\<none>" is the extension of files like "foo" and "bar", i.e. with no extension.  
+    - To have a program open IN terminal (like you might want for vim, or other text editors, prepend a '$' to the program path. This is shown for /usr/share/vim in the config. Otherwise the program is forked to the background and wait() does not hang within the current process.
 
 If running with no command line arguments, moonrabbit looks for the config in /home/*you*/.config/moonrabbit/config.  
 You can pass the argument  
