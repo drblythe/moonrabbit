@@ -13,13 +13,20 @@ The name Moonrabbit comes from the Touhou game series.
 ### Dependencies  
 You will need the ncurses development libraries from your distro  
 
-    libncurses5-dev  
-    libncursesw5-dev
+    libncurses*-dev  
+    libncursesw*-dev
     
 ### Compile
-    gcc -D_DEFAULT_SOURCE -lncursesw -ltinfo -ldl *.c -o moonrabbit  
 
+	cd moonrabbit
+	./build.sh
+
+build.sh uses "ncursesw*-config", which is a script that comes with the ncurses/ncurses development library. If it doesn't work, check the version (i.e. ncursesw5-config vs ncursesw6-config)
 ncursesw is required in order to render unicode wide chars correctly.  
+
+The cflags and libs I needed boiled down to:
+
+	gcc  -D_GNU_SOURCE -D_DEFAULT_SOURCE -lncursesw src/*.c -o moonrabbit
 
 ### Keybindings  
 I plan to make the keybindings configurable in the config, but currently it is basically vim:  

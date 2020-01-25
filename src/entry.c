@@ -4,7 +4,7 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 {
 	struct dirent **namelist;
 	char* perm;
-	int dot_count, entry_index, ret;
+	int dot_count, entry_index;
 	*num_entries = scandir(cwd, &namelist,NULL,alphasort);
 	if (*entry_arr != NULL) {
 		free(*entry_arr);
@@ -118,7 +118,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 		}
 		return 1;
 	}
-
 	return -1;
 }
 
@@ -205,7 +204,6 @@ int clear_entries(ENTRY* p_entry_arr, int* num_entries, int* current_index,int r
 	return 1;
 }
 
-
 int update_curr_index(short int direction, int* current_index, int *num_entries)
 {
 	erase();
@@ -214,14 +212,12 @@ int update_curr_index(short int direction, int* current_index, int *num_entries)
 	return 1;
 }
 
-
 int mark_file(ENTRY *p_entry, int *num_selected)
 {
 	p_entry->marked = 1;
 	(*num_selected)++;
 	return 1;
 }
-
 
 int unmark_file(ENTRY *p_entry, int *num_selected) 
 {
@@ -230,8 +226,6 @@ int unmark_file(ENTRY *p_entry, int *num_selected)
 	return 1;
 }
 
-
-
 int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries)
 {
 	int RIGHT_PADDING = 0 + 5;
@@ -239,7 +233,6 @@ int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries
 		return 0;
 	char* perm = get_permissions(cwd, entry.name);
 	int path_len = strlen(cwd) + 1 + 1 + strlen(entry.name) + 1;
-	//mvprintw(LINES-2, 0, "%d/%d  %c%s gid: %d\t uid: %d\t", current_index+1, num_entries, entry.type,perm, entry.marked, entry.gid, entry.uid);
 	mvprintw(LINES-2, 0, "%d/%d  %c%s", current_index+1, num_entries, entry.type,perm);
 	free(perm);
 
@@ -273,10 +266,8 @@ int display_file_info(char* cwd, ENTRY entry, int current_index, int num_entries
 		}
 		mvprintw(LINES-1, COLS-RIGHT_PADDING, "...");
 	}
-
 	return 1;
 }
-
 
 int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, const int num_entries)
 {
@@ -289,7 +280,7 @@ int search_dir(const char* file_name, ENTRY* entry_arr, int* current_index, cons
 	return 0;
 }
 
-int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries, int* current_index)
+int binarysearch_dir(const char* file_name, ENTRY* arr, const int num_entries, int* current_index)
 {
 	int low = 0;
 	int high = num_entries;
@@ -306,10 +297,8 @@ int binarysearch_entry(const char* file_name, ENTRY* arr, const int num_entries,
 		else if (strcmp(file_name, arr[mid].name ) > 0) 
 			low = mid+1;
 	}
-
 	return 0;
 }
-
 
 int get_num_marked(int num_entries, ENTRY* entry_arr)
 {
@@ -321,7 +310,6 @@ int get_num_marked(int num_entries, ENTRY* entry_arr)
 	}
 	return n;
 }
-
 
 int fill_copy_buffer(char*** copy_buff, int buff_size, int num_entries, ENTRY* entry_arr, char* cwd)
 {
@@ -339,19 +327,6 @@ int fill_copy_buffer(char*** copy_buff, int buff_size, int num_entries, ENTRY* e
 	return 1;
 }
 
-int print(char*** copy_buff, int buff_size)
-{
-	FILE* fp;
-	fp = fopen("./output","w");
-	for (int i = 0; i < buff_size; i++) {
-		fputs(*(*(copy_buff)+i),fp);
-		fputs("\n",fp);
-		printf("---%s---\n",*(*(copy_buff)+i));
-	}
-	fclose(fp);
-	return 1;
-}
-
 int empty_copy_buffer(char*** copy_buff, int* buff_size)
 {
 	for (int i = 0; i < *buff_size; i++)
@@ -360,4 +335,3 @@ int empty_copy_buffer(char*** copy_buff, int* buff_size)
 	*buff_size= 0;
 	return 1;
 }
-

@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-
 typedef struct node_str {
 	char *data;
 	struct node_str* next;
@@ -23,7 +22,6 @@ typedef struct chained_table_str {
 	unsigned int capacity;
 	ll_str* list;
 } chained_table_str;
-
 
 int ct_str_init(chained_table_str* c_table);
 int ct_str_grow(chained_table_str* c_table);

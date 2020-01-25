@@ -8,7 +8,6 @@
 
 chained_table_str ct;
 
-
 int init_ncurses(WINDOW *win)
 {
 	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
@@ -24,19 +23,53 @@ int init_ncurses(WINDOW *win)
 	return 1;
 }
 
-int parse_config(char* config_path)
+int parse_cmd_args(int argc, char* argv[], char config_path[])
+{
+	bool user_cfg = 0;
+	while (argc > 1) {
+		if (argv[1][0] == '-') {
+			if (argv[1][1] == 'c') {
+				if (argc > 2) {
+					user_cfg = 1;
+					strcpy(config_path, argv[2]);
+					argc--;
+					argv++;
+				}
+				else {
+					fprintf(stderr, "%s -c [/path/to/config]\n", argv[0]);
+					exit(EXIT_FAILURE);
+				}
+			}
+			else {
+				fprintf(stderr, "Error: unrecognized option %s\n", argv[1]);
+				exit(EXIT_FAILURE);
+			}
+			argc--;
+			argv++;
+		}
+		else
+			break;
+	}
+	if (!user_cfg) {
+		char username[128] ;
+		getlogin_r(username,128);
+		strcpy(config_path, "/home/");
+		strcat(config_path, username);
+		strcat(config_path, "/.config/moonrabbit/config");
+	}
+	return 1;
+}
+
+int parse_config_file(char* config_path)
 {
 	FILE *stream;
-	int n;
-	int m;
 	char *line = NULL;
-	ssize_t len = 0;
+	size_t len = 0;
 	size_t nread;
 	bool reading_programs = 0;
 	bool reading_file_types = 0;
 	bool reading_extensions = 0;
 
-	//char* current_program_path = NULL;
 	char current_program_path[PATH_MAX];
 
 	stream = fopen(config_path,"r");
@@ -87,10 +120,6 @@ int parse_config(char* config_path)
 
 			}
 			else if (reading_extensions) { // This HAS TO BE BEFORE *else if (reading_file_types)*
-				int start = 0;
-				int end = 0;
-				int count = 0;
-
 				for (int i = 0; i < strlen(line); i++) {
 					if (line[i] == ' ' || line[i] == '\t') {
 						continue;

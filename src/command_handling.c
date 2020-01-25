@@ -72,7 +72,6 @@ int unlink_cb(const char *fpath, const struct stat *sb, int typeflag, struct FTW
     return rv;
 }
 
-
 int rmrf(const char *path)
 {
 	if(!strcmp(path,"/")) {
@@ -81,12 +80,11 @@ int rmrf(const char *path)
     return nftw(path, unlink_cb, 64, FTW_DEPTH | FTW_PHYS);
 }
 
-
 int cmd_delete_dir(const char* dir_path)
 {
 	rmrf(dir_path);
+	return 1;
 }
-
 
 int cmd_delete(const char * file_path)
 {
@@ -105,7 +103,6 @@ int cmd_move(const char *dest, const char *src)
 		return 1;
 	}
 }
-
 
 int cmd_copy(const char *dest, const char *src)
 {
@@ -175,7 +172,6 @@ int handle_cmd(char **p_input, char** p_cwd)
 		return -1;
 	}
 
-
 	if (!strcmp(arg_vec[0], "cd")) {
 		strcpy(*p_cwd,arg_vec[1]);
 	}
@@ -204,7 +200,3 @@ int handle_cmd(char **p_input, char** p_cwd)
 	free(arg_vec);
 	return 1;
 }
-
-
-
-

@@ -2,7 +2,6 @@
 
 int is_directory(char* cwd, char* name)
 {
-
 	struct stat sb;
 	int ret;
 	char abs_path[NAME_MAX];
@@ -35,6 +34,8 @@ bool open_dir_allowed(const char* cwd, const char* file_name)
 	else {
 		struct stat sb;
 		int ret = stat(fullpath, &sb);
+		if (ret == -1) return 0;
+
 		perm = get_permissions(cwd, file_name);
 		if (perm[8] == 'x') {
 			allowed = 1;
@@ -88,12 +89,8 @@ char* get_permissions(const char* cwd, const char* file_name)
 	return modeval;
 }
 
-
 char** tokenize_command(char* command) 
 {
-	/* strtok_r() */
-	/* strtok() */
-	
 	char a_delim = ' ';
 	char** result    = 0;
     size_t count     = 0;
@@ -103,7 +100,6 @@ char** tokenize_command(char* command)
     delim[0] = a_delim;
     delim[1] = 0;
 
-    /* Count how many elements will be extracted. */
     while (*tmp)
     {
         if (a_delim == *tmp)
@@ -113,14 +109,8 @@ char** tokenize_command(char* command)
         }
         tmp++;
     }
-
-    /* Add space for trailing token. */
     count += last_space < (command + strlen(command) - 1);
-
-    /* Add space for terminating null string so caller
-       knows where the list of returned strings ends. */
 	count++;
-
     result = malloc(sizeof(char*) * count);
 
     if (result)
@@ -139,7 +129,6 @@ char** tokenize_command(char* command)
     }
     return result;
 }
-
 
 int str_remove_outer_ws(char* str)
 {

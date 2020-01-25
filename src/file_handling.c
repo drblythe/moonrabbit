@@ -15,7 +15,7 @@ int prev_dir(char** p_cwd)
 int next_dir(char** p_cwd, char* dir_name)
 {
 	if (!open_dir_allowed(*p_cwd,dir_name)) {
-		//print warning
+		// possibly print warning
 		return 0;
 	}
 	if (strcmp(*p_cwd,"/")){
@@ -52,9 +52,6 @@ char* get_extension(char* file_name)
 
 int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct)
 {
-	//bool exec_in_term = 0;
-	char file_type;	
-	int ret;
 	char *ext = get_extension(file_name);
 	char *program_path = ct_str_search_table(ct, ext);
 	if (program_path == NULL) {
@@ -63,7 +60,6 @@ int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str*
 	char * full_filepath = str_concat_cwd_filename(cwd, file_name);
 	*exec_in_term = ct_str_exec_in_term(ct,program_path);
 	int status;
-
 
 	pid_t pid = fork();
 	if (pid < 0) {
@@ -135,7 +131,6 @@ int append_to_path(char* new_path, const char* old_path, const char* filename)
 	strcat(new_path,filename);
 	return 1;
 }
-
 
 int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size)
 {

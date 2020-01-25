@@ -1,11 +1,10 @@
-/* input.c */
 #include "input.h"
 
 char* get_input(bool search_mode)
 {
 	char * command;
 	command = malloc(sizeof(char) * 255);
-	/* clear info area and put your colon on display */
+	// clear info area and put your colon on display
 	for (int i = 0; i < COLS-1; i++) {
 		mvprintw(LINES-2,i, " ");
 		mvprintw(LINES-1,i, " ");
@@ -17,11 +16,11 @@ char* get_input(bool search_mode)
 		mvprintw(LINES-1,0, ":");
 	}
 
-	/* turn terminal feedback on */
+	// turn terminal feedback on
 	echo();
 	nocbreak();
 
-	/* while char isnt ENTER, get char*/
+	// while char isnt ENTER, get char
 	int c, read, cmd_index;
 	read = 1;
 	cmd_index = 0;
@@ -44,7 +43,7 @@ char* get_input(bool search_mode)
 		}
 	}
 	
-	/* turn terminal feedback off again */
+	// turn terminal feedback off again
 	noecho();
 	cbreak();
 	return command;

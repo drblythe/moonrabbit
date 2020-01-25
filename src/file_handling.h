@@ -29,4 +29,3 @@ int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* 
 int delete_selection(char** file_buffer, int* num_selected);
 
 #endif
-
