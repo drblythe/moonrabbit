@@ -1,7 +1,7 @@
 ## Moonrabbit file manager  
 
 Moonrabbit is a low resource, terminal/ncurses file manager written in C. Ranger (Python) is neat, but I think C is more efficient and appropriate for this type of program. The config file(s) are also so ridiculous and large that it steams my beans to even think about it.  
-My goal was to keep it efficient and tiny by using only the absolute minimum amount of memory required. I also wanted to avoid using any libraries aside from ncurses and syscalls/standard c library, and to keep the config file/syntax simple.  
+My goal was to keep it efficient and tiny by using only the absolute minimum amount of memory required. I also wanted to avoid using any libraries aside from ncurses and syscalls/c libs, and to keep the config file/syntax simple.  
 It should run on any Posix system.  
 Keybindings are vim for the most part. They are detailed further below.  
 The name Moonrabbit comes from the Touhou game series.  
