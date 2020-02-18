@@ -81,7 +81,7 @@ int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str*
 	}
 	if (*exec_in_term) {
 		//waitpid(pid, &status, 0);
-		while (!waitpid(pid, &status, 0)){}
+		while (!waitpid(pid, &status, 0)){catch_signals();}
 		*exec_in_term = false;
 		//wait(&status);
 	}

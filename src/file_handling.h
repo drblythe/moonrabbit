@@ -16,6 +16,7 @@
 #include "entry.h"
 #include "chained_table.h"
 #include "utils.h"
+#include "signal_handling.h"
 
 int prev_dir(char **p_cwd);
 int next_dir(char **p_cwd, char *dir_name);
