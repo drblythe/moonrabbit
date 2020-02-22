@@ -1,5 +1,6 @@
 #include "signal_handling.h"
 
+// Reset terminal colors/cursor visibility
 void reset_term()
 {
 	move(0,0);
@@ -9,6 +10,7 @@ void reset_term()
 	endwin();
 }
 
+// Callback for catch_signals
 void signal_handler(int signo)
 {
 	switch (signo) {
@@ -24,7 +26,7 @@ void signal_handler(int signo)
 		exit(EXIT_SUCCESS);
         break;
     case (SIGCHLD):
-		printf("MY CHIIIILD\n");
+		//printf("MY CHIIIILD\n");
         // just don't terminate!
         break;
 	default:
@@ -33,6 +35,8 @@ void signal_handler(int signo)
 	}
 }
 
+// Called from a while loop
+// Prevent instant termination on child terminations, window size changes, interrupts
 void catch_signals()
 {
 	signal(SIGWINCH, signal_handler);

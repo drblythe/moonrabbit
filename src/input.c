@@ -16,11 +16,11 @@ char* get_input(bool search_mode)
 		mvprintw(LINES-1,0, ":");
 	}
 
-	// turn terminal feedback on
+	// Turn terminal feedback on
 	echo();
 	nocbreak();
 
-	// while char isnt ENTER, get char
+	// While char isn't ENTER, get char
 	int c, read, cmd_index;
 	read = 1;
 	cmd_index = 0;
@@ -43,12 +43,13 @@ char* get_input(bool search_mode)
 		}
 	}
 	
-	// turn terminal feedback off again
+	// Turn terminal feedback off again
 	noecho();
 	cbreak();
 	return command;
 }
 
+// Print confirmation prompt for file deletion
 bool confirm_deletion(int x_pos, int y_pos, int num_selected)
 {
 	mvprintw(x_pos, y_pos, "Delete selection? (y/N)", num_selected);

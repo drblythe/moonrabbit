@@ -16,6 +16,12 @@
 #include "bindings.h"
 #include "init.h"
 
+// TODO:
+// - In my "shell": mkdir, touch, etc. all need to be appended to cwd instead of
+//	 dir where moonrabbit was started from.
+// - Scrolling: Why don't the selected/bolded dirs scroll WITH the rest???
+// - When changing directory: If current index > num entries, set it to num entries
+
 int main(int argc, char* argv[])
 {
 	WINDOW* win = NULL;
@@ -128,7 +134,7 @@ int main(int argc, char* argv[])
 			refresh();
 			break;
 
-		// Interactive/command
+		// Interactive/command prompt
 		case ':':
 			input = malloc(sizeof(char)*128);
 			*input = get_input(0);
@@ -207,7 +213,7 @@ int main(int argc, char* argv[])
 			}
 			break;
 
-		// Move to top
+		// Move cursor to top
 		case 'g':
 			if ( (input_key = getch()) == 'g'){
 				current_index = 0;
@@ -217,7 +223,7 @@ int main(int argc, char* argv[])
 			}
 			break;
 
-		// Move to bottom
+		// Move cursor to bottom
 		case 'G':
 			current_index = num_entries -1;
 			clear();

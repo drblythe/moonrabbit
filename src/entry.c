@@ -55,16 +55,16 @@ int get_entries(char* cwd, ENTRY** entry_arr, int* num_entries, int show_dots)
 
 int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINES)
 {
-	unsigned int RIGHT_PADDING = 0 + 4;
+	unsigned int RIGHT_PADDING = 4;
 	int PRINT_STOP = LINES - 3;
 	int SCROLL_STOP_BOTTOM = PRINT_STOP - 5;
-	//int SCROLL_STOP_TOP = 10;
 
 	if (!num_entries) {
 		printw("<empty directory>");
 		return 1;
 	}
 
+	// Case 1: Length of file list is <= the number of rows in terminal
 	if (num_entries <= PRINT_STOP) {
 		for (int i = 0; i < num_entries; i++) {
 			if (entry_arr[i].index == current_index) 
@@ -72,8 +72,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 			if (entry_arr[i].type == 'd')
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i].marked) {
-				//wattron(stdscr, A_UNDERLINE);
-				//wattron(stdscr, A_BLINK);
 				printw("   ");
 			}
 			if ( strlen(entry_arr[i].name) >= COLS-RIGHT_PADDING) {
@@ -89,21 +87,25 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 		return 1;
 	}
 				
+	// Case 2: Length of file list displays past bottom of terminal
 	else {
+		// dist: the distance your cursor is below the initial bottom row
 		int dist = current_index - SCROLL_STOP_BOTTOM;
 		if (dist < 0)
 			dist = 0;
 
+		// Reverse is for cursor: always reverse the line that cursor is on
+		// Bold is for directories: scroll them with the screen (index is i+distance from bottom)
+		// ^^ Same as bold for marked files
 		for (int i = 0; i <= PRINT_STOP; i++) {
 			if (dist > 0)
 				current_index = SCROLL_STOP_BOTTOM;
-
 			if (entry_arr[i].index == current_index) 
 				wattron(stdscr, A_REVERSE);
-			if (entry_arr[i].type == 'd')
+			if (entry_arr[i+dist].type == 'd')
 				wattron(stdscr, A_BOLD);
-			if (entry_arr[i].marked) {
-			//	wattron(stdscr, A_UNDERLINE);
+			if (entry_arr[i+dist].marked) {
+				wattron(stdscr, A_UNDERLINE);
 				printw("   ");
 			}
 			if ( strlen(entry_arr[i+dist].name) >= COLS-RIGHT_PADDING) {

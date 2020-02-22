@@ -2,6 +2,7 @@
 #include "file_handling.h"
 #include <sys/wait.h>
 
+// Move to previous directory
 int prev_dir(char** p_cwd)
 {
 	char tmp[strlen(*p_cwd) + 4];
@@ -12,6 +13,7 @@ int prev_dir(char** p_cwd)
 	return 1;
 }
 
+// Move forward into specified directory
 int next_dir(char** p_cwd, char* dir_name)
 {
 	if (!open_dir_allowed(*p_cwd,dir_name)) {
@@ -25,6 +27,9 @@ int next_dir(char** p_cwd, char* dir_name)
 	return 1;
 }
 
+// When attempting to open a file:
+// Get extension to find appropriate program to open w/
+// Returns a malloc'ed char*
 char* get_extension(char* file_name)
 {
 	int n;
@@ -50,6 +55,10 @@ char* get_extension(char* file_name)
 	return ext;
 }
 
+// Determine extension of file and match with program
+// If the program is intented to execute within terminal (exec_in_term, for things like
+// 	 vim, etc...) need to loop/listen for signals while waiting for child pid.
+// Otherwise, wait w/ NOHANG arg and send all stdio to /dev/null (runs in background)
 int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct)
 {
 	char *ext = get_extension(file_name);
@@ -94,6 +103,7 @@ int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str*
 	return 1;
 }
 
+// Given a full path to a file, return just the base file name
 int file_name_len(char* path)
 {
 	int len = 0;
@@ -125,6 +135,7 @@ int extract_file_name(char** buff, const char* path)
 	return len;
 }
 
+// Append the filename onto a path
 int append_to_path(char* new_path, const char* old_path, const char* filename) 
 {
 	strcpy(new_path, old_path);
@@ -133,6 +144,8 @@ int append_to_path(char* new_path, const char* old_path, const char* filename)
 	return 1;
 }
 
+// Move or copy the filenames buffered with 'dd' or 'yy'
+// del_after_copy specifies a move or copy (aka: del_after_copy = 1 means move, 0 means just copy)
 int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* size)
 {
 	for (int i = 0; i < *size; i++) {
@@ -161,6 +174,7 @@ int file_buff_cp(int del_after_copy, const char* dest, char** file_buffer, int* 
 	return 1;
 }
 
+// PERMANENTLY delete the files buffered w/ 'xx'
 int delete_selection(char** file_buffer, int* num_selected)
 {
 	for (int i = 0; i < *num_selected; i++) {

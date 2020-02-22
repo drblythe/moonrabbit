@@ -8,6 +8,10 @@
 
 chained_table_str ct;
 
+int init_ncurses(WINDOW *win);
+int parse_cmd_args(int argc, char* argv[], char config_path[]);
+int parse_config_file(char* config_path);
+
 int init_ncurses(WINDOW *win)
 {
 	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
@@ -60,6 +64,9 @@ int parse_cmd_args(int argc, char* argv[], char config_path[])
 	return 1;
 }
 
+// Check that file exists! Print error otherwise.
+// Ignore: lines that are blank or commented with '#'
+// 3 "Modes" during parsing -- reading programs, reading filetypes, and reading extensions
 int parse_config_file(char* config_path)
 {
 	FILE *stream;
