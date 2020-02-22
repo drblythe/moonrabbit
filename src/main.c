@@ -19,8 +19,9 @@
 // TODO:
 // - In my "shell": mkdir, touch, etc. all need to be appended to cwd instead of
 //	 dir where moonrabbit was started from.
-// - Scrolling: Why don't the selected/bolded dirs scroll WITH the rest???
 // - When changing directory: If current index > num entries, set it to num entries
+// - Something wrong w/ displaying of cwd name (at bottom) when its length is 
+// 	 greater than the term width
 
 int main(int argc, char* argv[])
 {

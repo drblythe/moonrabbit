@@ -105,7 +105,6 @@ int display_entries(ENTRY* entry_arr,int num_entries, int current_index,int LINE
 			if (entry_arr[i+dist].type == 'd')
 				wattron(stdscr, A_BOLD);
 			if (entry_arr[i+dist].marked) {
-				wattron(stdscr, A_UNDERLINE);
 				printw("   ");
 			}
 			if ( strlen(entry_arr[i+dist].name) >= COLS-RIGHT_PADDING) {
