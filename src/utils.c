@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "../include/utils.h"
 
 int is_directory(char* cwd, char* name)
 {
@@ -89,12 +89,12 @@ char* get_permissions(const char* cwd, const char* file_name)
 	return modeval;
 }
 
-char** tokenize_command(char* command) 
+char** str_tokenize(char* string) 
 {
 	char a_delim = ' ';
 	char** result    = 0;
     size_t count     = 0;
-    char* tmp        = command;
+    char* tmp        = string;
     char* last_space = 0;
     char delim[2];
     delim[0] = a_delim;
@@ -109,14 +109,14 @@ char** tokenize_command(char* command)
         }
         tmp++;
     }
-    count += last_space < (command + strlen(command) - 1);
+    count += last_space < (string + strlen(string) - 1);
 	count++;
     result = malloc(sizeof(char*) * count);
 
     if (result)
     {
         size_t idx  = 0;
-        char* token = strtok(command, delim);
+        char* token = strtok(string, delim);
 
         while (token)
         {

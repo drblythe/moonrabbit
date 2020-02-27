@@ -1,31 +1,7 @@
 #ifndef INIT_H
 #define INIT_H
-#include <stdbool.h>
-#include <ncurses.h>
-#include <limits.h>
 #include "utils.h"
-#include "chained_table.h"
-
-chained_table_str ct;
-
-int init_ncurses(WINDOW *win);
-int parse_cmd_args(int argc, char* argv[], char config_path[]);
-int parse_config_file(char* config_path);
-
-int init_ncurses(WINDOW *win)
-{
-	setlocale(LC_ALL, ""); // Set locale to be able to properly display unicode. Must precede initscr()
-	win = initscr();
-	noecho();
-	keypad(stdscr,TRUE);
-	curs_set(0); /* 0, 1, 2 */
-	cbreak();
-	//scrollok(stdscr,TRUE);
-	//start_color();
-	move(0,0);
-	refresh();
-	return 1;
-}
+#include "ext_table.h"
 
 int parse_cmd_args(int argc, char* argv[], char config_path[])
 {
@@ -67,7 +43,7 @@ int parse_cmd_args(int argc, char* argv[], char config_path[])
 // Check that file exists! Print error otherwise.
 // Ignore: lines that are blank or commented with '#'
 // 3 "Modes" during parsing -- reading programs, reading filetypes, and reading extensions
-int parse_config_file(char* config_path)
+int parse_config_file(char* config_path, ext_table *ct)
 {
 	FILE *stream;
 	char *line = NULL;
@@ -87,7 +63,7 @@ int parse_config_file(char* config_path)
 		exit(EXIT_FAILURE);
 	}
 
-	ct_str_init(&ct);
+	ext_table_init(ct);
 
 	while ((nread = getline(&line, &len, stream)) != -1) {
 		if (line[0] == '#' || line[0] == '\n') {
@@ -145,7 +121,7 @@ int parse_config_file(char* config_path)
 							ext[j] = line[start+j];
 						}
 						str_remove_outer_ws(ext);
-						ct_str_ins_into_list(&ct, current_program_path, ext);
+						ext_table_ins_ext(ct, current_program_path, ext);
 						i--;
 					}
 				}
@@ -163,12 +139,12 @@ int parse_config_file(char* config_path)
 				}
 				program_path[k-exec_in_term] = '\0';
 				str_remove_outer_ws(program_path);
-				ct_str_add_new_list(&ct, program_path);
+				ext_table_new_prog(ct, program_path);
 				if (exec_in_term == 1) {
-					ct.list[ct.size-1].exec_in_term = 1;
+					ct->list[ct->size-1].exec_in_term = 1;
 				}
 				else {
-					ct.list[ct.size-1].exec_in_term = 0;
+					ct->list[ct->size-1].exec_in_term = 0;
 				}
 				reading_extensions = 1;
 				strcpy(current_program_path, program_path);

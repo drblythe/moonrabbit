@@ -1,4 +1,4 @@
-#include "command_handling.h"
+#include "../include/cmd_handling.h"
 
 int cmd_cd(char** p_cwd, char* dir_name)
 {
@@ -165,7 +165,7 @@ int cmd_copy(const char *dest, const char *src)
 int handle_cmd(char **p_input, char** p_cwd)
 {
 	char ** arg_vec;
-	arg_vec = tokenize_command(*p_input);
+	arg_vec = str_tokenize(*p_input);
 
 	if (!arg_vec) {
 		return -1;

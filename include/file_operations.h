@@ -1,6 +1,5 @@
-/*file_handling.h*/
-#ifndef	FILE_HANDLING_H
-#define FILE_HANDLING_H
+#ifndef	FILE_OPERATIONS_H
+#define FILE_OPERATIONS_H
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -10,17 +9,16 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/wait.h>
-#include <ncurses.h>
 
-#include "command_handling.h" 
-#include "entry.h"
-#include "chained_table.h"
+#include "cmd_handling.h" 
+#include "file_type.h"
+#include "ext_table.h"
 #include "utils.h"
 #include "signal_handling.h"
 
 int prev_dir(char **p_cwd);
 int next_dir(char **p_cwd, char *dir_name);
-int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct);
+int open_file(bool* exec_in_term, char *cwd, char *file_name, ext_table* ct);
 char* get_extension(char *file_name);
 int file_name_len(char* path);
 int get_path_length(char* cwd, char* file_name);

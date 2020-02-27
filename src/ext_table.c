@@ -1,11 +1,11 @@
-#include "chained_table.h"
+#include "../include/ext_table.h"
 
 // Default table size is 10
-int ct_str_init(chained_table_str* c_table)
+int ext_table_init(ext_table* c_table)
 {
 	c_table->size = 0;
 	c_table->capacity = 10;
-	c_table->list = (ll_str*) malloc(sizeof(ll_str) * c_table->capacity);
+	c_table->list = (ext_linked_list*) malloc(sizeof(ext_linked_list) * c_table->capacity);
 
 	for (int i = 0; i < c_table->capacity; i++) {
 		c_table->list->head = NULL;
@@ -14,11 +14,11 @@ int ct_str_init(chained_table_str* c_table)
 	return 0;
 }
 
-int ct_str_free_table(chained_table_str* c_table)
+int ext_table_free(ext_table* c_table)
 {
 	for (int i = 0; i < c_table->size; i++) {
 		free(c_table->list[i].title);
-		node_str *tmp;
+		ext_node *tmp;
 		while (c_table->list[i].head != NULL) {
 			tmp = c_table->list[i].head;
 			c_table->list[i].head = c_table->list[i].head->next;
@@ -30,9 +30,9 @@ int ct_str_free_table(chained_table_str* c_table)
 	return 0;
 }
 
-int ct_str_grow(chained_table_str* c_table)
+int ext_table_grow(ext_table* c_table)
 {
-	ll_str* new_list = (ll_str*) malloc(sizeof(ll_str) * (c_table->capacity * 2));
+	ext_linked_list* new_list = (ext_linked_list*) malloc(sizeof(ext_linked_list) * (c_table->capacity * 2));
 	for (int i = 0; i < c_table->capacity * 2; i++) {
 		new_list[i].head = NULL;
 		new_list[i].title = NULL;
@@ -47,7 +47,7 @@ int ct_str_grow(chained_table_str* c_table)
 	return 0;
 }
 
-int ct_str_add_new_list(chained_table_str* c_table, const char *title)
+int	ext_table_new_prog(ext_table* c_table, const char *title)
 {
 	for (int i = 0; i < c_table->size; i++) {
 		if (!strcmp(title, c_table->list[i].title)) {
@@ -56,7 +56,7 @@ int ct_str_add_new_list(chained_table_str* c_table, const char *title)
 	}
 
 	if (c_table->size == c_table->capacity) {
-		ct_str_grow(c_table);
+		ext_table_grow(c_table);
 	}
 
 	c_table->list[c_table->size].title = (char*) malloc(sizeof(char) * (strlen(title)+1) );
@@ -67,12 +67,12 @@ int ct_str_add_new_list(chained_table_str* c_table, const char *title)
 	return 0;
 }
 
-int ct_str_ins_into_list(chained_table_str* c_table, const char* title, const char* str)
+int ext_table_ins_ext(ext_table* c_table, const char* title, const char* str)
 {
 
 	for (int i = 0; i < c_table->size; i++) {
 		if (!strcmp(c_table->list[i].title, title)) {
-			node_str* new_node = (node_str*) malloc(sizeof(node_str));
+			ext_node* new_node = (ext_node*) malloc(sizeof(ext_node));
 			new_node->data = (char*) malloc(sizeof(char) * strlen(str));
 			new_node->next = NULL;
 			strcpy(new_node->data,str);
@@ -91,10 +91,10 @@ int ct_str_ins_into_list(chained_table_str* c_table, const char* title, const ch
 	return -1;
 }
 
-char* ct_str_search_table(chained_table_str* c_table, const char* search_term)
+char* ext_table_search_ext(ext_table* c_table, const char* search_term)
 {
 	for (int i = 0; i < c_table->size; i++) {
-		node_str *temp = c_table->list[i].head;
+		ext_node *temp = c_table->list[i].head;
 		while (temp != NULL) {
 			if (!strcmp(temp->data, search_term)) {
 				return c_table->list[i].title;
@@ -106,7 +106,7 @@ char* ct_str_search_table(chained_table_str* c_table, const char* search_term)
 }
 
 
-bool ct_str_exec_in_term(chained_table_str* c_table, const char* prog_title)
+bool ext_table_prog_execs_in_term(ext_table* c_table, const char* prog_title)
 {
 	for (int i = 0; i < c_table->size; i++) {
 		if (!strcmp(prog_title, c_table->list[i].title)) {

@@ -1,8 +1,8 @@
 # Configuration file for moonrabbit file manager
 #
-# Keybindings are taken from vim
-# 'Shift+h' to toggle hidden files
-# 'r' to refresh display
+# Keybindings are taken from vim (full list in README)
+# 'ctrl+h' to toggle hidden files
+# 'ctrl+r' to refresh display
 # '/' will allow for a search
 # ':' starts a simple shell prompt so you can cd, mkdir, a few simple commands
 

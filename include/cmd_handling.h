@@ -1,15 +1,9 @@
-#ifndef COMMAND_HANDLING_H
-#define COMMAND_HANDLING_H
-#include <string.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#ifndef CMD_HANDLING_H
+#define CMD_HANDLING_H
+#define __USE_XOPEN_EXTENDED 1
 #include <fcntl.h>
-#include <unistd.h>
 #include <dirent.h>
 #include <errno.h>
-#include <assert.h>
-#include <stdio.h>
 #include <ftw.h>
 #include "utils.h"
 

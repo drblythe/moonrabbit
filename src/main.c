@@ -1,23 +1,12 @@
 #define _XOPEN_SOURCE_EXTENDED
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include <limits.h>
-#include <ncurses.h>
-#include <locale.h>
-#include "entry.h"
-#include "file_handling.h"
-#include "input.h"
-#include "command_handling.h"
-#include "bindings.h"
-#include "init.h"
+#include "../include/graphics.h"
+#include "../include/file_operations.h"
+#include "../include/cmd_handling.h"
+#include "../include/init.h"
 
 // TODO:
-// - In my "shell": mkdir, touch, etc. all need to be appended to cwd instead of
+// - In the "shell": mkdir, touch, etc. all need to be appended to cwd instead of
 //	 dir where moonrabbit was started from.
 // - When changing directory: If current index > num entries, set it to num entries
 // - Something wrong w/ displaying of cwd name (at bottom) when its length is 
@@ -26,12 +15,13 @@
 int main(int argc, char* argv[])
 {
 	WINDOW* win = NULL;
+	ext_table ct;
 	int input_key;
 	char **copy_buffer = NULL;
 	int copy_buff_del = 0;
 	int copy_buff_size = 0;
 	int num_selected = 0;
-	ENTRY* entry_arr = NULL;
+	file_t* file_arr = NULL;
 	index_table stored_indexes;
 	int current_index = 0;
 	int num_entries = 0;
@@ -58,14 +48,12 @@ int main(int argc, char* argv[])
 
 	// Set config path, 
 	parse_cmd_args(argc, argv, config_path);
-	parse_config_file(config_path);
+	parse_config_file(config_path, &ct);
 	index_table_init(&stored_indexes);
 
 	// Initialize moonrabbit display
-	get_entries(cwd, &entry_arr, &num_entries, show_dots);
-	display_entries(entry_arr, num_entries, current_index,LINES);
-	display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-	refresh(); // wrefresh(stdscr);
+	get_file_list(cwd, &file_arr, &num_entries, show_dots);
+	refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 
 	bool run = 1;
 	while(run)
@@ -74,16 +62,14 @@ int main(int argc, char* argv[])
 		flushinp();
 		refresh();
 		input_key = getch();
-		switch(input_key) {
 
+		switch(input_key) {
 		// Move down
 		case KEY_DOWN:
 		case ('j'):
 			if (current_index < num_entries -1 ) {
 				update_curr_index(DOWN, &current_index, &num_entries);
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-				refresh();
+				refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			}
 			break;
 
@@ -92,47 +78,42 @@ int main(int argc, char* argv[])
 		case 'k':
 			if (current_index > 0 ) {
 				update_curr_index(UP, &current_index, &num_entries);
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-				refresh();
+				refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			}
 			break;
 
 		// Previous directory
 		case KEY_LEFT:
 		case 'h':
-			index_table_store(&stored_indexes, cwd, current_index);
+			store_index(&stored_indexes, cwd, current_index);
 			prev_dir(&cwd);
-			clear_entries(entry_arr, &num_entries, &current_index,1);
-			index_table_load(&stored_indexes, cwd, &current_index);
-			get_entries(cwd, &entry_arr, &num_entries, show_dots);
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			clear_file_list(file_arr, &num_entries, &current_index,1);
+			load_index(&stored_indexes, cwd, &current_index);
+			get_file_list(cwd, &file_arr, &num_entries, show_dots);
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Open file/directory
 		case K_ENTER:
+		case KEY_RIGHT:
 		case 'l':
 			if (!num_entries)
 				break;
-			if (entry_arr[current_index].type == 'd') {
-				index_table_store(&stored_indexes, cwd, current_index);
-				next_dir(&cwd, entry_arr[current_index].name);
-				clear_entries(entry_arr, &num_entries, &current_index, 1);
-				index_table_load(&stored_indexes, cwd, &current_index);
-				get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			if (file_arr[current_index].type == 'd') {
+				store_index(&stored_indexes, cwd, current_index);
+				next_dir(&cwd, file_arr[current_index].name);
+				clear_file_list(file_arr, &num_entries, &current_index, 1);
+				load_index(&stored_indexes, cwd, &current_index);
+				get_file_list(cwd, &file_arr, &num_entries, show_dots);
 				num_selected = 0;
 			}
-			else if (entry_arr[current_index].type != 'd') {
-				open_file(&exec_in_term, cwd, entry_arr[current_index].name, &ct);
+			else if (file_arr[current_index].type != 'd') {
+				open_file(&exec_in_term, cwd, file_arr[current_index].name, &ct);
 			}
 			else {
 			}
 			clear();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Interactive/command prompt
@@ -141,31 +122,27 @@ int main(int argc, char* argv[])
 			*input = get_input(0);
 			handle_cmd(input,&cwd);
 			free(input);
-			clear_entries(entry_arr, &num_entries, &current_index,1);
-			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			clear_file_list(file_arr, &num_entries, &current_index,1);
+			get_file_list(cwd, &file_arr, &num_entries, show_dots);
 			erase();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Search
 		case '/':
 			input = malloc(sizeof(char)*128);
 			*input = get_input(1);
-			search_dir(*input,entry_arr,&current_index,num_entries);
+			search_dir(*input,file_arr,&current_index,num_entries);
 			erase();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			free(input);
 			break;
 
 		// Copy
 		case 'y':
 			if ( (input_key = getch()) == 'y'){
-				copy_buff_size = get_num_marked(num_entries, entry_arr);
-				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+				copy_buff_size = get_num_marked(num_entries, file_arr);
+				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, file_arr, cwd);
 				copy_buff_del = 0;
 			}
 			break;
@@ -173,8 +150,8 @@ int main(int argc, char* argv[])
 		// Cut
 		case 'd':
 			if ( (input_key = getch()) == 'd'){
-				copy_buff_size = get_num_marked(num_entries, entry_arr);
-				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+				copy_buff_size = get_num_marked(num_entries, file_arr);
+				fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, file_arr, cwd);
 				copy_buff_del = 1;
 			}
 			break;
@@ -184,12 +161,10 @@ int main(int argc, char* argv[])
 			if ( (input_key = getch()) == 'p'){
 				file_buff_cp(copy_buff_del, cwd, copy_buffer, &copy_buff_size);
 				empty_copy_buffer(&copy_buffer, &copy_buff_size);
-				clear_entries(entry_arr, &num_entries, &current_index,1);
-				get_entries(cwd, &entry_arr, &num_entries, show_dots);
+				clear_file_list(file_arr, &num_entries, &current_index,1);
+				get_file_list(cwd, &file_arr, &num_entries, show_dots);
 				erase();
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-				refresh();
+				refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			}
 			break;
 
@@ -198,17 +173,15 @@ int main(int argc, char* argv[])
 			if ( (input_key = getch()) == 'x' && num_selected > 0) {
 				int ret = confirm_deletion(LINES-4, 0, num_selected);
 				if (ret) {
-					copy_buff_size = get_num_marked(num_entries, entry_arr);
-					fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, entry_arr, cwd);
+					copy_buff_size = get_num_marked(num_entries, file_arr);
+					fill_copy_buffer(&copy_buffer, copy_buff_size, num_entries, file_arr, cwd);
 					copy_buff_del = 0;
 					delete_selection(copy_buffer, &copy_buff_size);
 					empty_copy_buffer(&copy_buffer, &copy_buff_size);
-					clear_entries(entry_arr, &num_entries, &current_index,1);
-					get_entries(cwd, &entry_arr, &num_entries, show_dots);
+					clear_file_list(file_arr, &num_entries, &current_index,1);
+					get_file_list(cwd, &file_arr, &num_entries, show_dots);
 					erase();
-					display_entries(entry_arr, num_entries, current_index,LINES);
-					display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-					refresh();
+					refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 					num_selected = 0;
 				}
 			}
@@ -219,8 +192,7 @@ int main(int argc, char* argv[])
 			if ( (input_key = getch()) == 'g'){
 				current_index = 0;
 				clear();
-				display_entries(entry_arr, num_entries, current_index,LINES);
-				display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+				refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			}
 			break;
 
@@ -228,8 +200,7 @@ int main(int argc, char* argv[])
 		case 'G':
 			current_index = num_entries -1;
 			clear();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Quit
@@ -242,36 +213,33 @@ int main(int argc, char* argv[])
 			break;
 
 		// Toggle hidden files
-		case ctrl('h'):
-		case 'H':
+		//case 'H':
+		case K_CTRL_H:
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
-			clear_entries(entry_arr, &num_entries, &current_index,1);
-			get_entries(cwd, &entry_arr, &num_entries, show_dots);
+			clear_file_list(file_arr, &num_entries, &current_index,1);
+			get_file_list(cwd, &file_arr, &num_entries, show_dots);
 			clear();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Refresh moonrabbit display
-		case 'r':
+		//case 'r':
+		case K_CTRL_R:
 			clear();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		// Select/deselect file
 		case K_SPACE:
-			if (!entry_arr[current_index].marked) 
-				mark_file(&entry_arr[current_index],&num_selected);
+			if (!file_arr[current_index].marked) 
+				mark_file(&file_arr[current_index],&num_selected);
 			else 
-				unmark_file(&entry_arr[current_index],&num_selected);
+				unmark_file(&file_arr[current_index],&num_selected);
 			if (current_index < num_entries -1) 
 				update_curr_index(DOWN, &current_index, &num_entries);
 			else 
 				erase();
-			display_entries(entry_arr, num_entries, current_index,LINES);
-			display_file_info(cwd, entry_arr[current_index],current_index, num_entries);
-			refresh();
+			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
 			break;
 
 		default:
@@ -280,18 +248,13 @@ int main(int argc, char* argv[])
 	}
 
 	// Free globals / storage structures
-	free(entry_arr);
+	free(file_arr);
 	free(cwd);
 	free(win);
 	index_table_free(&stored_indexes);
-	ct_str_free_table(&ct);
+	ext_table_free(&ct);
 
 	// Clear/reset term settings for clean exit
-	move(0,0);
-	clear();
-	erase();
-	refresh();
-	endwin();
-
+	reset_term();
 	exit(EXIT_SUCCESS);
 }

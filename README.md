@@ -18,15 +18,11 @@ You will need the ncurses development libraries from your distro
 ### Compile
 
 	cd moonrabbit
-	./build.sh
+    make
 
-build.sh uses "ncursesw*-config", which is a script that comes with the ncurses/ncurses development library.  
-If it doesn't work, check the version (i.e. ncursesw5-config vs ncursesw6-config).  
-ncursesw is required in order to render unicode wide chars correctly.  
+The Makefile uses "ncursesw6-config" to detect the correct cflags and libs for your version (it is a script that comes with the ncurses/ncurses development library).  
+If you have any problem with that, check in your path because it might be a different version. Otherwise, the cflags and libs that my script output are commented out in the makefile, so just uncomment that instead.  
 
-The cflags and libs I needed boiled down to:
-
-	gcc  -D_GNU_SOURCE -D_DEFAULT_SOURCE -lncursesw src/*.c -o moonrabbit
 
 ### Keybindings  
 I plan to make the keybindings configurable in the config, but currently it is basically vim:  
@@ -34,19 +30,18 @@ I plan to make the keybindings configurable in the config, but currently it is b
     k = up  
     j = down  
     l = forward/right/open  
-    h = backward  
-    space = select/hightlight file  
-    gg = move to top  
-    G = move to bottom  
+    h = previous directory  
+    space = select/highlight file  
+    gg = move cursor to top  
+    G = move cursor to bottom  
     : = open mini shell (a bit wonky at the moment!)  
     / = search in current directory  
     yy = copy selected files to buffer  
     dd = cut selected files to buffer  
     pp = paste buffered files to current dir  
     xx = permanently delete selected files (you will get a y/N prompt)  
-    r = refresh display  
-    H = toggle hidden files  
-    ctrl+h = toggle hidden files (I have noticed this has not worked on all terminal emulators!)  
+    ctrl+r = refresh display  
+    ctrl+h = toggle hidden files  
     q = quit  
     
 

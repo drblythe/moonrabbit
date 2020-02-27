@@ -1,6 +1,4 @@
-/* file_handling.c */
-#include "file_handling.h"
-#include <sys/wait.h>
+#include "../include/file_operations.h"
 
 // Move to previous directory
 int prev_dir(char** p_cwd)
@@ -59,15 +57,15 @@ char* get_extension(char* file_name)
 // If the program is intented to execute within terminal (exec_in_term, for things like
 // 	 vim, etc...) need to loop/listen for signals while waiting for child pid.
 // Otherwise, wait w/ NOHANG arg and send all stdio to /dev/null (runs in background)
-int open_file(bool* exec_in_term, char *cwd, char *file_name, chained_table_str* ct)
+int open_file(bool* exec_in_term, char *cwd, char *file_name, ext_table* ct)
 {
 	char *ext = get_extension(file_name);
-	char *program_path = ct_str_search_table(ct, ext);
+	char *program_path = ext_table_search_ext(ct, ext);
 	if (program_path == NULL) {
 		return -1;
 	}
 	char * full_filepath = str_concat_cwd_filename(cwd, file_name);
-	*exec_in_term = ct_str_exec_in_term(ct,program_path);
+	*exec_in_term = ext_table_prog_execs_in_term(ct,program_path);
 	int status;
 
 	pid_t pid = fork();
