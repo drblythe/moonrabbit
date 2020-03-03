@@ -5,7 +5,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <ftw.h>
-#include "utils.h"
+#include <utils.h>
 
 int cmd_cd(char** p_cwd, char* dir_name);
 int handle_cmd(char **p_input, char** p_cwd);

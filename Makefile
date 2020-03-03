@@ -17,6 +17,9 @@ REBUILDABLES = $(OBJS) $(TARGET)
 
 all : $(TARGET)
 
+run : 
+	$(TARGET)
+
 clean :
 	rm -f $(REBUILDABLES)
 

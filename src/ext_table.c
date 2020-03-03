@@ -1,4 +1,4 @@
-#include "../include/ext_table.h"
+#include <ext_table.h>
 
 // Default table size is 10
 int ext_table_init(ext_table* c_table)

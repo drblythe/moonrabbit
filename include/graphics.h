@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <locale.h>
-#include "file_type.h"
-#include "keycodes.h"
+#include <file_type.h>
+#include <keycodes.h>
 
 int init_ncurses(WINDOW *win)
 {

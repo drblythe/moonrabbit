@@ -1,4 +1,4 @@
-#include "../include/file_operations.h"
+#include <file_operations.h>
 
 // Move to previous directory
 int prev_dir(char** p_cwd)

@@ -1,9 +1,9 @@
 #define _XOPEN_SOURCE_EXTENDED
 #include <limits.h>
-#include "../include/graphics.h"
-#include "../include/file_operations.h"
-#include "../include/cmd_handling.h"
-#include "../include/init.h"
+#include <graphics.h>
+#include <file_operations.h>
+#include <cmd_handling.h>
+#include <init.h>
 
 // TODO:
 // - In the "shell": mkdir, touch, etc. all need to be appended to cwd instead of

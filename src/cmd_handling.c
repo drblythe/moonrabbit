@@ -1,4 +1,4 @@
-#include "../include/cmd_handling.h"
+#include <cmd_handling.h>
 
 int cmd_cd(char** p_cwd, char* dir_name)
 {

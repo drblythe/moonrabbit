@@ -1,4 +1,4 @@
-#include "../include/signal_handling.h"
+#include <signal_handling.h>
 
 // Callback for catch_signals
 void signal_handler(int signo)

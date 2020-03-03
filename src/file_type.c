@@ -1,4 +1,4 @@
-#include "../include/file_type.h"
+#include <file_type.h>
 
 int get_file_list(char* cwd, file_t** file_arr, int* num_entries, int show_dots)
 {

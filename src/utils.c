@@ -1,4 +1,4 @@
-#include "../include/utils.h"
+#include <utils.h>
 
 int is_directory(char* cwd, char* name)
 {

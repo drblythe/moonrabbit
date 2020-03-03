@@ -10,11 +10,11 @@
 #include <errno.h>
 #include <sys/wait.h>
 
-#include "cmd_handling.h" 
-#include "file_type.h"
-#include "ext_table.h"
-#include "utils.h"
-#include "signal_handling.h"
+#include <cmd_handling.h>
+#include <file_type.h>
+#include <ext_table.h>
+#include <utils.h>
+#include <signal_handling.h>
 
 int prev_dir(char **p_cwd);
 int next_dir(char **p_cwd, char *dir_name);

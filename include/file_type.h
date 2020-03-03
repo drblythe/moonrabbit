@@ -12,9 +12,9 @@
 #include <stdbool.h>
 #include <ncurses.h>
 #include <limits.h> // limits.h defines: PATH_MAX = 4096, NAME_MAX = 255
-#include "cmd_handling.h"
-#include "utils.h"
-#include "ext_table.h"
+#include <cmd_handling.h>
+#include <utils.h>
+#include <ext_table.h>
 
 typedef struct file_t {
 	char name[NAME_MAX];

@@ -1,7 +1,7 @@
 #ifndef INIT_H
 #define INIT_H
-#include "utils.h"
-#include "ext_table.h"
+#include <utils.h>
+#include <ext_table.h>
 
 int parse_cmd_args(int argc, char* argv[], char config_path[])
 {
