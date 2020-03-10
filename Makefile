@@ -24,6 +24,7 @@ clean :
 	rm -f $(REBUILDABLES)
 
 $(TARGET) : $(OBJS)
+	mkdir -p bin
 	gcc -o $(TARGET) $^ $(CFLAGS) $(LIBS)
 
 %.o : src/%.c
