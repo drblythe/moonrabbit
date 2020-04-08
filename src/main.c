@@ -213,7 +213,7 @@ int main(int argc, char* argv[])
 			break;
 
 		// Toggle hidden files
-		//case 'H':
+		case 'H':
 		case K_CTRL_H:
 			(!show_dots) ?  (show_dots = 1) : (show_dots = 0);
 			clear_file_list(file_arr, &num_entries, &current_index,1);
@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
 			break;
 
 		// Refresh moonrabbit display
-		//case 'r':
+		case 'r':
 		case K_CTRL_R:
 			clear();
 			refresh_display(file_arr, num_entries, current_index, LINES, cwd);
