@@ -7,7 +7,7 @@ Keybindings are vim for the most part. They are detailed further below.
 The name Moonrabbit comes from the Touhou game series.  
 
 <br>
-<img "align="center" height="350px" width="auto" src="vid/moonrabbit.gif">  
+<img "align="center" height="350px" width="auto" src="../assets/moonrabbit.gif?raw=true">  
 
 ### Dependencies  
 You will need the ncurses development libraries from your distro  
