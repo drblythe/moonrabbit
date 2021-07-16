@@ -1,0 +1,10 @@
+Ncurses (namespace)
+	(static) Functions to init...?
+	Input (class)
+	Display (class)
+
+System
+	Env (cwd... etc)
+	Copy/delete/move buffer
+	File associations table
+	Config parser
