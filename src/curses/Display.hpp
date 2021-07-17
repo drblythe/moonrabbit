@@ -8,11 +8,11 @@ namespace Curses {
 class Display {
 	public:
 		Display();
-		int 		init();
 		int 		print(std::string text, int row, int col);
 		int 		clear();
 		int 		terminate();
 	private:
+		int 		init();
 };
 
 static Display *DISPLAY = new Display();

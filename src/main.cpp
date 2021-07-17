@@ -1,5 +1,5 @@
-#include "Display.hpp"
-#include "Input.hpp"
+#include "curses/Display.hpp"
+#include "curses/Input.hpp"
 
 #include <iostream>
 #include <string>
@@ -8,7 +8,6 @@ using namespace Curses;
 
 int main (int argc, char* argv[])
 {
-	DISPLAY->init();
 	std::string input;
 	while (input != "q") {
 		input = INPUT->getKey();

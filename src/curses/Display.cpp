@@ -4,7 +4,7 @@ namespace Curses {
 
 Display::Display()
 {
-
+	init();
 }
 
 int 
