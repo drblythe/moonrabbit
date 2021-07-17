@@ -9,6 +9,8 @@ void
 test_CreateDelete(Filer *filer);
 void
 test_Permissions(Filer *filer);
+void
+test_FileListOperations(Filer *filer);
 
 int
 main()
@@ -17,31 +19,68 @@ main()
 
     test_CreateDelete(filer);
     test_Permissions(filer);
+    test_FileListOperations(filer);
 }
 
 
 void
-test_Permissions(Filer *filer)
+test_FileListOperations(Filer *filer)
 {
 	// Tests:
-	// Filer.getPermissions() overloads
-	// Filer.permstostring
+	// Filer.getFileList()
+	// Filer.getFilesInDir()
 	
-    fs::directory_entry direntToTest =
-        fs::directory_entry(fs::path("permTestFile.txt"));
+    fs::path path = fs::path("./");
+    for (const auto &file : filer->getFileList(path))
+        {
+            std::cout << std::endl;
+            std::cout << "file.path():\t" << file.path() << std::endl;
+            std::cout << "fs::path(path).filename():\t" << fs::path(
+                          path).filename() << std::endl;
+            std::cout << "permsToString(...):\t" << filer->permsToString(
+                          file.status().permissions()) << std::endl;
+            if (!fs::is_directory(path))
+                {
+                    std::cout << "fs::file_size(path):\t" << fs::file_size(path) << std::endl;
+                }
+        }
+}
 
-	fs::perms p1 = filer->getPermissions(direntToTest);
-	fs::perms p2 = filer->getPermissions(fs::path("permTestFile.txt"));
-	fs::perms p3 = filer->getPermissions(direntToTest.path());
+void
+test_Permissions(Filer *filer)
+{
+    // Tests:
+    // Filer.getPermissions() overloads
+    // Filer.permstostring
 
-	std::cout << filer->permsToString(p1) << std::endl;
-	std::cout << filer->permsToString(p2) << std::endl;
-	std::cout << filer->permsToString(p3) << std::endl;
+    fs::path permTestFile = fs::path("permTestFile.txt");
 
-	filer->setPermissions(fs::perms::all, direntToTest);
+    if (fs::exists(permTestFile))
+        {
+            filer->deleteFile(permTestFile);
+            std::cout << "deleted that bitch" << std::endl;
+        }
+    else
+        {
+            filer->createFile(permTestFile);
+            std::cout << "created that bitch" << std::endl;
+        }
 
-	std::cout << filer->permsToString(direntToTest.status().permissions()) << std::endl;
+    DirEnt direntToTest =
+        DirEnt(fs::path(permTestFile));
 
+    fs::perms p1 = filer->getPermissions(direntToTest);
+    fs::perms p2 = filer->getPermissions(fs::path(permTestFile));
+    fs::perms p3 = filer->getPermissions(direntToTest.path());
+
+    std::cout << filer->permsToString(p1) << std::endl;
+    std::cout << filer->permsToString(p2) << std::endl;
+    std::cout << filer->permsToString(p3) << std::endl;
+
+    filer->setPermissions(fs::perms::all, direntToTest);
+
+    std::cout << filer->permsToString(direntToTest.status().permissions()) <<
+              std::endl;
 
 }
 

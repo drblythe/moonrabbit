@@ -15,15 +15,13 @@ Filer::Filer()
 bool
 Filer::createDir(fs::path path)
 {
-    fs::directory_entry dirent = fs::directory_entry(path);
-    // Check if dir already exists
+    DirEnt dirent = DirEnt(path);
     if (dirent.exists())
         {
             return false;
         }
     // TODO: Check permissions of parent dir
 
-    // Create
     return fs::create_directory(path);
 }
 
@@ -31,7 +29,6 @@ bool
 Filer::createFile(fs::path path)
 {
     std::ofstream ofs(path);
-    //ofs << "this is some text in the new file\n";
     ofs.close();
     return 0;
 }
@@ -101,7 +98,7 @@ Filer::getPermissions(fs::path path)
 }
 
 fs::perms
-Filer::getPermissions(fs::directory_entry dirent)
+Filer::getPermissions(DirEnt dirent)
 {
     return fs::status(dirent.path()).permissions();
 }
@@ -109,25 +106,26 @@ Filer::getPermissions(fs::directory_entry dirent)
 bool
 Filer::setPermissions(fs::perms newPerms, fs::path path)
 {
-	/*
-	 https://stackoverflow.com/questions/46835440/set-permission-for-all-files-in-a-folder-in-c
+    /*
+    https://stackoverflow.com/questions/46835440/set-permission-for-all-files-in-a-folder-in-c
+    https://stackoverflow.com/questions/46835440/set-permission-for-all-files-in-a-folder-in-c
 
-	//fs::directory_entry(path).status().permissions(newPerms); // WRONG
+    //DirEnt(path).status().permissions(newPerms); // WRONG
 
-	 TODO:
-	 In all these functions
-	 Check if user has permissions to do these actions
+     TODO:
+     In all these functions
+     Check if user has permissions to do these actions
 
-	*/
+    */
 
     if (!fs::exists(path))
         {
             return false;
         }
 
-	fs::permissions(path, newPerms);
-	
-	return true;
+    fs::permissions(path, newPerms);
+
+    return true;
 }
 
 std::string
@@ -155,5 +153,34 @@ Filer::permsToString(fs::perms perms)
     return permString;
 }
 
+// File List
+
+
+bool
+Filer::updateFileList(fs::path path)
+{
+	std::cout << path << std::endl;
+    return true;
+}
+
+bool
+Filer::getFilesInDir(fs::path path)
+{
+    for (const DirEnt &entry : fs::directory_iterator(path))
+        {
+            fileList.push_back(fs::directory_entry(entry));
+            //const DirEnt newDirEnt = entry;
+            //std::cout << entry.path() << std::endl;
+        }
+
+    return true;
+}
+
+FileList
+Filer::getFileList(fs::path path)
+{
+	this->getFilesInDir(path);
+    return this->fileList;
+}
 
 }

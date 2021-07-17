@@ -13,8 +13,9 @@ namespace System
 {
 namespace fs = std::filesystem;
 //using FileList = std::vector<std::reference_wrapper<fs::directory_entry>>;
-using FileList = std::vector<std::reference_wrapper<fs::directory_entry>>;
-using File = std::filesystem::directory_entry;
+//using FileList = std::vector<std::reference_wrapper<const fs::directory_entry &>>;
+using FileList = std::vector<std::filesystem::directory_entry>;
+using DirEnt = std::filesystem::directory_entry;
 
 }
 #endif
