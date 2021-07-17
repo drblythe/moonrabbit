@@ -26,24 +26,36 @@ main()
 void
 test_FileListOperations(Filer *filer)
 {
-	// Tests:
-	// Filer.getFileList()
-	// Filer.getFilesInDir()
-	
+    // Tests:
+    // Filer.getFileList()
+    // Filer.updateFileList()
+
+
     fs::path path = fs::path("./");
-    for (const auto &file : filer->getFileList(path))
+    filer->updateFileList(path);
+    for (const auto &file : filer->getFileList())
         {
             std::cout << std::endl;
-            std::cout << "file.path():\t" << file.path() << std::endl;
-            std::cout << "fs::path(path).filename():\t" << fs::path(
-                          path).filename() << std::endl;
-            std::cout << "permsToString(...):\t" << filer->permsToString(
+
+            std::cout << "Absolute Path:\t" << fs::absolute(file) << std::endl;;
+            std::cout << "Relative Path:\t" << file.path() << std::endl;
+            std::cout << "Filename: \t" << file.path().filename() << std::endl;
+            std::cout << "Permissions:\t" << filer->permsToString(
                           file.status().permissions()) << std::endl;
-            if (!fs::is_directory(path))
+
+            if (!fs::is_directory(file.path()))
                 {
-                    std::cout << "fs::file_size(path):\t" << fs::file_size(path) << std::endl;
+                    std::cout << "Size:\t" << fs::file_size(file.path()) << std::endl;
                 }
         }
+
+    filer->updateFileList("/");
+    for (const auto &file : filer->getFileList())
+        {
+            std::cout << "Absolute Path:\t" << fs::absolute(file) << std::endl;;
+        }
+
+
 }
 
 void
@@ -66,8 +78,8 @@ test_Permissions(Filer *filer)
             std::cout << "created that bitch" << std::endl;
         }
 
-    DirEnt direntToTest =
-        DirEnt(fs::path(permTestFile));
+    File direntToTest =
+        File(fs::path(permTestFile));
 
     fs::perms p1 = filer->getPermissions(direntToTest);
     fs::perms p2 = filer->getPermissions(fs::path(permTestFile));

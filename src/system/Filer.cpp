@@ -13,9 +13,9 @@ Filer::Filer()
 
 /* Creation */
 bool
-Filer::createDir(fs::path path)
+Filer::createDir(const fs::path &path)
 {
-    DirEnt dirent = DirEnt(path);
+    File dirent = File(path);
     if (dirent.exists())
         {
             return false;
@@ -26,7 +26,7 @@ Filer::createDir(fs::path path)
 }
 
 bool
-Filer::createFile(fs::path path)
+Filer::createFile(const fs::path &path)
 {
     std::ofstream ofs(path);
     ofs.close();
@@ -35,7 +35,7 @@ Filer::createFile(fs::path path)
 
 /* Deletion */
 bool
-Filer::deleteDir(fs::path path)
+Filer::deleteDir(const fs::path &path)
 {
     if (!fs::exists(path))
         {
@@ -51,7 +51,7 @@ Filer::deleteDir(fs::path path)
 }
 
 bool
-Filer::deleteFile(fs::path path)
+Filer::deleteFile(const fs::path &path)
 {
     if (!fs::exists(path))
         {
@@ -92,25 +92,25 @@ find_file(const fs::path &dir_path,          // in this directory,
 
 /* Permissions */
 fs::perms
-Filer::getPermissions(fs::path path)
+Filer::getPermissions(const fs::path &path)
 {
     return fs::status(path).permissions();
 }
 
 fs::perms
-Filer::getPermissions(DirEnt dirent)
+Filer::getPermissions(const File &dirent)
 {
     return fs::status(dirent.path()).permissions();
 }
 
 bool
-Filer::setPermissions(fs::perms newPerms, fs::path path)
+Filer::setPermissions(const fs::perms &newPerms, const fs::path &path)
 {
     /*
     https://stackoverflow.com/questions/46835440/set-permission-for-all-files-in-a-folder-in-c
     https://stackoverflow.com/questions/46835440/set-permission-for-all-files-in-a-folder-in-c
 
-    //DirEnt(path).status().permissions(newPerms); // WRONG
+    //File(path).status().permissions(newPerms); // WRONG
 
      TODO:
      In all these functions
@@ -129,7 +129,7 @@ Filer::setPermissions(fs::perms newPerms, fs::path path)
 }
 
 std::string
-Filer::permsToString(fs::perms perms)
+Filer::permsToString(const fs::perms &perms)
 {
     std::string permString;
     permString.append(((perms & fs::perms::owner_read) != fs::perms::none ? "r" :
@@ -153,34 +153,51 @@ Filer::permsToString(fs::perms perms)
     return permString;
 }
 
-// File List
-
-
-bool
-Filer::updateFileList(fs::path path)
+std::string
+Filer::typeToString(const fs::file_status &fileStatus)
 {
-	std::cout << path << std::endl;
-    return true;
+    std::string typeStr;
+    switch (fileStatus.type())
+        {
+        case fs::file_type::none: typeStr = "none"; break;
+        case fs::file_type::not_found: typeStr = "not_found"; break;
+        case fs::file_type::regular: typeStr = "regular"; break;
+        case fs::file_type::directory: typeStr = "directory"; break;
+        case fs::file_type::symlink: typeStr = "symlink"; break;
+        case fs::file_type::block: typeStr = "block"; break;
+        case fs::file_type::character: typeStr = "character"; break;
+        case fs::file_type::fifo: typeStr = "fifo"; break;
+        case fs::file_type::socket: typeStr = "socket"; break;
+        case fs::file_type::unknown: typeStr = "unknown"; break;
+        default: typeStr = "?"; break;
+        }
+    return typeStr;
 }
 
+
+// File List
 bool
-Filer::getFilesInDir(fs::path path)
+Filer::updateFileList(const fs::path &path)
 {
-    for (const DirEnt &entry : fs::directory_iterator(path))
+	this->fileList.clear();
+    for (const File &entry : fs::directory_iterator(path))
         {
             fileList.push_back(fs::directory_entry(entry));
-            //const DirEnt newDirEnt = entry;
-            //std::cout << entry.path() << std::endl;
         }
 
     return true;
 }
 
 FileList
-Filer::getFileList(fs::path path)
+Filer::getFileList()
 {
-	this->getFilesInDir(path);
     return this->fileList;
+}
+
+bool
+Filer::pathIsValid(const fs::path &path)
+{
+	return fs::exists(path);
 }
 
 }
