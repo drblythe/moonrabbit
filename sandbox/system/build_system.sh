@@ -5,7 +5,7 @@ g++ \
 	-std=c++17 \
 	-Wall \
 	-Wextra \
-	../src/system/*.cpp \
+	../../src/system/*.cpp \
 	./test_system.cpp
 
 

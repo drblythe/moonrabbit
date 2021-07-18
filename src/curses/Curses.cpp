@@ -1,5 +1,6 @@
 #include "Curses.hpp"
 
-namespace Curses {
+namespace Curses
+{
 
 }

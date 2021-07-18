@@ -1,13 +1,12 @@
 #include "Filer.hpp"
 #include <filesystem>
 
-namespace fs = std::filesystem;
 namespace System
 {
 
-Filer::Filer()
+Filer::Filer():
+    showDotFiles(false)
 {
-
 }
 
 
@@ -179,7 +178,7 @@ Filer::typeToString(const fs::file_status &fileStatus)
 bool
 Filer::updateFileList(const fs::path &path)
 {
-	this->fileList.clear();
+    this->fileList.clear();
     for (const File &entry : fs::directory_iterator(path))
         {
             fileList.push_back(fs::directory_entry(entry));
@@ -197,7 +196,24 @@ Filer::getFileList()
 bool
 Filer::pathIsValid(const fs::path &path)
 {
-	return fs::exists(path);
+    return fs::exists(path);
 }
 
+
+bool
+Filer::setCwd(const fs::path &path)
+{
+    if (!pathIsValid(path))
+        {
+            return false;
+        }
+    return updateFileList(path);
 }
+
+int
+Filer::getNumFilesInDir()
+{
+	return this->fileList.size();
+}
+
+} // namespace System

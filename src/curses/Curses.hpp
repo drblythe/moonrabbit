@@ -1,10 +1,8 @@
-namespace Curses {
+#ifndef CURSES_HPP
+#define CURSES_HPP
 
-	enum Mode {
-		BROWSER,
-		SHELL
-	};
-
-	static Mode MODE;
+namespace Curses
+{
 
 }
+#endif

@@ -4,14 +4,16 @@
 #include <ncurses.h>
 #include <string>
 
-namespace Curses {
+namespace Curses
+{
 
-class Input {
-	public:
-		Input();
-		int listen();
-		std::string getKey();
-	private:
+class Input
+{
+public:
+    Input();
+    int listen();
+    std::string getKey();
+private:
 };
 
 static Input *INPUT = new Input();

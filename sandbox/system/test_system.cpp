@@ -1,4 +1,4 @@
-#include "../src/system/Filer.hpp"
+#include "../../src/system/Filer.hpp"
 #include <filesystem>
 #include <functional>
 
@@ -15,11 +15,9 @@ test_FileListOperations(Filer *filer);
 int
 main()
 {
-    Filer *filer = new Filer();
-
-    test_CreateDelete(filer);
-    test_Permissions(filer);
-    test_FileListOperations(filer);
+    test_CreateDelete(System::FILER);
+    test_Permissions(System::FILER);
+    test_FileListOperations(System::FILER);
 }
 
 

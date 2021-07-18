@@ -1,23 +1,24 @@
 #include "Input.hpp"
 
-namespace Curses {
+namespace Curses
+{
 Input::Input()
 {
 
 }
 
-std::string 
+std::string
 Input::getKey()
 {
-	std::string input = "";
-	input.push_back(getch());
-	return input;
+    std::string input = "";
+    input.push_back(getch());
+    return input;
 }
 
-int 
+int
 Input::listen()
 {
-	return 0;
+    return 0;
 }
 
 

@@ -11,6 +11,8 @@ System
 
 ---------------------------------------------------------------------
 
+TODO
+~~~~
 [+] List directories
 [+] Functions to get file info (for ncurses display)
 [+] Change parameters to ref/const ref

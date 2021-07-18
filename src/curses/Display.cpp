@@ -1,41 +1,46 @@
 #include "Display.hpp"
+#include <curses.h>
 
-namespace Curses {
+namespace Curses
+{
 
 Display::Display()
 {
-	init();
+    init();
 }
 
-int 
+int
 Display::init()
 {
-	initscr();					/* Start curses mode 		*/
-	raw();						/* Line buffering disabled	*/
-	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
-	noecho();					/* Don't echo() while we do getch */
-	
-	return 0;
+    initscr();                  /* Start curses mode        */
+    raw();                      /* Line buffering disabled  */
+    keypad(stdscr, TRUE);       /* We get F1, F2 etc..      */
+    noecho();                   /* Don't echo() while we do getch */
+
+    return 0;
 }
 
-int 
-Display::print(std::string text, int row, int col)
+int
+Display::print(const std::string &text, int row, int col, attr_t attr)
 {
-	mvprintw(row, col, text.c_str());
-	refresh();
-	return 0;
+	// TODO: Is it okay to apply A_NORMAL every print?
+	if (!attr == A_NORMAL) attron(attr);
+    mvprintw(row, col, text.c_str());
+	if (!attr == A_NORMAL) attroff(attr);
+    refresh();
+    return 0;
 }
 
-int 
-Display::clear()
+int
+Display::clearAll()
 {
-	return clear();
+    return clear();
 }
 
-int 
+int
 Display::terminate()
 {
-	return endwin();
+    return endwin();
 }
 
 
